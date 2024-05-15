@@ -16,7 +16,7 @@ def register():
             return jsonify({"status": "error", "message": "Name already exists"}), 409
 
         # Cria um novo usuário
-        create_user(Name, Email, generate_password_hash(Password, method='sha256'))
+        create_user(Name, Email, Password)
         return jsonify({"status": "success", "message": "Registration successful"})
 
     return render_template('register.html')
