@@ -29,11 +29,10 @@ def login():
 
         # Verifica as credenciais do usuário
         user = get_user_by_username(Name)
-        if user and check_password_hash(user.password, Password):
+        if user and check_password_hash(user.Password, Password):
             return jsonify({"status": "success", "message": "Login successful"})
         else:
             return jsonify({"status": "error", "message": "Invalid credentials"}), 401
 
     return render_template('login.html')
-
 
