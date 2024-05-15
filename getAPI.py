@@ -1,51 +1,52 @@
 import requests
 import pyodbc
-import time
 
-def fetch_and_store_champions(api_key, connection_string):
-    # Configuração da conexão com o banco de dados
-    conn = pyodbc.connect(connection_string)
+def fetch_champion_data():
+    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=localhost\\SQLEXPRESS;DATABASE=LeagueClientManager;Trusted_Connection=yes;')
     cursor = conn.cursor()
+    
+    version_url = "https://ddragon.leagueoflegends.com/api/versions.json"
+    version = requests.get(version_url).json()[0]
+    
+    champions_url = f"http://ddragon.leagueoflegends.com/cdn/{version}/data/en_US/champion.json"
+    response = requests.get(champions_url)
+    champions_data = response.json()['data']
+    
+    for champion_key, champion_info in champions_data.items():
+        champion_id = int(champion_info['key'])
+        champion_name = champion_info['name']
+        first_tag = champion_info['tags'][0] if champion_info['tags'] else 'Unknown'
+        
+        detailed_url = f"http://ddragon.leagueoflegends.com/cdn/{version}/data/en_US/champion/{champion_key}.json"
+        detailed_response = requests.get(detailed_url).json()
+        detailed_info = detailed_response['data'][champion_key]
+        
+        lore = detailed_info['lore']
+        kingdom = extract_kingdom_from_lore(lore)
+        be_price = 1350
+        
+        # Verifica e insere na tabela Item_Type se necessário
+        cursor.execute("SELECT COUNT(*) FROM LCM.Item_Type WHERE ID = ?", (champion_id,))
+        if cursor.fetchone()[0] == 0:
+            cursor.execute("INSERT INTO LCM.Item_Type (ID, Name, RP_Price) VALUES (?, ?, ?)",
+                           (champion_id, champion_name, None))  # RP_Price pode ser definido como None ou um valor padrão
+        
+        # Insere dados na tabela Champion
+        cursor.execute("INSERT INTO LCM.Champion (ID_Item_Type, Name, BE_Price, Category, Kingdom) VALUES (?, ?, ?, ?, ?)",
+                       (champion_id, champion_name, be_price, first_tag, kingdom))
+        conn.commit()
 
-    # URL para a API de campeões
-    region = 'na1'
-    url = f'https://{region}.api.riotgames.com/lol/static-data/v3/champions'
-    params = {
-        'locale': 'en_US',
-        'dataById': 'false',
-        'api_key': api_key
-    }
+    conn.close()
 
-    try:
-        # Fazendo a requisição à API
-        response = requests.get(url, params=params)
-        response.raise_for_status()  # Levanta uma exceção para respostas 4XX e 5XX
-        champions_data = response.json()['data']
+def extract_kingdom_from_lore(lore):
+    possible_kingdoms = ['Demacia', 'Noxus', 'Freljord', 'Piltover', 'Zaun', 'Ionia', 'Shurima', 'Targon', 'Bilgewater', 'Shadow Isles']
+    for kingdom in possible_kingdoms:
+        if kingdom in lore:
+            return kingdom
+    return "Unknown"
 
-        # Inserir dados na tabela Champion
-        for champ_key, details in champions_data.items():
-            name = details['name']
-            title = details['title']  # Supondo que você também queira guardar o título
-            # Supondo que 'Item_Type_ID' seja gerado automaticamente ou já conhecido/definido
-            cursor.execute("INSERT INTO LCM.Champion (Name, Title) VALUES (?, ?)", (name, title))
-            conn.commit()
-            time.sleep(1)  # Dorme por 1 segundo para controlar a frequência de requisições
+fetch_champion_data()
 
-    except requests.exceptions.HTTPError as e:
-        if e.response.status_code == 429:
-            retry_after = int(e.response.headers['Retry-After'])
-            print(f"Rate limit exceeded. Retrying after {retry_after} seconds.")
-            time.sleep(retry_after)
-            fetch_and_store_champions(api_key, connection_string)  # Tenta novamente após o tempo de espera
-        else:
-            print(f"HTTP Error: {e}")
-    except Exception as e:
-        print(f"An error occurred: {e}")
-    finally:
-        # Fechando a conexão
-        conn.close()
 
-# Exemplo de uso
-api_key = 'RGAPI-a347caa4-1737-40d8-b66f-b15ec1a3b51d'
-connection_string = 'DRIVER={SQL Server};SERVER=your_server;DATABASE=your_database;UID=your_username;PWD=your_password'
-fetch_and_store_champions(api_key, connection_string)
+
+
