@@ -1,0 +1,31 @@
+# Bytecode do Python
+__pycache__/
+*.py[cod]
+
+# Ambiente virtual
+venv/
+
+# Arquivos de banco de dados
+*.db
+*.sql
+
+# Arquivos de log
+*.log
+
+# Configurações sensíveis
+.env
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Diretórios e arquivos de IDE/Editor
+.vscode/
+.idea/
+*.sublime-workspace
+
+# Arquivos de Build e Distribuição
+build/
+dist/
+*.egg-info/
+*.egg
