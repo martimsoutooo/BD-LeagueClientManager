@@ -30,9 +30,15 @@ def fetch_and_insert_skins(cursor, champion_key, champion_id, version):
         name = skin['name']
         rp_price = 450  # RP_Price pré-definido como 450 para todas as skins
         
-        # Insere os dados de skin na tabela Skin
-        cursor.execute("INSERT INTO LCM.Skin (Skin_ID, Champion_ID, RP_Price, Name) VALUES (?, ?, ?, ?)",
-                       (skin_id, champion_id, rp_price, name))
-        cursor.commit()
+        # Verifica se a skin já está inserida na tabela Skin
+        cursor.execute("SELECT COUNT(*) FROM LCM.Skin WHERE Skin_ID = ?", (skin_id,))
+        if cursor.fetchone()[0] == 0:  # Se não estiver, insere a skin
+            # Insere os dados de skin na tabela Skin
+            cursor.execute("INSERT INTO LCM.Skin (Skin_ID, Champion_ID, RP_Price, Name) VALUES (?, ?, ?, ?)",
+                           (skin_id, champion_id, rp_price, name))
+            cursor.commit()
+        else:
+            print(f"Skin {name} with ID {skin_id} already exists in the database.")
 
 fetch_champion_data()
+

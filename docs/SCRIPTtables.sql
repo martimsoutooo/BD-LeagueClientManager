@@ -48,9 +48,11 @@ CREATE TABLE LCM.Champion (
 
 --Tabela Skin
 CREATE TABLE LCM.Skin (
-    ID_Item_Type INT PRIMARY KEY,
+	Skin_ID INT PRIMARY KEY,
+    Champion_ID INT,
+	RP_Price INT,
     Name VARCHAR(50),
-    FOREIGN KEY (ID_Item_Type) REFERENCES LCM.Item_Type(ID)
+	FOREIGN KEY (Champion_ID) REFERENCES LCM.Champion(ID_Item_Type)
 );
 
 --Tabela Chest
@@ -70,11 +72,11 @@ CREATE TABLE LCM.Ward (
 CREATE TABLE LCM.User_Select (
     ID INT PRIMARY KEY,
     ID_User INT,
-    ID_Skin INT,
+    ID_Skin_User INT,
     ID_Champion INT,
     ID_Ward INT,
     FOREIGN KEY (ID_User) REFERENCES LCM.[User](ID),
-    FOREIGN KEY (ID_Skin) REFERENCES LCM.Skin(ID_Item_Type),
+    FOREIGN KEY (ID_Skin_User) REFERENCES LCM.Skin(Skin_ID),
     FOREIGN KEY (ID_Champion) REFERENCES LCM.Champion(ID_Item_Type),
     FOREIGN KEY (ID_Ward) REFERENCES LCM.Ward(ID_Item_Type)
 );
