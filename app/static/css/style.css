@@ -1,3 +1,61 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+html, body{
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+
+}
+
+.logo-image {
+    width: 240px;  /* Limit the width to 100 pixels */
+    height: 140px; /* Limit the height to 100 pixels */
+}
+
+.background {
+    background-color: #f8f9fa;
+}
+.smaller-link {
+    font-size: 0.8em;
+}
+.line {
+    width: 140px;       /* Adjust width as necessary */
+    height: 2px;       /* Thickness of the line */
+    background-color: #ffffff; /* Color of the line */
+    margin: 0 10px;    /* Space between the text and the lines */
+}
+.welcome-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers the content vertically and horizontally */
+    background: linear-gradient(to right, #24277F 0%, #059fff 90%);
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease-in-out;
+    border: 1px solid;
+    border-color: goldenrod;
+    
+}
+
+.custom-size {
+    width: 350px; /* Sets the width to 150 pixels */
+    height: 100px; /* Sets the height to 50 pixels */
+    padding: 10px 24px; /* Adjust padding to fit text comfortably if needed */
+    font-size: 100px; /* Optional: Adjust font size if needed */
+}
+
+.welcome-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.welcome-section:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+.btn-info {
+    background-color: #059fff !important; /* Ensures it overrides Bootstrap's default styling */
+    border-color: #059fff !important; /* Keeps the border the same color */
+}
