@@ -41,8 +41,16 @@ html, body{
 .custom-size {
     width: 350px; /* Sets the width to 150 pixels */
     height: 100px; /* Sets the height to 50 pixels */
-    padding: 10px 24px; /* Adjust padding to fit text comfortably if needed */
     font-size: 100px; /* Optional: Adjust font size if needed */
+    display: block; /* Make sure buttons use full width for the hover effect */
+    transition: all 0.3s ease-in-out; /* Transition for smooth effect */
+    margin: 5px; /* Margin to separate buttons */
+    border-radius: 5px; /* Optional: rounded corners */
+}
+
+.custom-size:hover {
+    background-color: #017BFF; /* Lighter blue on hover */
+    transform: scale(1.015); /* Slightly enlarge the button on hover */
 }
 
 .welcome-text {
