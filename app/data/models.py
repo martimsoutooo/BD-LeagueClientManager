@@ -1,31 +1,40 @@
 from .database import get_db
 
-def create_user(Name, Email, Password):
+def create_user(username, email, password):
     db = get_db()
     cursor = db.cursor()
-    cursor.execute(
-        "INSERT INTO LCM.[User] (Name, Email, Password) VALUES (?, ?, ?)",
-        (Name, Email, Password)
-    )
+    query = """
+    INSERT INTO LCM.[User] (Name, Email, Password) 
+    VALUES (?, ?, dbo.HashPassword(?))
+    """
+    cursor.execute(query, (username, email, password))
     db.commit()
 
-def get_user_by_username(Name):
+def get_user_by_username(username):
     db = get_db()
     cursor = db.cursor()
-    cursor.execute(
-        "SELECT ID, Name, Email, Password FROM LCM.[User] WHERE Name = ?",
-        (Name,)
-    )
-    return cursor.fetchone()
+    cursor.execute("SELECT * FROM LCM.[User] WHERE Name = ?", (username,))
+    user = cursor.fetchone()
+    return user
 
-def get_user_by_email(Email):
+def get_user_by_email(email):
     db = get_db()
     cursor = db.cursor()
-    cursor.execute(
-        "SELECT ID, Name, Email, Password FROM LCM.[User] WHERE Email = ?",
-        (Email,)
-    )
-    return cursor.fetchone()
+    cursor.execute("SELECT * FROM LCM.[User] WHERE Email = ?", (email,))
+    user = cursor.fetchone()
+    return user
+
+def verify_user(email, password):
+    db = get_db()
+    cursor = db.cursor()
+    query = """
+    SELECT * FROM LCM.[User] 
+    WHERE Name = ? AND Password = dbo.HashPassword(?)
+    """
+    cursor.execute(query, (email, password))
+    user = cursor.fetchone()
+    return user is not None
+
 
 
 

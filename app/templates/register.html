@@ -1,32 +1,35 @@
-<h2>Register</h2>
-<form hx-post="/register" hx-target="#response" hx-swap="innerHTML">
-    <label for="username">Username:</label>
-    <input type="text" id="Name" name="Name" required><br>
-    <label for="email">Email:</label>
-    <input type="email" id="Email" name="Email" required><br>
-    <label for="password">Password:</label>
-    <input type="password" id="Password" name="Password" required><br>
-    <button class="submit-button" type="submit">Register</button>
-</form>
+{% extends "base.html" %}
 
-<style>
-    .submit-button {
-        background-color: #4CAF50;
-        color: white;
-        padding: 14px 20px;
-        margin: 8px 0;
-        border: none;
-        cursor: pointer;
-        border-radius: 15px;
-    }
-</style>
+{% block title %}Register{% endblock %}
 
-<div id="response">
-    <label for="inputPassword5" class="form-label">Password</label>
-    <input type="password" id="inputPassword5" class="form-control" aria-describedby="passwordHelpBlock">
-    <div id="passwordHelpBlock" class="form-text">
-      Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
+{% block content %}
+<div class="vh-100 d-flex align-items-center justify-content-center">
+    <div class="container">
+        <div class="row justify-content-center w-100">
+            <div class="col-md-5">
+                <div class="shadow-lg p-5 rounded-lg">
+                    <form method="post" action="/register">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-info">Register</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+{% endblock %}
+
+
 
 
