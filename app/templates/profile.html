@@ -11,12 +11,15 @@
             </div>
             <div class="col-md-2 stats-box">
                 Blue Essence: 3400
+                <img src="https://server.blix.gg/imgproxy/nP7l6vA2EI8fTz4xs51FwU7acvVmJx2yR-Fo_iUmeHI/rs:fit:260:260:0/g:no/aHR0cDovL21pbmlvOjkwMDAvaW1hZ2VzLzQxM2I0ZTQzNzFjYjQxYTliMzQwNDJhNTBmNDg4NjVhLnBuZw.webp" alt="" class="stats-image">
             </div>
             <div class="col-md-2 stats-box">
-                Riot Points: 750
+                Riot Points: 1000
+                <img src="https://www.nicepng.com/png/full/17-174865_free-lol-riot-points-riot-points.png" class="stats-image" alt="">
             </div>
-            <div class="col-md-2 stats-box">
+            <div class="col-md-2 stats-box-rank">
                 Rank: Gold
+                <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/764bbd9c-6d80-481d-8136-96848f01e843/ddx6pbw-df50a375-a9ab-4ab9-acea-281c6ceab93f.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzc2NGJiZDljLTZkODAtNDgxZC04MTM2LTk2ODQ4ZjAxZTg0M1wvZGR4NnBidy1kZjUwYTM3NS1hOWFiLTRhYjktYWNlYS0yODFjNmNlYWI5M2YucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.UfunOvrkALQ0M1Aqb5Dxjh4Pap3JX906ptJFVLldlLA"  class="stats-image" alt="">
             </div>
         </div>
         <div class="row align-items-center mt-3">
@@ -79,21 +82,108 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="v-pills-skins" role="tabpanel" aria-labelledby="v-pills-skins-tab">
-                                    skins
+                                    <div class="filter-section p-5">
+                                        <h4 class="pb-2">Filters</h4>
+                                        <div class="form-check">
+                                            <input class="form-check-input large-checkbox" type="checkbox" value="" id="check1">
+                                            <label class="form-check-label" for="check1">
+                                                Owned
+                                            </label>
+                                        </div>
+                                        <div class="form-check pt-2">
+                                            <input class="form-check-input large-checkbox" type="checkbox" value="" id="check2">
+                                            <label class="form-check-label" for="check2">
+                                                Alphabetical
+                                            </label>
+                                        </div>
+                                        <div class="form-group pt-3">
+                                            <label for="championFilter">Champion:</label>
+                                            <select class="form-control" id="Champion">
+                                                <option value="all">All</option>
+                                                <option value="aatrox">Aatrox</option>
+                                                <option value="ahri">Ahri</option>
+                                                <option value="akali">Akali</option>
+                                                <option value="akshan">Akshan</option>
+                                                <option value="alistar">Alistar</option>
+                                                <option value="amumu">Amumu</option>
+                                                <option value="anivia">Anivia</option>
+                                                <option value="annie">Annie</option>
+                                                <option value="aphelios">Aphelios</option>
+                                                <option value="ashe">Ashe</option>
+                                                <option value="aurelionSol">Aurelion Sol</option>
+                                                <option value="azir">Azir</option>
+                                                <option value="bard">Bard</option>
+                                                <option value="blitzcrank">Blitzcrank</option>
+                                                <option value="brand">Brand</option>
+                                                <option value="braum">Braum</option>
+                                                <option value="caitlyn">Caitlyn</option>
+                                                <option value="camille">Camille</option>
+                                                <option value="cassiopeia">Cassiopeia</option>
+                                                <option value="chogath">Cho'Gath</option>
+                                                <option value="corki">Corki</option>
+                                                <option value="darius">Darius</option>
+                                                <option value="diana">Diana</option>
+                                                <option value="draven">Draven</option>
+                                                <option value="drmundo">Dr. Mundo</option>
+                                                <option value="ekko">Ekko</option>
+                                                <option value="elise">Elise</option>
+                                                <option value="evelynn">Evelynn</option>
+                                                <option value="ezreal">Ezreal</option>
+                                                <option value="fiddlesticks">Fiddlesticks</option>
+                                                <option value="fiora">Fiora</option>
+                                                <option value="fizz">Fizz</option>
+                                                <option value="galio">Galio</option>
+                                                <option value="gangplank">Gangplank</option>
+                                                <option value="garen">Garen</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="tab-pane fade" id="v-pills-chests" role="tabpanel" aria-labelledby="v-pills-chests-tab">
-                                    chests
+                                    <div class="filter-section p-5">
+                                        <h4 class="pb-2">Filters</h4>
+                                        
+                                        <div class="form-group pt-3">
+                                            <label for="chestFilter">Type:</label>
+                                            <select class="form-control" id="chestFilter">
+                                                <option value="all">All</option>
+                                                <option value="masterwork">Masterwork</option>
+                                                <option value="hextech">Hextech</option>                                                    
+                                            </select>
+                                        </div>
+                                        
+                                    </div>
                                 </div>
                                 <div class="tab-pane fade" id="v-pills-wards" role="tabpanel" aria-labelledby="v-pills-wards-tab">
-                                    wards
+                                    <div class="filter-section p-5">
+                                        <h4 class="pb-2">Filters</h4>
+                                        
+                                        <div class="form-group pt-3">
+                                            <label for="wardFilter">Name:</label>
+                                            <select class="form-control" id="wardFilter">
+                                                <option value="all">All</option>
+                                                <option value="ward1">Ward 1</option>
+                                                <option value="ward2">Ward 2</option>
+                                                <option value="ward3">Ward 3</option>
+                                                <option value="ward4">Ward 4</option>
+                                                <option value="ward5">Ward 5</option>
+                                                <option value="ward6">Ward 6</option>
+                                                <option value="ward7">Ward 7</option>
+                                                <option value="ward8">Ward 8</option>
+                                                <option value="ward9">Ward 9</option>
+                                                <option value="ward10">Ward 10</option>
+
+
+                                                                                              
+                                            </select>
+                                        </div>
+                                        
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="vertical-line"></div>
-                        </div>
-                        <div class="col-md-8">
-                            <!-- Additional content would go here -->
                         </div>
                     </div>
                 </div>
