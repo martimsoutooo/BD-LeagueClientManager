@@ -3,7 +3,7 @@ body {
     height: 100%;
     width: 100%;
     box-sizing: border-box;
-    overflow: hidden;
+    overflow-y: auto;
 
 }
 
@@ -158,4 +158,18 @@ body {
     /* Darker text for better readability */
     font-size: 20px;
     /* Larger font size for emphasis */
+}
+
+
+.container {
+    margin-top: 20px;
+    overflow-y: auto; /* Garante que o contêiner permite rolagem se necessário */
+}
+
+.card {
+    margin-bottom: 20px; /* Adiciona espaço entre os cards */
+}
+
+.vh-100 {
+    height: auto !important; /* Override vh-100 */
 }

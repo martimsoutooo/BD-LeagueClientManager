@@ -24,16 +24,17 @@ def get_user_by_email(email):
     user = cursor.fetchone()
     return user
 
-def verify_user(email, password):
+def verify_user(username, password):
     db = get_db()
     cursor = db.cursor()
     query = """
     SELECT * FROM LCM.[User] 
     WHERE Name = ? AND Password = dbo.HashPassword(?)
     """
-    cursor.execute(query, (email, password))
+    cursor.execute(query, (username, password))
     user = cursor.fetchone()
-    return user is not None
+    return user
+
 
 
 

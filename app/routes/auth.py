@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, jsonify, Blueprint, redirect, url_for, session
+from flask import Blueprint, request, render_template, jsonify, session, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from ..data.models import create_user, get_user_by_username, verify_user, get_user_by_email
 
@@ -21,29 +21,33 @@ def register():
 
         # Cria um novo usuário
         create_user(username, email, password)
-        session['username'] = username
+        user = get_user_by_username(username)
+        session['user_id'] = user.ID
         return redirect(url_for('main.dashboard'))
-        
 
     return render_template('register.html')
-
-
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        name = request.form.get('username')
+        username = request.form.get('username')
         password = request.form.get('password')
 
         # Verifica as credenciais do usuário
-        user = verify_user(name, password)
+        user = verify_user(username, password)
         if user:
             # Configura a sessão do usuário
-            session['name'] = name
+            session['user_id'] = user.ID
+            print(f"User {user.ID} logged in successfully")
             return redirect(url_for('main.dashboard'))
         else:
+            print("Login failed: Invalid credentials")
             return jsonify({"status": "error", "message": "Invalid credentials"}), 401
 
     return render_template('login.html')
-    
+
+@auth_bp.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    return redirect(url_for('main.index'))
 
