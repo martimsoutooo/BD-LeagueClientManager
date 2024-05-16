@@ -1,4 +1,5 @@
-html, body{
+html,
+body {
     height: 100%;
     width: 100%;
     box-sizing: border-box;
@@ -7,50 +8,79 @@ html, body{
 }
 
 .logo-image {
-    width: 240px;  /* Limit the width to 100 pixels */
-    height: 140px; /* Limit the height to 100 pixels */
+    width: 240px;
+    /* Limit the width to 100 pixels */
+    height: 140px;
+    /* Limit the height to 100 pixels */
 }
 
 .background {
     background-color: #f8f9fa;
 }
+
 .smaller-link {
     font-size: 0.8em;
 }
+
 .line {
-    width: 140px;       /* Adjust width as necessary */
-    height: 2px;       /* Thickness of the line */
-    background-color: #ffffff; /* Color of the line */
-    margin: 0 10px;    /* Space between the text and the lines */
+    width: 140px;
+    /* Adjust width as necessary */
+    height: 2px;
+    /* Thickness of the line */
+    background-color: #ffffff;
+    /* Color of the line */
+    margin: 0 10px;
+    /* Space between the text and the lines */
 }
+
 .welcome-section {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centers the content vertically and horizontally */
+    align-items: center;
+    /* Centers the content vertically and horizontally */
     background: linear-gradient(to right, #24277F 0%, #059fff 90%);
     color: white;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease-in-out;
-    border: 1px solid;
-    border-color: goldenrod;
-    
+}
+
+.filter-section {
+    overflow-y: auto;
+    /* Enables scrolling if content overflows */
+    height: 100%;
+    /* Full height for alignment with the divider */
+}
+
+.vertical-line {
+    width: 1px;
+    background-color: #ddd;
+    height: 100%;
 }
 
 .custom-size {
-    width: 350px; /* Sets the width to 150 pixels */
-    height: 100px; /* Sets the height to 50 pixels */
-    font-size: 100px; /* Optional: Adjust font size if needed */
-    display: block; /* Make sure buttons use full width for the hover effect */
-    transition: all 0.3s ease-in-out; /* Transition for smooth effect */
-    margin: 5px; /* Margin to separate buttons */
-    border-radius: 5px; /* Optional: rounded corners */
+    width: 350px;
+    /* Sets the width to 150 pixels */
+    height: 100px;
+    /* Sets the height to 50 pixels */
+    font-size: 100px;
+    /* Optional: Adjust font size if needed */
+    display: block;
+    /* Make sure buttons use full width for the hover effect */
+    transition: all 0.3s ease-in-out;
+    /* Transition for smooth effect */
+    margin: 5px;
+    /* Margin to separate buttons */
+    border-radius: 5px;
+    /* Optional: rounded corners */
 }
 
 .custom-size:hover {
-    background-color: #017BFF; /* Lighter blue on hover */
-    transform: scale(1.015); /* Slightly enlarge the button on hover */
+    background-color: #017BFF;
+    /* Lighter blue on hover */
+    transform: scale(1.015);
+    /* Slightly enlarge the button on hover */
 }
 
 .welcome-text {
@@ -58,12 +88,56 @@ html, body{
     align-items: center;
     justify-content: center;
 }
+
 .welcome-section:hover {
     transform: scale(1.05);
     cursor: pointer;
 }
 
 .btn-info {
-    background-color: #059fff !important; /* Ensures it overrides Bootstrap's default styling */
-    border-color: #059fff !important; /* Keeps the border the same color */
+    background-color: #059fff !important;
+    /* Ensures it overrides Bootstrap's default styling */
+    border-color: #059fff !important;
+    /* Keeps the border the same color */
+}
+
+.stats-box {
+    background-color: #eaeaea;
+    /* Light grey background */
+    overflow-y: auto;
+    /* Enables scrolling if content overflows */
+    border-radius: 4px;
+    /* Rounded corners */
+    padding: 10px 20px;
+    /* Padding inside the box */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow for depth */
+    height: 100%;
+    /* Full height for alignment with the divider */
+    margin: 7px;
+    text-align: center;
+}
+
+.large-checkbox {
+    width: 20px;  /* Increasing the width */
+    height: 20px; /* Increasing the height */
+    cursor: pointer; /* Ensures it's clear the checkbox is clickable */
+    /* Optional: custom styling adjustments */
+    background-color: #fff; /* Change background if needed */
+    border-radius: 4px; /* Rounded corners for visual appeal */
+    border: 2px solid #ccc; /* Define border to make checkbox more defined */
+}
+.form-check-label {
+    margin-left: 10px; /* Extra spacing between checkbox and label */
+    vertical-align: middle; /* Align label text vertically with the larger checkbox */
+    line-height: 30px; /* Line height to match checkbox height */
+}
+
+.stats-box h4 {
+    margin: 0;
+    /* Remove default margin */
+    color: #333;
+    /* Darker text for better readability */
+    font-size: 20px;
+    /* Larger font size for emphasis */
 }

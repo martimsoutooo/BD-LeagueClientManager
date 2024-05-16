@@ -3,5 +3,102 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<h1>profile</h1>
+<div class="vh-100 d-flex align-items-center justify-content-center">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="font-weight-bold col-md-5" style="font-size: 80px;">
+                Profile
+            </div>
+            <div class="col-md-2 stats-box">
+                Blue Essence: 3400
+            </div>
+            <div class="col-md-2 stats-box">
+                Riot Points: 750
+            </div>
+            <div class="col-md-2 stats-box">
+                Rank: Gold
+            </div>
+        </div>
+        <div class="row align-items-center mt-3">
+            <div class="col-md-2">
+                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <a class="nav-link active" id="v-pills-champion-tab" data-toggle="pill" href="#v-pills-champion" role="tab" aria-controls="v-pills-champion" aria-selected="true">Champion</a>
+                    <a class="nav-link" id="v-pills-skins-tab" data-toggle="pill" href="#v-pills-skins" role="tab" aria-controls="v-pills-skins" aria-selected="false">Skins</a>
+                    <a class="nav-link" id="v-pills-chests-tab" data-toggle="pill" href="#v-pills-chests" role="tab" aria-controls="v-pills-chests" aria-selected="false">Chests</a>
+                    <a class="nav-link" id="v-pills-wards-tab" data-toggle="pill" href="#v-pills-wards" role="tab" aria-controls="v-pills-wards" aria-selected="false">Wards</a>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div class="shadow-lg rounded-lg w-100" style="height: 26rem;">
+                    <div class="row h-100">
+                        <div class="col-md-3">
+                            <div class="tab-content" id="v-pills-tabContent">
+                                <div class="tab-pane fade show active" id="v-pills-champion" role="tabpanel" aria-labelledby="v-pills-champion-tab">
+                                    <div class="filter-section p-5">
+                                        <h4 class="pb-2">Filters</h4>
+                                        <div class="form-check">
+                                            <input class="form-check-input large-checkbox" type="checkbox" value="" id="check1">
+                                            <label class="form-check-label" for="check1">
+                                                Owned
+                                            </label>
+                                        </div>
+                                        <div class="form-check pt-2">
+                                            <input class="form-check-input large-checkbox" type="checkbox" value="" id="check2">
+                                            <label class="form-check-label" for="check2">
+                                                Alphabetical
+                                            </label>
+                                        </div>
+                                        <div class="form-group pt-3">
+                                            <label for="kingdomFilter">Kingdom:</label>
+                                            <select class="form-control" id="kingdomFilter">
+                                                <option value="all">All</option>
+                                                <option value="demacia">Demacia</option>
+                                                <option value="noxus">Noxus</option>
+                                                <option value="freljord">Freljord</option>
+                                                <option value="ionia">Ionia</option>
+                                                <option value="bilgewater">Bilgewater</option>
+                                                <option value="shadowIsles">Shadow Isles</option>
+                                                <option value="shurima">Shurima</option>
+                                                <option value="targon">Targon</option>
+                                                <option value="zaun">Zaun</option>
+                                                <option value="piltover">Piltover</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group pt-2">
+                                            <label for="Category">Category:</label>
+                                            <select class="form-control" id="Category">
+                                                <option value="all">All</option>
+                                                <option value="tank">Tank</option>
+                                                <option value="fighter">Fighter</option>
+                                                <option value="mage">Mage</option>
+                                                <option value="assassin">Assassin</option>
+                                                <option value="marksman">Marksman</option>
+                                                <option value="support">Support</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="v-pills-skins" role="tabpanel" aria-labelledby="v-pills-skins-tab">
+                                    skins
+                                </div>
+                                <div class="tab-pane fade" id="v-pills-chests" role="tabpanel" aria-labelledby="v-pills-chests-tab">
+                                    chests
+                                </div>
+                                <div class="tab-pane fade" id="v-pills-wards" role="tabpanel" aria-labelledby="v-pills-wards-tab">
+                                    wards
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="vertical-line"></div>
+                        </div>
+                        <div class="col-md-8">
+                            <!-- Additional content would go here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
