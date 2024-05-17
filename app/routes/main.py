@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify, session, redirect, url_for
 from ..data.database import get_db
-from datetime import datetime
 
 main_bp = Blueprint('main', __name__)
 
@@ -10,7 +9,18 @@ def index():
 
 @main_bp.route('/dashboard')
 def dashboard():
-    return render_template('dashboard.html')
+    user_id = session.get('user_id')
+    if not user_id:
+        print("User ID not found in session")
+        return redirect(url_for('auth.login'))
+    
+    db = get_db()
+    cursor = db.cursor()
+    
+    cursor.execute("SELECT Name FROM LCM.[User] WHERE ID = ?", (user_id,))
+    user_name = cursor.fetchone()[0]
+
+    return render_template('dashboard.html', user_name=user_name)
 
 @main_bp.route('/game')
 def game():
@@ -18,7 +28,31 @@ def game():
 
 @main_bp.route('/profile')
 def profile():
-    return render_template('profile.html')
+    user_id = session.get('user_id')
+    if not user_id:
+        print("User ID not found in session")
+        return redirect(url_for('auth.login'))
+    
+    db = get_db()
+    cursor = db.cursor()
+    
+    # Fetch user's Blue Essence and Riot Points
+    cursor.execute("SELECT BE, RP FROM LCM.[User] WHERE ID = ?", (user_id,))
+    user_data = cursor.fetchone()
+    user_be = user_data[0]
+    user_rp = user_data[1]
+    
+    # Fetch champions owned by the user
+    cursor.execute("""
+    SELECT C.ID, C.Name, C.Category, C.Kingdom 
+    FROM LCM.Champion C
+    JOIN LCM.User_Item UI ON C.ID = UI.ID_Item
+    WHERE UI.ID_User = ?
+    """, (user_id,))
+    champions = cursor.fetchall()
+    
+    return render_template('profile.html', user_be=user_be, user_rp=user_rp, champions=champions)
+
 
 @main_bp.route('/store')
 def store():
@@ -36,25 +70,34 @@ def store():
     category = request.args.get('category', 'all')
 
     # Build the query with filters
-    champion_query = "SELECT ID_Item_Type, Name, BE_Price, Category, Kingdom FROM LCM.Champion WHERE 1=1"
-    params = []
+    champion_query = """
+    SELECT C.ID, C.Name, C.BE_Price, C.Category, C.Kingdom 
+    FROM LCM.Champion C
+    WHERE C.ID NOT IN (
+        SELECT UI.ID_Item 
+        FROM LCM.User_Item UI 
+        WHERE UI.ID_User = ?
+    )
+    """
+    params = [user_id]
+    
     if kingdom != 'all':
-        champion_query += " AND Kingdom = ?"
+        champion_query += " AND C.Kingdom = ?"
         params.append(kingdom)
     if category != 'all':
-        champion_query += " AND Category = ?"
+        champion_query += " AND C.Category = ?"
         params.append(category)
     if alphabetical == '1':
-        champion_query += " ORDER BY Name"
+        champion_query += " ORDER BY C.Name"
     else:
-        champion_query += " ORDER BY ID_Item_Type"  # Assuming this is the original order
+        champion_query += " ORDER BY C.ID"  # Assuming this is the original order
 
     # Execute the query with filters
     cursor.execute(champion_query, params)
     champions = cursor.fetchall()
     
     # Fetch skins data
-    cursor.execute("SELECT LCM.Skin.Name as skin, LCM.Champion.Name as champion, LCM.Skin.RP_Price as rp_price FROM LCM.Skin JOIN LCM.Champion ON LCM.Skin.Champion_ID = LCM.Champion.ID_Item_Type")
+    cursor.execute("SELECT LCM.Skin.Name as skin, LCM.Champion.Name as champion, LCM.Skin.RP_Price as rp_price FROM LCM.Skin JOIN LCM.Champion ON LCM.Skin.Champion_ID = LCM.Champion.ID")
     skins = cursor.fetchall()
 
     # Fetch user's balance
@@ -62,6 +105,7 @@ def store():
     user_be = cursor.fetchone()[0]
     
     return render_template('store.html', champions=champions, skins=skins, user_be=user_be)
+
 @main_bp.route('/buy_champion', methods=['POST'])
 def buy_champion():
     user_id = session.get('user_id')
@@ -83,18 +127,8 @@ def buy_champion():
         # Deduzir o preço do BE do usuário
         cursor.execute("UPDATE LCM.[User] SET BE = BE - ? WHERE ID = ?", (be_price, user_id))
         
-        # Obter a data e a hora atuais
-        current_time = datetime.now()
-        current_date = current_time.date()
-        current_hour = current_time.time()
-        
-        print(f"Inserting into User_Item: user_id={user_id}, champion_id={champion_id}, date={current_date}, time={current_hour}")
-        
-        # Adicionar campeão à tabela User_Item com data e hora atuais
-        cursor.execute("""
-            INSERT INTO LCM.User_Item (ID_User, ID_Item, Data, Hora) 
-            VALUES (?, ?, ?, ?)
-        """, (user_id, champion_id, current_date, current_hour))
+        # Adicionar campeão à tabela User_Item
+        cursor.execute("INSERT INTO LCM.User_Item (ID_User, ID_Item, Data, Hora) VALUES (?, ?, GETDATE(), GETDATE())", (user_id, champion_id))
         
         db.commit()
         return jsonify({"status": "success", "message": "Champion purchased successfully"})
@@ -116,18 +150,27 @@ def filter_champions():
     category = request.args.get('category', 'all')
 
     # Build the query with filters
-    champion_query = "SELECT ID_Item_Type, Name, BE_Price, Category, Kingdom FROM LCM.Champion WHERE 1=1"
-    params = []
+    champion_query = """
+    SELECT C.ID, C.Name, C.BE_Price, C.Category, C.Kingdom 
+    FROM LCM.Champion C
+    WHERE C.ID NOT IN (
+        SELECT UI.ID_Item 
+        FROM LCM.User_Item UI 
+        WHERE UI.ID_User = ?
+    )
+    """
+    params = [user_id]
+    
     if kingdom != 'all':
-        champion_query += " AND Kingdom = ?"
+        champion_query += " AND C.Kingdom = ?"
         params.append(kingdom)
     if category != 'all':
-        champion_query += " AND Category = ?"
+        champion_query += " AND C.Category = ?"
         params.append(category)
     if alphabetical == '1':
-        champion_query += " ORDER BY Name"
+        champion_query += " ORDER BY C.Name"
     else:
-        champion_query += " ORDER BY ID_Item_Type"  # Assuming this is the original order
+        champion_query += " ORDER BY C.ID"  # Assuming this is the original order
 
     # Execute the query with filters
     cursor.execute(champion_query, params)
@@ -135,7 +178,7 @@ def filter_champions():
     
     champions_list = [
         {
-            "ID_Item_Type": champ[0],
+            "ID": champ[0],
             "Name": champ[1],
             "BE_Price": champ[2],
             "Category": champ[3],
@@ -145,5 +188,4 @@ def filter_champions():
     ]
     
     return jsonify({"status": "success", "champions": champions_list})
-
 

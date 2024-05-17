@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             </div>
                             <div class="d-flex justify-content-between align-items-center">
                                 <p class="card-text mb-0" style="font-size: small;">Price: ${champion.BE_Price} BE</p>
-                                <button class="btn btn-primary" onclick="buyChampion('${champion.ID_Item_Type}', '${champion.BE_Price}')">Buy</button>
+                                <button class="btn btn-primary" onclick="buyChampion('${champion.ID}', '${champion.BE_Price}')">Buy</button>
                             </div>
                         </div>
                     </div>
@@ -75,6 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function buyChampion(championId, bePrice) {
+    console.log("Attempting to buy champion with ID:", championId, "and BE Price:", bePrice); // Log para depuração
     fetch('/buy_champion', {
         method: 'POST',
         headers: {
@@ -82,13 +83,34 @@ function buyChampion(championId, bePrice) {
         },
         body: JSON.stringify({ champion_id: championId, be_price: bePrice })
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log("Response status:", response.status); // Log para depuração
+        return response.json();
+    })
     .then(data => {
+        console.log("Response data:", data); // Log para depuração
         if (data.status === 'success') {
             alert(data.message);
             location.reload();
         } else {
             alert(data.message);
         }
+    })
+    .catch(error => {
+        console.error("Error during fetch:", error); // Log para depuração
     });
 }
+
+document.getElementById("logoutButton").addEventListener("click", function() {
+    fetch('/auth/logout')
+        .then(response => {
+            if (response.ok) {
+                window.location.href = '/auth/login';
+            }
+        });
+});
+
+
+
+
+
