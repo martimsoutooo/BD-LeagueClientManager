@@ -3,15 +3,12 @@ body {
     height: 100%;
     width: 100%;
     box-sizing: border-box;
-    overflow-y: auto;
-
+    overflow: hidden;
 }
 
 .logo-image {
     width: 240px;
-    /* Limit the width to 100 pixels */
     height: 140px;
-    /* Limit the height to 100 pixels */
 }
 
 .background {
@@ -24,20 +21,15 @@ body {
 
 .line {
     width: 140px;
-    /* Adjust width as necessary */
     height: 2px;
-    /* Thickness of the line */
     background-color: #ffffff;
-    /* Color of the line */
     margin: 0 10px;
-    /* Space between the text and the lines */
 }
 
 .welcome-section {
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* Centers the content vertically and horizontally */
     background: linear-gradient(to right, #24277F 0%, #059fff 90%);
     color: white;
     padding: 20px;
@@ -48,9 +40,7 @@ body {
 
 .filter-section {
     overflow-y: auto;
-    /* Enables scrolling if content overflows */
     height: 100%;
-    /* Full height for alignment with the divider */
 }
 
 .vertical-line {
@@ -61,26 +51,17 @@ body {
 
 .custom-size {
     width: 350px;
-    /* Sets the width to 150 pixels */
     height: 100px;
-    /* Sets the height to 50 pixels */
     font-size: 100px;
-    /* Optional: Adjust font size if needed */
     display: block;
-    /* Make sure buttons use full width for the hover effect */
     transition: all 0.3s ease-in-out;
-    /* Transition for smooth effect */
     margin: 5px;
-    /* Margin to separate buttons */
     border-radius: 5px;
-    /* Optional: rounded corners */
 }
 
 .custom-size:hover {
     background-color: #017BFF;
-    /* Lighter blue on hover */
     transform: scale(1.015);
-    /* Slightly enlarge the button on hover */
 }
 
 .welcome-text {
@@ -96,82 +77,87 @@ body {
 
 .btn-info {
     background-color: #059fff !important;
-    /* Ensures it overrides Bootstrap's default styling */
     border-color: #059fff !important;
-    /* Keeps the border the same color */
 }
 
 .stats-box {
-    background-color: #ffffff;  /* Light grey background */
-    overflow-y: auto;  /* Enables scrolling if content overflows */
-    border-radius: 4px;  /* Rounded corners */
-    padding: 10px 20px;  /* Padding inside the box */
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);  /* Subtle shadow for depth */
-    height: 100%;  /* Full height for alignment with the divider */
+    background-color: #ffffff;
+    overflow-y: auto;
+    border-radius: 4px;
+    padding: 10px 20px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    height: 100%;
     margin: 7px;
-    text-align: left;  /* Align text to the left */
-    display: flex;  /* Use flexbox */
-    justify-content: space-between;  /* Space between text and image */
-    align-items: center;  /* Center items vertically */
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .stats-box-rank {
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);  /* Subtle shadow for depth */
-    background-color: #fdca00;  /* Light grey background */
-    overflow-y: auto;  /* Enables scrolling if content overflows */
-    border-radius: 4px;  /* Rounded corners */
-    padding: 10px 20px;  /* Padding inside the box */
-    height: 100%;  /* Full height for alignment with the divider */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    background-color: #fdca00;
+    overflow-y: auto;
+    border-radius: 4px;
+    padding: 10px 20px;
+    height: 100%;
     margin: 7px;
-    text-align: left;  /* Align text to the left */
-    display: flex;  /* Use flexbox */
-    justify-content: space-between;  /* Space between text and image */
-    align-items: center;  /* Center items vertically */
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .stats-image {
-    width: 20px;  /* Adjust this as needed to make image 'shorter' */
-    height: auto;  /* Maintain aspect ratio */
-    flex-shrink: 0;  /* Prevent the image from shrinking */
+    width: 20px;
+    height: auto;
+    flex-shrink: 0;
 }
-
 
 .large-checkbox {
-    width: 20px;  /* Increasing the width */
-    height: 20px; /* Increasing the height */
-    cursor: pointer; /* Ensures it's clear the checkbox is clickable */
-    /* Optional: custom styling adjustments */
-    background-color: #fff; /* Change background if needed */
-    border-radius: 4px; /* Rounded corners for visual appeal */
-    border: 2px solid #ccc; /* Define border to make checkbox more defined */
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    background-color: #fff;
+    border-radius: 4px;
+    border: 2px solid #ccc;
 }
+
 .form-check-label {
-    margin-left: 10px; /* Extra spacing between checkbox and label */
-    vertical-align: middle; /* Align label text vertically with the larger checkbox */
-    line-height: 30px; /* Line height to match checkbox height */
+    margin-left: 10px;
+    vertical-align: middle;
+    line-height: 30px;
 }
 
 .stats-box h4 {
     margin: 0;
-    /* Remove default margin */
     color: #333;
-    /* Darker text for better readability */
     font-size: 20px;
-    /* Larger font size for emphasis */
 }
-
 
 .container {
     margin-top: 20px;
-    overflow-y: auto; /* Garante que o contêiner permite rolagem se necessário */
+    overflow-y: auto;
 }
 
-.card {
-    margin-bottom: 20px; /* Adiciona espaço entre os cards */
+/* Container for the fixed card */
+.card-container {
+    height: 100%;
+}
+
+/* Fixed card height and width */
+.fixed-card {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+/* Scrollable content within the card */
+.scrollable-content {
+    height:23rem; /* Adjust based on padding and other content */
+    overflow-y: auto;
 }
 
 .vh-100 {
-    height: auto !important; /* Override vh-100 */
+    height: auto !important;
 }
-
-

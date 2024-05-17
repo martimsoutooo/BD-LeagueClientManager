@@ -3,125 +3,187 @@
 {% block title %}Store{% endblock %}
 
 {% block content %}
-<div class="container my-5">
-    <div class="row align-items-center">
-        <div class="col-md-5 font-weight-bold" style="font-size: 80px;">
-            Store
-        </div>
-        <div class="col-md-2 stats-box">
-            Blue Essence: {{ user_be }}
-            <img src="https://server.blix.gg/imgproxy/nP7l6vA2EI8fTz4xs51FwU7acvVmJx2yR-Fo_iUmeHI/rs:fit:260:260:0/g:no/aHR0cDovL21pbmlvOjkwMDAvaW1hZ2VzLzQxM2I0ZTQzNzFjYjQxYTliMzQwNDJhNTBmNDg4NjVhLnBuZw.webp" alt="" class="stats-image">
-        </div>
-        <div class="col-md-2 stats-box">
-            Riot Points: {{ user_rp }}
-            <img src="https://www.nicepng.com/png/full/17-174865_free-lol-riot-points-riot-points.png" class="stats-image" alt="">
-        </div>
-    </div>
-    <div class="row mt-3">
-        <div class="col-md-2">
-            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                <a class="nav-link active" id="v-pills-champion-tab" data-toggle="pill" href="#v-pills-champion" role="tab" aria-controls="v-pills-champion" aria-selected="true">Champion</a>
-                <a class="nav-link" id="v-pills-skins-tab" data-toggle="pill" href="#v-pills-skins" role="tab" aria-controls="v-pills-skins" aria-selected="false">Skins</a>
-                <a class="nav-link" id="v-pills-chests-tab" data-toggle="pill" href="#v-pills-chests" role="tab" aria-controls="v-pills-chests" aria-selected="false">Chests</a>
-                <a class="nav-link" id="v-pills-wards-tab" data-toggle="pill" href="#v-pills-wards" role="tab" aria-controls="v-pills-wards" aria-selected="false">Wards</a>
+<div class="vh-100 d-flex align-items-center justify-content-center">
+    <div class="container">
+        <div class="row align-items-center pb-4">
+            <div class="font-weight-bold col-md-5" style="font-size: 80px;">
+                Store
+            </div>
+            <div class="col-md-2"></div>
+            <div class="col-md-2 stats-box">
+                Blue Essence: {{user_be}}
+                <img src="https://server.blix.gg/imgproxy/nP7l6vA2EI8fTz4xs51FwU7acvVmJx2yR-Fo_iUmeHI/rs:fit:260:260:0/g:no/aHR0cDovL21pbmlvOjkwMDAvaW1hZ2VzLzQxM2I0ZTQzNzFjYjQxYTliMzQwNDJhNTBmNDg4NjVhLnBuZw.webp"
+                    alt="" class="stats-image">
+            </div>
+            <div class="col-md-2 stats-box">
+                Riot Points: 1000
+                <img src="https://www.nicepng.com/png/full/17-174865_free-lol-riot-points-riot-points.png"
+                    class="stats-image" alt="">
             </div>
         </div>
-        <div class="col-md-10">
-            <div class="tab-content" id="v-pills-tabContent">
-                <div class="tab-pane fade show active" id="v-pills-champion" role="tabpanel" aria-labelledby="v-pills-champion-tab">
-                    <div class="filter-section p-3">
-                        <h4 class="pb-2">Filters</h4>
-                        <div class="form-check">
-                            <input class="form-check-input large-checkbox" type="checkbox" value="" id="check1">
-                            <label class="form-check-label" for="check1">
-                                Owned
-                            </label>
-                        </div>
-                        <div class="form-check pt-2">
-                            <input class="form-check-input large-checkbox" type="checkbox" value="" id="check2">
-                            <label class="form-check-label" for="check2">
-                                Alphabetical
-                            </label>
-                        </div>
-                        <div class="form-group pt-3">
-                            <label for="kingdomFilter">Kingdom:</label>
-                            <select class="form-control" id="kingdomFilter">
-                                <option value="all">All</option>
-                                <option value="demacia">Demacia</option>
-                                <option value="noxus">Noxus</option>
-                                <option value="freljord">Freljord</option>
-                                <option value="ionia">Ionia</option>
-                                <option value="bilgewater">Bilgewater</option>
-                                <option value="shadowIsles">Shadow Isles</option>
-                                <option value="shurima">Shurima</option>
-                                <option value="targon">Targon</option>
-                                <option value="zaun">Zaun</option>
-                                <option value="piltover">Piltover</option>
-                            </select>
-                        </div>
-                        <div class="form-group pt-2">
-                            <label for="Category">Category:</label>
-                            <select class="form-control" id="Category">
-                                <option value="all">All</option>
-                                <option value="tank">Tank</option>
-                                <option value="fighter">Fighter</option>
-                                <option value="mage">Mage</option>
-                                <option value="assassin">Assassin</option>
-                                <option value="marksman">Marksman</option>
-                                <option value="support">Support</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        {% for champion in champions %}
-                        <div class="col-md-4">
-                            <div class="card mb-4 shadow-sm">
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ champion.Name }}</h5>
-                                    <p class="card-text">Price: {{ champion.BE_Price }} BE</p>
-                                    <p class="card-text">Category: {{ champion.Category }}</p>
-                                    <p class="card-text">Kingdom: {{ champion.Kingdom }}</p>
-                                    <button class="btn btn-primary" onclick="buyChampion('{{ champion.ID_Item_Type }}', '{{ champion.BE_Price }}')">Buy</button>
+        <div class="row align-items-center mb-5" >
+            <div class="col-md-2">
+                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <h4 class="mb-3">Buy</h4> <!-- Added Header -->
+                    <a class="nav-link active" id="v-pills-champion-tab" data-toggle="pill" href="#v-pills-champion"
+                        role="tab" aria-controls="v-pills-champion" aria-selected="true">Champion</a>
+                    <a class="nav-link" id="v-pills-skins-tab" data-toggle="pill" href="#v-pills-skins" role="tab"
+                        aria-controls="v-pills-skins" aria-selected="false">Skins</a>
+                    <a class="nav-link" id="v-pills-wards-tab" data-toggle="pill" href="#v-pills-wards" role="tab"
+                        aria-controls="v-pills-wards" aria-selected="false">Wards</a>
+                    <a class="nav-link" id="v-pills-chests-tab" data-toggle="pill" href="#v-pills-chests" role="tab"
+                        aria-controls="v-pills-chests" aria-selected="false">Chests</a>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div class="shadow-sm rounded-lg w-100 card-container" ">
+                    <div class="row h-100">
+                        <div class="col-md-12">
+                            <div class="tab-content h-100" id="v-pills-tabContent">
+                                <!-- Champion Tab Content -->
+                                <div class="tab-pane fade show active h-100" id="v-pills-champion" role="tabpanel"
+                                    aria-labelledby="v-pills-champion-tab">
+                                    <div class="card h-100 fixed-card">
+                                        <div class="row h-100">
+                                            <div class="col-md-3 filter-section p-5">
+                                                <h5 class="pb-2">Filters</h5>
+                                                <div class="form-check pt-2">
+                                                    <input class="form-check-input large-checkbox" type="checkbox" value=""
+                                                        id="check2">
+                                                    <label class="form-check-label" for="check2">
+                                                        Alphabetical
+                                                    </label>
+                                                </div>
+                                                <div class="form-group pt-3">
+                                                    <label for="kingdomFilter">Kingdom:</label>
+                                                    <select class="form-control" id="kingdomFilter">
+                                                        <option value="all">All</option>
+                                                        <option value="demacia">Demacia</option>
+                                                        <option value="noxus">Noxus</option>
+                                                        <option value="freljord">Freljord</option>
+                                                        <option value="ionia">Ionia</option>
+                                                        <option value="bilgewater">Bilgewater</option>
+                                                        <option value="shadowIsles">Shadow Isles</option>
+                                                        <option value="shurima">Shurima</option>
+                                                        <option value="targon">Targon</option>
+                                                        <option value="zaun">Zaun</option>
+                                                        <option value="piltover">Piltover</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group pt-2">
+                                                    <label for="Category">Category:</label>
+                                                    <select class="form-control" id="Category">
+                                                        <option value="all">All</option>
+                                                        <option value="tank">Tank</option>
+                                                        <option value="fighter">Fighter</option>
+                                                        <option value="mage">Mage</option>
+                                                        <option value="assassin">Assassin</option>
+                                                        <option value="marksman">Marksman</option>
+                                                        <option value="support">Support</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-9 p-3" style="border-left: 1px solid #ddd;">
+                                                <div class="row scrollable-content">
+                                                    {% for champion in champions %}
+                                                    <div class="col-md-4">
+                                                        <div class="card mb-3 shadow-sm">
+                                                            <div class="card-body d-flex flex-column justify-content-between">
+                                                                <div>
+                                                                    <h5 class="card-title font-weight-bold">{{ champion.Name }}</h5>
+                                                                    <p class="card-text" style="margin-bottom: 0.2rem;">Category: {{ champion.Category }}</p>
+                                                                    <p class="card-text" style="margin-bottom: 1rem;">Kingdom: {{ champion.Kingdom }}</p>
+                                                                </div>
+                                                                <div class="d-flex justify-content-between align-items-center">
+                                                                    <p class="card-text mb-0" style="font-size: small;">Price: {{ champion.BE_Price }} BE</p>
+                                                                    <button class="btn btn-primary"
+                                                                        onclick="buyChampion('{{ champion.ID_Item_Type }}', '{{ champion.BE_Price }}')">Buy</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Other Tabs Content -->
+                                <div class="tab-pane fade h-100" id="v-pills-skins" role="tabpanel"
+                                    aria-labelledby="v-pills-skins-tab">
+                                    <!-- Skins content here -->
+                                    <div class="tab-pane fade show active h-100" id="v-pills-champion" role="tabpanel"
+                                    aria-labelledby="v-pills-champion-tab">
+                                    <div class="card h-100 fixed-card">
+                                        <div class="row h-100">
+                                            <div class="col-md-3 filter-section p-5">
+                                                <h5 class="pb-2">Filters</h5>
+                                                <div class="form-check pt-2">
+                                                    <input class="form-check-input large-checkbox" type="checkbox" value=""
+                                                        id="check2">
+                                                    <label class="form-check-label" for="check2">
+                                                        Alphabetical
+                                                    </label>
+                                                </div>
+                                                <div class="form-group pt-3">
+                                                    <label for="championFilter">Champion:</label>
+                                                    <select class="form-control" id="championFilter">
+                                                        <option value="all">All</option>
+                                                        <option value="garen">garen</option>
+                                                        <option value="darius">darius</option>
+                                                        <option value="ashe">ashe</option>
+                                                        <option value="lux">lux</option>
+                                                        <option value="zed">zed</option>
+                                                        <option value="ahri">ahri</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-9 p-3" style="border-left: 1px solid #ddd;">
+                                                <div class="row scrollable-content">
+                                                    {% for skin in skins %}
+                                                    <div class="col-md-4">
+                                                        <div class="card mb-3 shadow-sm">
+                                                            <div class="card-body d-flex flex-column justify-content-between">
+                                                                <div>
+                                                                    <h5 class="card-title font-weight-bold">{{ skin.Name }}</h5>
+                                                                    <p class="card-text" style="margin-bottom: 1rem;">Champion: {{ skin.Category }}</p>
+                                                                </div>
+                                                                <div class="d-flex justify-content-between align-items-center">
+                                                                    <p class="card-text mb-0" style="font-size: small;">Price: {{ Skin.RP_Price }} RP</p>
+                                                                    <button class="btn btn-primary"
+                                                                        onclick="buyChampion('{{ champion.ID_Item_Type }}', '{{ champion.BE_Price }}')">Buy</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                                <div class="tab-pane fade h-100" id="v-pills-chests" role="tabpanel"
+                                    aria-labelledby="v-pills-chests-tab">
+                                    <!-- Chests content here -->
+                                </div>
+                                <div class="tab-pane fade h-100" id="v-pills-wards" role="tabpanel"
+                                    aria-labelledby="v-pills-wards-tab">
+                                    <!-- Wards content here -->
                                 </div>
                             </div>
                         </div>
-                        {% endfor %}
+                        <div class="col-md-1">
+                            <div class="vertical-line"></div>
+                        </div>
                     </div>
-                </div>
-                <div class="tab-pane fade" id="v-pills-skins" role="tabpanel" aria-labelledby="v-pills-skins-tab">
-                    <!-- Conteúdo da aba de skins -->
-                </div>
-                <div class="tab-pane fade" id="v-pills-chests" role="tabpanel" aria-labelledby="v-pills-chests-tab">
-                    <!-- Conteúdo da aba de chests -->
-                </div>
-                <div class="tab-pane fade" id="v-pills-wards" role="tabpanel" aria-labelledby="v-pills-wards-tab">
-                    <!-- Conteúdo da aba de wards -->
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<script>
-    function buyChampion(championId, bePrice) {
-        fetch('/buy_champion', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ champion_id: championId, be_price: bePrice })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                alert(data.message);
-                location.reload();
-            } else {
-                alert(data.message);
-            }
-        });
-    }
-</script>
 {% endblock %}
 
 
