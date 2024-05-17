@@ -44,7 +44,7 @@ def fetch_champion_data():
     conn.close()
 
 def extract_kingdom_from_lore(lore):
-    possible_kingdoms = ['Demacia', 'Noxus', 'Freljord', 'Piltover', 'Zaun', 'Ionia', 'Shurima', 'Targon', 'Bilgewater', 'Shadow Isles']
+    possible_kingdoms = ['Demacia', 'Noxus', 'Freljord', 'Piltover', 'Zaun', 'Ionia', 'Shurima', 'Targon', 'Bilgewater', 'Shadow Isles', 'Unknown']
     for kingdom in possible_kingdoms:
         if kingdom in lore:
             return kingdom
