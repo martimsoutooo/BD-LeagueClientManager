@@ -13,11 +13,10 @@ def fetch_champion_data():
     champions_data = response.json()['data']
     
     for champion_key, champion_info in champions_data.items():
-        champion_id = int(champion_info['key'])
-        champion_name = champion_info['name']  # Define 'champion_name' fora do bloco if para acesso universal
+        champion_name = champion_info['name']
         
-        # Verifica se o campeão já está inserido na tabela Champion
-        cursor.execute("SELECT COUNT(*) FROM LCM.Champion WHERE ID_Item_Type = ?", (champion_id,))
+        # Verifica se o item já está inserido na tabela Item
+        cursor.execute("SELECT COUNT(*) FROM LCM.Item WHERE Name = ? AND Type = 'Champion'", (champion_name,))
         if cursor.fetchone()[0] == 0:
             first_tag = champion_info['tags'][0] if champion_info['tags'] else 'Unknown'
             
@@ -29,16 +28,16 @@ def fetch_champion_data():
             kingdom = extract_kingdom_from_lore(lore)
             be_price = 1350
             
-            # Insere em Item_Type se necessário
-            cursor.execute("SELECT COUNT(*) FROM LCM.Item_Type WHERE ID = ?", (champion_id,))
-            if cursor.fetchone()[0] == 0:
-                cursor.execute("INSERT INTO LCM.Item_Type (ID, Name, RP_Price) VALUES (?, ?, ?)",
-                               (champion_id, champion_name, None))
+            # Insere dados na tabela Item
+            cursor.execute("INSERT INTO LCM.Item (Name, Type, BE_Price) OUTPUT INSERTED.ID VALUES (?, 'Champion', ?)",
+                           (champion_name, be_price))
+            item_id = cursor.fetchone()[0]
             
             # Insere dados na tabela Champion
-            cursor.execute("INSERT INTO LCM.Champion (ID_Item_Type, Name, BE_Price, Category, Kingdom) VALUES (?, ?, ?, ?, ?)",
-                           (champion_id, champion_name, be_price, first_tag, kingdom))
+            cursor.execute("INSERT INTO LCM.Champion (ID, Name, BE_Price, Category, Kingdom) VALUES (?, ?, ?, ?, ?)",
+                           (item_id, champion_name, be_price, first_tag, kingdom))
             conn.commit()
+            print(f"Champion {champion_name} inserted successfully.")
         else:
             print(f"Champion {champion_name} already exists in the database.")
 
@@ -52,6 +51,10 @@ def extract_kingdom_from_lore(lore):
     return "Unknown"
 
 fetch_champion_data()
+
+
+
+
 
 
 
