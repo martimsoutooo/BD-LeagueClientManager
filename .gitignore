@@ -5,10 +5,6 @@ __pycache__/
 # Ambiente virtual
 venv/
 
-# Arquivos de banco de dados
-*.db
-*.sql
-
 # Arquivos de log
 *.log
 
