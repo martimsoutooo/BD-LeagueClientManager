@@ -158,6 +158,12 @@ body {
     overflow-y: auto;
 }
 
+/* Scrollable content within the card */
+.scrollable-content2 {
+    height:23rem; /* Adjust based on padding and other content */
+    overflow-y: auto;
+}
+
 .vh-100 {
     height: auto !important;
 }
