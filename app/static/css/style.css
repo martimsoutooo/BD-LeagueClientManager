@@ -167,3 +167,23 @@ body {
 .vh-100 {
     height: auto !important;
 }
+
+.checkbox-input {
+    display: none;
+}
+
+.card-checkbox {
+    cursor: pointer;
+    display: block;
+}
+
+.card-checkbox h5, .card-checkbox p {
+    margin: 0;
+}
+
+.checkbox-input:checked + .card-checkbox {
+    border: 2px solid #007bff;
+    background-color: #e9f7ff;
+    border-radius: 0.25rem;
+}
+

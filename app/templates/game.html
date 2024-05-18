@@ -14,20 +14,20 @@
                 </a>
                 Game
             </div>
-            <div class="col-md-2 ">
+            <div class="col-md-2">
             </div>
             <div class="col-md-2 stats-box">
                 Rank Points: {{ user_rank_points }}
             </div>
             <div class="col-md-2 stats-box-rank">
                 Rank: Unranked
-                <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/764bbd9c-6d80-481d-8136-96848f01e843/ddx6pbw-df50a375-a9ab-4ab9-acea-281c6ceab93f.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzc2NGJiZDljLTZkODAtNDgxZC04MTM2LTk2ODQ4ZjAxZTg0M1wvZGR4NnBidy1kZjUwYTM3NS1hOWFiLTRhYjktYWNlYS0yODFjNmNlYWI5M2YucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.UfunOvrkALQ0M1Aqb5Dxjh4Pap3JX906ptJFVLldlLA"  class="stats-image" alt="">
+                <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/764bbd9c-6d80-481d-8136-96848f01e843/ddx6pbw-df50a375-a9ab-4ab9-acea-281c6ceab93f.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzc2NGJiZDljLTZkODAtNDgxZC04MTM2LTk2ODQ4ZjAxZTg0M1wvZGR4NnBidy1kZjUwYTM3NS1hOWFiLTRhYjktYWNlYS0yODFjNmNlYWI5M2YucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.UfunOvrkALQ0M1Aqb5Dxjh4Pap3JX906ptJFVLldlLA" class="stats-image" alt="">
             </div>
         </div>
         <div class="row align-items-center mt-3">
             <div class="col-md-2">
                 <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                    <h4 class="mb-3">Item Selection  </h4> <!-- Added Header -->
+                    <h4 class="mb-3">Item Selection</h4>
                     <a class="nav-link active" id="v-pills-champion-tab" data-toggle="pill" href="#v-pills-champion" role="tab" aria-controls="v-pills-champion" aria-selected="true">Champion</a>
                     <a class="nav-link" id="v-pills-skins-tab" data-toggle="pill" href="#v-pills-skins" role="tab" aria-controls="v-pills-skins" aria-selected="false">Skin</a>
                     <a class="nav-link" id="v-pills-wards-tab" data-toggle="pill" href="#v-pills-wards" role="tab" aria-controls="v-pills-wards" aria-selected="false">Ward</a>
@@ -37,21 +37,39 @@
             <div class="col-md-10">
                 <div class="shadow-lg rounded-lg w-100" style="height: 26rem;">
                     <div class="row h-100">
-                        <div class="col-md-3">
+                        <div class="col-md-9">
                             <div class="tab-content" id="v-pills-tabContent">
                                 <div class="tab-pane fade show active" id="v-pills-champion" role="tabpanel" aria-labelledby="v-pills-champion-tab">
-                                    
+                                    <div class="row scrollable-content2">
+                                        <div class="col-md-4">
+                                            <div class="card mb-3 m-4">
+                                                <div class="card-body">
+                                                    <input type="checkbox" id="champion1" class="checkbox-input">
+                                                    <label for="champion1" class="card-checkbox">
+                                                        <h5 class="card-title">Zac</h5>
+                                                        <p class="card-text">Tank</p>
+                                                        <p class="card-text">Zaun</p>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="tab-pane fade" id="v-pills-skins" role="tabpanel" aria-labelledby="v-pills-skins-tab">
-                                    
+                                    <div class="card-body">
+                                        <input type="checkbox" id="champion1" class="checkbox-input">
+                                        <label for="champion1" class="card-checkbox">
+                                            <h5 class="card-title">Zac</h5>
+                                            <p class="card-text">Tank</p>
+                                            <p class="card-text">Zaun</p>
+                                        </label>
+                                    </div>
                                 </div>
-                               
                                 <div class="tab-pane fade" id="v-pills-wards" role="tabpanel" aria-labelledby="v-pills-wards-tab">
-                                    
+                                    <!-- Wards content here -->
                                 </div>
                             </div>
                         </div>
-                        
                     </div>
                 </div>
             </div>
@@ -59,3 +77,4 @@
     </div>
 </div>
 {% endblock %}
+

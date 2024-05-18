@@ -129,16 +129,18 @@ function buySkin(skinId, rpPrice) {
     });
 }
 
-
-
 document.getElementById("logoutButton").addEventListener("click", function() {
-    fetch('/auth/logout')
+    fetch('/logout')
         .then(response => {
             if (response.ok) {
-                window.location.href = '/auth/login';
+                window.location.href = '/login';
+            } else {
+                alert('Logout failed');
             }
         });
 });
+
+
 
 function purchaseRP() {
     const rpAmount = document.getElementById('rpAmount').value;
@@ -163,6 +165,23 @@ function purchaseRP() {
         console.error("Error during fetch:", error);
     });
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    const checkboxInputs = document.querySelectorAll('.checkbox-input');
+
+    checkboxInputs.forEach(input => {
+        input.addEventListener('change', function () {
+            if (this.checked) {
+                // Do something when the checkbox is checked
+                console.log('Checked:', this.id);
+            } else {
+                // Do something when the checkbox is unchecked
+                console.log('Unchecked:', this.id);
+            }
+        });
+    });
+});
+
 
 
 
