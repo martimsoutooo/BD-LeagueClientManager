@@ -33,10 +33,10 @@
                 Logout
             </div>
         </div>
-        <div class="row align-items-center mt-3">
+        <div class="row align-items-center mb-5">
             <div class="col-md-2">
                 <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                    <h4 class="mb-3">Inventory</h4> <!-- Added Header -->
+                    <h4 class="mb-3">Purchase</h4>
                     <a class="nav-link active" id="v-pills-champion-tab" data-toggle="pill" href="#v-pills-champion"
                         role="tab" aria-controls="v-pills-champion" aria-selected="true">Champion</a>
                     <a class="nav-link" id="v-pills-skins-tab" data-toggle="pill" href="#v-pills-skins" role="tab"
@@ -48,123 +48,101 @@
                 </div>
             </div>
             <div class="col-md-10">
-                <div class=" shadow-lg rounded-lg w-100" style="height: 26rem;">
+                <div class="shadow-sm rounded-lg w-100 card-container">
                     <div class="row h-100">
                         <div class="col-md-12">
-                            <div class="tab-content" id="v-pills-tabContent">
+                            <div class="tab-content h-100" id="v-pills-tabContent">
                                 <div class="tab-pane fade show active h-100" id="v-pills-champion" role="tabpanel" aria-labelledby="v-pills-champion-tab">
-                                    <div class="row mt-4 ml-4 mr-4 mb-4 scrollable-content">
-                                        {% for champion in champions %}
-                                        <div class="col-md-4">
-                                            <div class="card mb-3 shadow-sm">
-                                                <div class="card-body d-flex flex-column justify-content-between">
-                                                    <div>
-                                                        <h5 class="card-title font-weight-bold">{{ champion.Name }}</h5>
-                                                        <p class="card-text" style="margin-bottom: 0.2rem;">Category: {{ champion.Category }}</p>
-                                                        <p class="card-text" style="margin-bottom: 1rem;">Kingdom: {{ champion.Kingdom }}</p>
-                                                    </div>
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <p class="card-text mb-0" style="font-size: small;">Owned</p>
-                                                    </div>
+                                    <div class="card h-100 fixed-card">
+                                        <div class="row h-100">
+                                            <div class="col-md-3 filter-section p-5">
+                                                <h5 class="pb-2">Filters</h5>
+                                                <div class="form-check pt-2">
+                                                    <input class="form-check-input large-checkbox" type="checkbox" value="" id="alphabeticalFilter">
+                                                    <label class="form-check-label" for="alphabeticalFilter">Alphabetical</label>
+                                                </div>
+                                                <div class="form-group pt-3">
+                                                    <label for="kingdomFilter">Kingdom:</label>
+                                                    <select class="form-control" id="kingdomFilter">
+                                                        <option value="all">All</option>
+                                                        <option value="Demacia">Demacia</option>
+                                                        <option value="Noxus">Noxus</option>
+                                                        <option value="Ionia">Ionia</option>
+                                                        <option value="Freljord">Freljord</option>
+                                                        <option value="Targon">Targon</option>
+                                                        <option value="Bilgewater">Bilgewater</option>
+                                                        <option value="Shadow Isles">Shadow Isles</option>
+                                                        <option value="Shurima">Shurima</option>
+                                                        <option value="Zaun">Zaun</option>
+                                                        <option value="Piltover">Piltover</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group pt-2">
+                                                    <label for="categoryFilter">Category:</label>
+                                                    <select class="form-control" id="categoryFilter">
+                                                        <option value="all">All</option>
+                                                        <option value="Tank">Tank</option>
+                                                        <option value="Fighter">Fighter</option>
+                                                        <option value="Mage">Mage</option>
+                                                        <option value="Assassin">Assassin</option>
+                                                        <option value="Marksman">Marksman</option>
+                                                        <option value="Support">Support</option>
+                                                    </select>
                                                 </div>
                                             </div>
-                                        </div>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="v-pills-skins" role="tabpanel" aria-labelledby="v-pills-skins-tab">
-                                    <div class="filter-section p-5">
-                                        <h4 class="pb-2">Filters</h4>
-                                        <div class="form-check">
-                                            <input class="form-check-input large-checkbox" type="checkbox" value=""
-                                                id="check1">
-                                            <label class="form-check-label" for="check1">
-                                                Owned
-                                            </label>
-                                        </div>
-                                        <div class="form-check pt-2">
-                                            <input class="form-check-input large-checkbox" type="checkbox" value=""
-                                                id="check2">
-                                            <label class="form-check-label" for="check2">
-                                                Alphabetical
-                                            </label>
-                                        </div>
-                                        <div class="form-group pt-3">
-                                            <label for="championFilter">Champion:</label>
-                                            <select class="form-control" id="Champion">
-                                                <option value="all">All</option>
-                                                <option value="aatrox">Aatrox</option>
-                                                <option value="ahri">Ahri</option>
-                                                <option value="akali">Akali</option>
-                                                <option value="akshan">Akshan</option>
-                                                <option value="alistar">Alistar</option>
-                                                <option value="amumu">Amumu</option>
-                                                <option value="anivia">Anivia</option>
-                                                <option value="annie">Annie</option>
-                                                <option value="aphelios">Aphelios</option>
-                                                <option value="ashe">Ashe</option>
-                                                <option value="aurelionSol">Aurelion Sol</option>
-                                                <option value="azir">Azir</option>
-                                                <option value="bard">Bard</option>
-                                                <option value="blitzcrank">Blitzcrank</option>
-                                                <option value="brand">Brand</option>
-                                                <option value="braum">Braum</option>
-                                                <option value="caitlyn">Caitlyn</option>
-                                                <option value="camille">Camille</option>
-                                                <option value="cassiopeia">Cassiopeia</option>
-                                                <option value="chogath">Cho'Gath</option>
-                                                <option value="corki">Corki</option>
-                                                <option value="darius">Darius</option>
-                                                <option value="diana">Diana</option>
-                                                <option value="draven">Draven</option>
-                                                <option value="drmundo">Dr. Mundo</option>
-                                                <option value="ekko">Ekko</option>
-                                                <option value="elise">Elise</option>
-                                                <option value="evelynn">Evelynn</option>
-                                                <option value="ezreal">Ezreal</option>
-                                                <option value="fiddlesticks">Fiddlesticks</option>
-                                                <option value="fiora">Fiora</option>
-                                                <option value="fizz">Fizz</option>
-                                                <option value="galio">Galio</option>
-                                                <option value="gangplank">Gangplank</option>
-                                                <option value="garen">Garen</option>
-                                            </select>
+                                            <div class="col-md-9 p-3" style="border-left: 1px solid #ddd;">
+                                                {% for champion in champions %}
+                                                <div class="col-md-4">
+                                                    <div class="card mb-3">
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">{{ champion.Name }}</h5>
+                                                            <p class="card-text">Category: {{ champion.Category }}</p>
+                                                            <p class="card-text">Kingdom: {{ champion.Kingdom }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {% endfor %}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="v-pills-chests" role="tabpanel" aria-labelledby="v-pills-chests-tab">
-                                    <div class="filter-section p-5">
-                                        <h4 class="pb-2">Filters</h4>
-                                        <div class="form-group pt-3">
-                                            <label for="chestFilter">Type:</label>
-                                            <select class="form-control" id="chestFilter">
-                                                <option value="all">All</option>
-                                                <option value="masterwork">Masterwork</option>
-                                                <option value="hextech">Hextech</option>
-                                            </select>
+                                <div class="tab-pane fade h-100" id="v-pills-skins" role="tabpanel" aria-labelledby="v-pills-skins-tab">
+                                    <div class="card h-100 fixed-card">
+                                        <div class="row h-100">
+                                            <div class="col-md-3 filter-section p-5">
+                                                <h5 class="pb-2">Filters</h5>
+                                                <div class="form-check pt-2">
+                                                    <input class="form-check-input large-checkbox" type="checkbox" value="" id="alphabeticalFilter">
+                                                    <label class="form-check-label" for="alphabeticalFilter">Alphabetical</label>
+                                                </div>
+                                                <div class="form-group pt-3">
+                                                    <label for="championFilter">Champion:</label>
+                                                    <select class="form-control" id="championFilter">
+                                                        <option value="all">All</option>
+                                                        <option value="garen">garen</option>
+                                                        <option value="darius">darius</option>
+                                                        <option value="ashe">ashe</option>
+                                                        <option value="lux">lux</option>
+                                                        <option value="zed">zed</option>
+                                                        <option value="ahri">ahri</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9 p-3" style="border-left: 1px solid #ddd;">
+                                                <!-- <div class="row scrollable-content">
+                                                    {% for skin in skins %}
+                                                                                                       
+                                                    {% endfor %}
+                                                </div> -->
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="v-pills-wards" role="tabpanel" aria-labelledby="v-pills-wards-tab">
-                                    <div class="filter-section p-5">
-                                        <h4 class="pb-2">Filters</h4>
-                                        <div class="form-group pt-3">
-                                            <label for="wardFilter">Name:</label>
-                                            <select class="form-control" id="wardFilter">
-                                                <option value="all">All</option>
-                                                <option value="ward1">Ward 1</option>
-                                                <option value="ward2">Ward 2</option>
-                                                <option value="ward3">Ward 3</option>
-                                                <option value="ward4">Ward 4</option>
-                                                <option value="ward5">Ward 5</option>
-                                                <option value="ward6">Ward 6</option>
-                                                <option value="ward7">Ward 7</option>
-                                                <option value="ward8">Ward 8</option>
-                                                <option value="ward9">Ward 9</option>
-                                                <option value="ward10">Ward 10</option>
-                                            </select>
-                                        </div>
-                                    </div>
+                                <div class="tab-pane fade h-100" id="v-pills-chests" role="tabpanel" aria-labelledby="v-pills-chests-tab">
+                                    <!-- Chests content here -->
+                                </div>
+                                <div class="tab-pane fade h-100" id="v-pills-wards" role="tabpanel" aria-labelledby="v-pills-wards-tab">
+                                    <!-- Wards content here -->
                                 </div>
                             </div>
                         </div>
