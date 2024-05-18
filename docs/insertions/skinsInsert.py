@@ -1,5 +1,6 @@
 import requests
 import pyodbc
+import random
 
 def fetch_champion_data():
     # Estabelece conexão com o banco de dados
@@ -13,7 +14,10 @@ def fetch_champion_data():
     response = requests.get(champions_url)
     champions_data = response.json()['data']
     
-    for champion_key, champion_info in champions_data.items():
+    champions_list = list(champions_data.items())
+    random.shuffle(champions_list)
+    
+    for champion_key, champion_info in champions_list:
         champion_id = int(champion_info['key'])
         champion_name = champion_info['name']
         
@@ -35,7 +39,10 @@ def fetch_and_insert_skins(cursor, champion_key, item_id, version):
     response = requests.get(skins_url).json()
     skins_data = response['data'][champion_key]['skins']  # Obtém dados das skins
     
-    for skin in skins_data:
+    skins_list = list(skins_data)
+    random.shuffle(skins_list)
+    
+    for skin in skins_list:
         skin_id = int(skin['id'])
         name = skin['name']
         rp_price = 450  # RP_Price pré-definido como 450 para todas as skins
@@ -57,5 +64,3 @@ def fetch_and_insert_skins(cursor, champion_key, item_id, version):
             print(f"Skin {name} with ID {skin_id} already exists in the database.")
 
 fetch_champion_data()
-
-

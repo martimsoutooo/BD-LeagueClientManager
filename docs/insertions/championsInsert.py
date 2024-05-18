@@ -1,5 +1,6 @@
 import requests
 import pyodbc
+import random
 
 def fetch_champion_data():
     conn = pyodbc.connect('DRIVER={SQL Server};SERVER=localhost\\SQLEXPRESS;DATABASE=LeagueClientManager;Trusted_Connection=yes;')
@@ -12,7 +13,11 @@ def fetch_champion_data():
     response = requests.get(champions_url)
     champions_data = response.json()['data']
     
-    for champion_key, champion_info in champions_data.items():
+    # Convert the champions_data dictionary to a list and shuffle it
+    champions_list = list(champions_data.items())
+    random.shuffle(champions_list)
+    
+    for champion_key, champion_info in champions_list:
         champion_name = champion_info['name']
         
         # Verifica se o item já está inserido na tabela Item
@@ -51,13 +56,3 @@ def extract_kingdom_from_lore(lore):
     return "Unknown"
 
 fetch_champion_data()
-
-
-
-
-
-
-
-
-
-
