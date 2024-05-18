@@ -75,9 +75,13 @@ body {
     cursor: pointer;
 }
 
+.font-weight-bold a:hover {
+    color: #ffffff00; /* Changes color on hover */
+    text-decoration: underline; /* Adds underline on hover */
+}
+
 .btn-info {
-    background-color: #059fff !important;
-    border-color: #059fff !important;
+    background-color: #006fdd !important;
 }
 
 .stats-box {
