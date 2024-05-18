@@ -62,7 +62,8 @@ document.addEventListener('DOMContentLoaded', function () {
                                 <p class="card-text" style="margin-bottom: 1rem;">Kingdom: ${champion.Kingdom}</p>
                             </div>
                             <div class="d-flex justify-content-between align-items-center">
-                                <p class="card-text mb-0" style="font-size: small;">Price: ${champion.BE_Price} BE</p>
+                                <p class="card-text mb-0" style="font-size: small;">Price: ${champion.BE_Price} <img src="https://server.blix.gg/imgproxy/nP7l6vA2EI8fTz4xs51FwU7acvVmJx2yR-Fo_iUmeHI/rs:fit:260:260:0/g:no/aHR0cDovL21pbmlvOjkwMDAvaW1hZ2VzLzQxM2I0ZTQzNzFjYjQxYTliMzQwNDJhNTBmNDg4NjVhLnBuZw.webp"
+                                alt="" class="stats-image"></p>
                                 <button class="btn btn-primary" onclick="buyChampion('${champion.ID}', '${champion.BE_Price}')">Buy</button>
                             </div>
                         </div>
@@ -101,6 +102,35 @@ function buyChampion(championId, bePrice) {
     });
 }
 
+function buySkin(skinId, rpPrice) {
+    console.log("Attempting to buy skin with ID:", skinId, "and RP Price:", rpPrice); // Log para depuração
+    fetch('/buy_skin', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ skin_id: skinId, rp_price: rpPrice })  // Correção aqui
+    })
+    .then(response => {
+        console.log("Response status:", response.status); // Log para depuração
+        return response.json();
+    })
+    .then(data => {
+        console.log("Response data:", data); // Log para depuração
+        if (data.status === 'success') {
+            alert(data.message);
+            location.reload();
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        console.error("Error during fetch:", error); // Log para depuração
+    });
+}
+
+
+
 document.getElementById("logoutButton").addEventListener("click", function() {
     fetch('/auth/logout')
         .then(response => {
@@ -109,6 +139,31 @@ document.getElementById("logoutButton").addEventListener("click", function() {
             }
         });
 });
+
+function purchaseRP() {
+    const rpAmount = document.getElementById('rpAmount').value;
+    
+    fetch('/purchase_rp', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ rp_amount: rpAmount })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert(data.message);
+            location.reload();
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        console.error("Error during fetch:", error);
+    });
+}
+
 
 
 

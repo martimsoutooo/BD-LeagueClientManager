@@ -24,7 +24,19 @@ def dashboard():
 
 @main_bp.route('/game')
 def game():
-    return render_template('game.html')
+    user_id = session.get('user_id')
+    if not user_id:
+        print("User ID not found in session")
+        return redirect(url_for('auth.login'))
+    
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute("SELECT Rank_Points, RP FROM LCM.[User] WHERE ID = ?", (user_id,))
+    user_data = cursor.fetchone()
+    user_rank_points = user_data[0]
+
+    return render_template('game.html', user_rank_points=user_rank_points)
 
 @main_bp.route('/profile')
 def profile():
@@ -101,10 +113,12 @@ def store():
     skins = cursor.fetchall()
 
     # Fetch user's balance
-    cursor.execute("SELECT BE FROM LCM.[User] WHERE ID = ?", (user_id,))
-    user_be = cursor.fetchone()[0]
+    cursor.execute("SELECT BE,RP FROM LCM.[User] WHERE ID = ?", (user_id,))
+    user_data = cursor.fetchone()
+    user_be = user_data[0]
+    user_rp = user_data[1]
     
-    return render_template('store.html', champions=champions, skins=skins, user_be=user_be)
+    return render_template('store.html', champions=champions, skins=skins, user_be=user_be, user_rp=user_rp)
 
 @main_bp.route('/buy_champion', methods=['POST'])
 def buy_champion():
@@ -188,4 +202,58 @@ def filter_champions():
     ]
     
     return jsonify({"status": "success", "champions": champions_list})
+
+@main_bp.route('/purchase_rp', methods=['POST'])
+def purchase_rp():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({"status": "error", "message": "Not logged in"}), 401
+    
+    data = request.get_json()
+    rp_amount = data.get('rp_amount')
+    
+    if not rp_amount or int(rp_amount) <= 0:
+        return jsonify({"status": "error", "message": "Invalid amount"}), 400
+    
+    db = get_db()
+    cursor = db.cursor()
+    
+    # Atualiza o saldo de RP do usuário
+    cursor.execute("UPDATE LCM.[User] SET RP = RP + ? WHERE ID = ?", (rp_amount, user_id))
+    db.commit()
+    
+    return jsonify({"status": "success", "message": f"{rp_amount} RP added successfully"})
+
+@main_bp.route('/buy_skin', methods=['POST'])
+def buy_skin():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({"status": "error", "message": "Not logged in"}), 401
+    
+    data = request.get_json()
+    skin_id = data.get('skin_id')
+    rp_price = data.get('rp_price')
+    
+    print(f"Received skin_id: {skin_id}, rp_price: {rp_price}")  # Log para depuração
+    
+    if not skin_id or not rp_price:
+        return jsonify({"status": "error", "message": "Invalid skin ID or RP price"}), 400
+    
+    db = get_db()
+    cursor = db.cursor()
+    
+    cursor.execute("SELECT RP FROM LCM.[User] WHERE ID = ?", (user_id,))
+    user_rp = cursor.fetchone()[0]
+    
+    if user_rp >= int(rp_price):
+        cursor.execute("UPDATE LCM.[User] SET RP = RP - ? WHERE ID = ?", (rp_price, user_id))
+        cursor.execute("INSERT INTO LCM.User_Item (ID_User, ID_Item, Data, Hora) VALUES (?, ?, GETDATE(), GETDATE())", (user_id, skin_id))
+        db.commit()
+        return jsonify({"status": "success", "message": "Skin purchased successfully"})
+    else:
+        return jsonify({"status": "error", "message": "Not enough Riot Points"}), 400
+
+
+
+
 
