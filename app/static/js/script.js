@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const kingdomFilter = document.getElementById('kingdomFilter');
     const categoryFilter = document.getElementById('categoryFilter');
 
-    // Set filters based on URL parameters
     setFiltersFromUrl();
 
     alphabeticalFilter.addEventListener('change', applyFilters);
@@ -44,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
         kingdomFilter.value = selectedKingdom;
         categoryFilter.value = selectedCategory;
 
-        applyFilters();  // Fetch initial data based on URL parameters
+        applyFilters();
     }
 
     function updateChampionList(champions) {
@@ -76,47 +75,43 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function buyChampion(championId, bePrice) {
-    console.log("Attempting to buy champion with ID:", championId, "and BE Price:", bePrice); // Log para depuração
-    fetch('/buy_champion', {
+    console.log("Attempting to buy champion with ID:", championId, "and BE Price:", bePrice);
+    fetch('/buy_champion_route', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({ champion_id: championId, be_price: bePrice })
     })
-    .then(response => {
-        console.log("Response status:", response.status); // Log para depuração
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
-        console.log("Response data:", data); // Log para depuração
+        console.log("Response data:", data);
         if (data.status === 'success') {
             alert(data.message);
             location.reload();
+            console.log("cheguei aqui")
         } else {
+            console.log("estou aqui")
             alert(data.message);
         }
     })
     .catch(error => {
-        console.error("Error during fetch:", error); // Log para depuração
+        console.error("Error during fetch:", error);
     });
 }
 
 function buySkin(skinId, rpPrice) {
-    console.log("Attempting to buy skin with ID:", skinId, "and RP Price:", rpPrice); // Log para depuração
+    console.log("Attempting to buy skin with ID:", skinId, "and RP Price:", rpPrice);
     fetch('/buy_skin', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ skin_id: skinId, rp_price: rpPrice })  // Correção aqui
+        body: JSON.stringify({ skin_id: skinId, rp_price: rpPrice })
     })
-    .then(response => {
-        console.log("Response status:", response.status); // Log para depuração
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
-        console.log("Response data:", data); // Log para depuração
+        console.log("Response data:", data);
         if (data.status === 'success') {
             alert(data.message);
             location.reload();
@@ -125,7 +120,7 @@ function buySkin(skinId, rpPrice) {
         }
     })
     .catch(error => {
-        console.error("Error during fetch:", error); // Log para depuração
+        console.error("Error during fetch:", error);
     });
 }
 
@@ -140,11 +135,9 @@ document.getElementById("logoutButton").addEventListener("click", function() {
         });
 });
 
-
-
 function purchaseRP() {
     const rpAmount = document.getElementById('rpAmount').value;
-    
+
     fetch('/purchase_rp', {
         method: 'POST',
         headers: {
@@ -172,15 +165,15 @@ document.addEventListener('DOMContentLoaded', function () {
     checkboxInputs.forEach(input => {
         input.addEventListener('change', function () {
             if (this.checked) {
-                // Do something when the checkbox is checked
                 console.log('Checked:', this.id);
             } else {
-                // Do something when the checkbox is unchecked
                 console.log('Unchecked:', this.id);
             }
         });
     });
 });
+
+
 
 
 
