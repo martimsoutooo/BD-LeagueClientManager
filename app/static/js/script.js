@@ -102,7 +102,7 @@ function buyChampion(championId, bePrice) {
 
 function buySkin(skinId, rpPrice) {
     console.log("Attempting to buy skin with ID:", skinId, "and RP Price:", rpPrice);
-    fetch('/buy_skin', {
+    fetch('/buy_skin_route', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

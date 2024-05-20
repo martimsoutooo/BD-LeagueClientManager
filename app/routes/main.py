@@ -127,7 +127,7 @@ def buy_champion_route():
     print(jsonify(result))
     return jsonify(result)
 
-@main_bp.route('/buy_skin', methods=['POST'])
+@main_bp.route('/buy_skin_route', methods=['POST'])
 def buy_skin_route():
     user_id = session.get('user_id')
     if not user_id:

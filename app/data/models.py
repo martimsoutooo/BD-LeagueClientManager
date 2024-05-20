@@ -32,21 +32,9 @@ def buy_champion(user_id, champion_id, be_price):
     db = get_db()
     cursor = db.cursor()
 
-    print(user_id)
-    print(champion_id)
-    print(be_price)
-
-    print(user_id)
-    print(champion_id)
-    print(be_price)
-
-    # Execute the stored procedure and fetch the result
     cursor.execute("EXEC BuyChampion ?, ?, ?", (user_id, champion_id, be_price))
     result = cursor.fetchone()
-    
     db.commit()
-    # Add logs for debugging
-    print("Stored procedure result:", result)
     
     # Check if the result is not None and if it has 'Result' and 'Message' attributes
     if result and hasattr(result, 'Result') and hasattr(result, 'Message'):
@@ -61,11 +49,9 @@ def buy_champion(user_id, champion_id, be_price):
 def buy_skin(user_id, skin_id, rp_price):
     db = get_db()
     cursor = db.cursor()
-    result = cursor.execute("""
-        DECLARE @Result NVARCHAR(255);
-        EXEC BuySkin ?, ?, ?, @Result OUTPUT;
-        SELECT @Result AS Result
-    """, user_id, skin_id, rp_price).fetchone()
+    result = cursor.execute("EXEC BuySkin ?, ?, ?,", (user_id, skin_id, rp_price))
+    result.fetchone()
+    db.commit()
 
     if result:
         return {"status": "success", "message": result.Result}
