@@ -1,15 +1,8 @@
 CREATE PROCEDURE VerifyUser
-    @Username NVARCHAR(255),
-    @Password NVARCHAR(255)
+    @Name NVARCHAR(50),
+    @Password NVARCHAR(100)
 AS
 BEGIN
-    SET NOCOUNT ON;
-    DECLARE @HashedPassword NVARCHAR(255);
-
-    SET @HashedPassword = CONVERT(NVARCHAR(255), HASHBYTES('SHA2_256', @Password), 2);
-
-    SELECT *
-    FROM LCM.[User]
-    WHERE Name = @Username AND Password = @HashedPassword;
+    SELECT * FROM LCM.[User]
+    WHERE Name = @Name AND Password = dbo.HashPassword(@Password);
 END;
-GO

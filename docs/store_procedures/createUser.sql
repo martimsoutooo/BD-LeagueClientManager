@@ -1,14 +1,9 @@
 CREATE PROCEDURE CreateUser
-    @Username NVARCHAR(50),
-    @Email NVARCHAR(50),
-    @Password NVARCHAR(50)
+    @Name NVARCHAR(50),
+    @Email NVARCHAR(100),
+    @Password NVARCHAR(100)
 AS
 BEGIN
-    DECLARE @HashedPassword NVARCHAR(256);
-    SET @HashedPassword = HASHBYTES('SHA2_256', @Password); 
-
     INSERT INTO LCM.[User] (Name, Email, Password)
-    VALUES (@Username, @Email, @HashedPassword);
-
-    RETURN SCOPE_IDENTITY();
+    VALUES (@Name, @Email, dbo.HashPassword(@Password));
 END;

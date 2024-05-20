@@ -15,4 +15,4 @@ BEGIN
         SELECT 'Error' AS Result, 'Invalid amount' AS Message;
     END
 END;
-GO
+

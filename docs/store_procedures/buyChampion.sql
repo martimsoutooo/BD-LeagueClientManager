@@ -22,4 +22,4 @@ BEGIN
         SELECT 'Error' AS Result, 'Not enough Blue Essence' AS Message;
     END
 END;
-GO
+
