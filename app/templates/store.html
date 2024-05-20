@@ -15,7 +15,7 @@
                 Store
             </div>
             <div class="col-md-2 stats-box">
-                Blue Essence: {{user_be}}
+                Blue Essence: {{ user_be }}
                 <img src="https://server.blix.gg/imgproxy/nP7l6vA2EI8fTz4xs51FwU7acvVmJx2yR-Fo_iUmeHI/rs:fit:260:260:0/g:no/aHR0cDovL21pbmlvOjkwMDAvaW1hZ2VzLzQxM2I0ZTQzNzFjYjQxYTliMzQwNDJhNTBmNDg4NjVhLnBuZw.webp"
                     alt="" class="stats-image">
             </div>
@@ -166,7 +166,7 @@
                                                                 </div>
                                                                 <div class="d-flex justify-content-between align-items-center">
                                                                     <p class="card-text mb-0" style="font-size: small;">Price: {{ skin.rp_price }} <img src="https://www.nicepng.com/png/full/17-174865_free-lol-riot-points-riot-points.png" class="stats-image" alt=""></p>
-                                                                    <button class="btn btn-primary" onclick="buySkin('{{ skin.id }}', '{{ skin.rp_price }}')">Buy</button>
+                                                                    <button class="btn btn-primary" onclick="buySkin('{{ skin.ID }}', '{{ skin.rp_price }}')">Buy</button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -195,4 +195,5 @@
     </div>
 </div>
 {% endblock %}
+
 

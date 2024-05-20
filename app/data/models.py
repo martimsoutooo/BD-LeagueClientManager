@@ -31,32 +31,27 @@ def verify_user(username, password):
 def buy_champion(user_id, champion_id, be_price):
     db = get_db()
     cursor = db.cursor()
-
     cursor.execute("EXEC BuyChampion ?, ?, ?", (user_id, champion_id, be_price))
     result = cursor.fetchone()
     db.commit()
     
-    # Check if the result is not None and if it has 'Result' and 'Message' attributes
-    if result and hasattr(result, 'Result') and hasattr(result, 'Message'):
-        if result.Result == 'Success':
-            return {"status": "success", "message": result.Message}
-        else:
-            return {"status": "error", "message": result.Message}
+    if result and result.Result == 'Success':
+        return {"status": "success", "message": result.Message}
     else:
-        return {"status": "error", "message": "An error occurred"}
-    
+        return {"status": "error", "message": result.Message}
 
 def buy_skin(user_id, skin_id, rp_price):
     db = get_db()
     cursor = db.cursor()
-    result = cursor.execute("EXEC BuySkin ?, ?, ?,", (user_id, skin_id, rp_price))
-    result.fetchone()
+    cursor.execute("EXEC BuySkin ?, ?, ?", (user_id, skin_id, rp_price))
+    result = cursor.fetchone()
     db.commit()
 
-    if result:
-        return {"status": "success", "message": result.Result}
+    if result and result.Result == 'Success':
+        return {"status": "success", "message": result.Message}
     else:
-        return {"status": "error", "message": "An error occurred"}
+        return {"status": "error", "message": result.Message}
+
 
 
 def get_user_balance(user_id):

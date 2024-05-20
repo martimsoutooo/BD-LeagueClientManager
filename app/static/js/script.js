@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function updateChampionList(champions) {
-        const championContainer = document.querySelector('.scrollable-content');
+        const championContainer = document.querySelector('.scrollable-content2');
         championContainer.innerHTML = '';
 
         champions.forEach(champion => {
@@ -86,17 +86,14 @@ function buyChampion(championId, bePrice) {
     .then(response => response.json())
     .then(data => {
         console.log("Response data:", data);
+        alert(data.message);
         if (data.status === 'success') {
-            alert(data.message);
-            location.reload();
-            console.log("cheguei aqui")
-        } else {
-            console.log("estou aqui")
-            alert(data.message);
+            location.reload();  // Recarrega a página após compra bem-sucedida
         }
     })
     .catch(error => {
         console.error("Error during fetch:", error);
+        alert("An error occurred while processing your request.");
     });
 }
 
@@ -112,15 +109,14 @@ function buySkin(skinId, rpPrice) {
     .then(response => response.json())
     .then(data => {
         console.log("Response data:", data);
+        alert(data.message);
         if (data.status === 'success') {
-            alert(data.message);
-            location.reload();
-        } else {
-            alert(data.message);
+            location.reload();  // Recarrega a página após compra bem-sucedida
         }
     })
     .catch(error => {
         console.error("Error during fetch:", error);
+        alert("An error occurred while processing your request.");
     });
 }
 
@@ -172,6 +168,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
 
 
 

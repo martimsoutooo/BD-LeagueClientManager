@@ -60,8 +60,23 @@ def profile():
     WHERE UI.ID_User = ?
     """, (user_id,))
     champions = cursor.fetchall()
+
+    cursor.execute("""
+    SELECT S.ID, S.Name AS skin, C.Name AS championName
+    FROM LCM.Skin S
+    JOIN LCM.Champion C ON S.Champion_ID = C.ID
+    JOIN LCM.User_Item UI ON S.ID = UI.ID_Item
+    WHERE UI.ID_User = ?
+    """, (user_id,))
+    skins = cursor.fetchall()
+
+    print("Champions:", champions)  # Debugging
+    print("Skins:", skins)  # Debugging
     
-    return render_template('profile.html', user_be=user_be, user_rp=user_rp, champions=champions)
+    return render_template('profile.html', champions=champions, skins=skins,user_be=user_be, user_rp=user_rp)
+
+
+
 
 @main_bp.route('/store')
 def store():
@@ -105,11 +120,22 @@ def store():
 
     cursor.execute(champion_query, params)
     champions = cursor.fetchall()
-    
-    cursor.execute("SELECT LCM.Skin.Name as skin, LCM.Champion.Name as champion, LCM.Skin.RP_Price as rp_price FROM LCM.Skin JOIN LCM.Champion ON LCM.Skin.Champion_ID = LCM.Champion.ID")
+
+    skin_query = """
+    SELECT S.ID, S.Name AS skin, C.Name AS champion, S.RP_Price as rp_price
+    FROM LCM.Skin S
+    JOIN LCM.Champion C ON S.Champion_ID = C.ID
+    WHERE S.ID NOT IN (
+        SELECT UI.ID_Item
+        FROM LCM.User_Item UI
+        WHERE UI.ID_User = ?
+    )
+    """
+    cursor.execute(skin_query, [user_id])
     skins = cursor.fetchall()
 
     return render_template('store.html', champions=champions, skins=skins, user_be=user_be, user_rp=user_rp)
+
 
 @main_bp.route('/buy_champion_route', methods=['POST'])
 def buy_champion_route():
