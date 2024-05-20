@@ -122,12 +122,8 @@ def buy_champion_route():
     data = request.get_json()
     champion_id = data.get('champion_id')
     be_price = data.get('be_price')
-
-    print(user_id)
-    print(be_price)
-    print(champion_id)
     
-    result = buy_champion(user_id, champion_id, be_price)
+    result = buy_champion(user_id, int(champion_id), int(be_price))
     print(jsonify(result))
     return jsonify(result)
 

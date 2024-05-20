@@ -31,11 +31,20 @@ def verify_user(username, password):
 def buy_champion(user_id, champion_id, be_price):
     db = get_db()
     cursor = db.cursor()
-    
+
+    print(user_id)
+    print(champion_id)
+    print(be_price)
+
+    print(user_id)
+    print(champion_id)
+    print(be_price)
+
     # Execute the stored procedure and fetch the result
     cursor.execute("EXEC BuyChampion ?, ?, ?", (user_id, champion_id, be_price))
     result = cursor.fetchone()
     
+    db.commit()
     # Add logs for debugging
     print("Stored procedure result:", result)
     
