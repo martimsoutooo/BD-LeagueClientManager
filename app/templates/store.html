@@ -15,7 +15,7 @@
                 Store
             </div>
             <div class="col-md-2 stats-box">
-                Blue Essence: {{ user_be }}
+                Blue Essence: {{user_be}}
                 <img src="https://server.blix.gg/imgproxy/nP7l6vA2EI8fTz4xs51FwU7acvVmJx2yR-Fo_iUmeHI/rs:fit:260:260:0/g:no/aHR0cDovL21pbmlvOjkwMDAvaW1hZ2VzLzQxM2I0ZTQzNzFjYjQxYTliMzQwNDJhNTBmNDg4NjVhLnBuZw.webp"
                     alt="" class="stats-image">
             </div>
@@ -69,6 +69,7 @@
                     <div class="row h-100">
                         <div class="col-md-12">
                             <div class="tab-content h-100" id="v-pills-tabContent">
+                                <!-- Champions -->
                                 <div class="tab-pane fade show active h-100" id="v-pills-champion" role="tabpanel" aria-labelledby="v-pills-champion-tab">
                                     <div class="card h-100 fixed-card">
                                         <div class="row h-100">
@@ -119,7 +120,7 @@
                                                                     <p class="card-text" style="margin-bottom: 1rem;">Kingdom: {{ champion.Kingdom }}</p>
                                                                 </div>
                                                                 <div class="d-flex justify-content-between align-items-center">
-                                                                    <p class="card-text mb-0" style="font-size: small;">Price: {{ champion.BE_Price }}<img src="https://server.blix.gg/imgproxy/nP7l6vA2EI8fTz4xs51FwU7acvVmJx2yR-Fo_iUmeHI/rs:fit:260:260:0/g:no/aHR0cDovL21pbmlvOjkwMDAvaW1hZ2VzLzQxM2I0ZTQzNzFjYjQxYTliMzQwNDJhNTBmNDg4NjVhLnBuZw.webp"
+                                                                    <p class="card-text mb-0" style="font-size: small;">Price: {{ champion.BE_Price }} <img src="https://server.blix.gg/imgproxy/nP7l6vA2EI8fTz4xs51FwU7acvVmJx2yR-Fo_iUmeHI/rs:fit:260:260:0/g:no/aHR0cDovL21pbmlvOjkwMDAvaW1hZ2VzLzQxM2I0ZTQzNzFjYjQxYTliMzQwNDJhNTBmNDg4NjVhLnBuZw.webp"
                                                                         alt="" class="stats-image"></p>
                                                                     <button class="btn btn-primary" onclick="buyChampion('{{ champion.ID }}','{{champion.BE_Price}}')">Buy</button>
                                                                 </div>
@@ -132,6 +133,8 @@
                                         </div>
                                     </div>
                                 </div>
+                                
+                                <!-- Skins -->
                                 <div class="tab-pane fade h-100" id="v-pills-skins" role="tabpanel" aria-labelledby="v-pills-skins-tab">
                                     <div class="card h-100 fixed-card">
                                         <div class="row h-100">
@@ -162,7 +165,7 @@
                                                             <div class="card-body d-flex flex-column justify-content-between">
                                                                 <div>
                                                                     <h5 class="card-title font-weight-bold">{{ skin.skin }}</h5>
-                                                                    <p class="card-text" style="margin-bottom: 1rem;">Champion: {{ skin.champion }}</p>
+                                                                    <p class="card-text" style="margin-bottom: 0.2rem;">Champion: {{ skin.champion }}</p>
                                                                 </div>
                                                                 <div class="d-flex justify-content-between align-items-center">
                                                                     <p class="card-text mb-0" style="font-size: small;">Price: {{ skin.rp_price }} <img src="https://www.nicepng.com/png/full/17-174865_free-lol-riot-points-riot-points.png" class="stats-image" alt=""></p>
@@ -170,19 +173,82 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>                                                    
+                                                    </div>
                                                     {% endfor %}
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade h-100" id="v-pills-chests" role="tabpanel" aria-labelledby="v-pills-chests-tab">
-                                    <!-- Chests content here -->
-                                </div>
+                                
+                                <!-- Wards -->
                                 <div class="tab-pane fade h-100" id="v-pills-wards" role="tabpanel" aria-labelledby="v-pills-wards-tab">
-                                    <!-- Wards content here -->
+                                    <div class="card h-100 fixed-card">
+                                        <div class="row h-100">
+                                            <div class="col-md-3 filter-section p-5">
+                                                <h5 class="pb-2">Filters</h5>
+                                                <div class="form-check pt-2">
+                                                    <input class="form-check-input large-checkbox" type="checkbox" value="" id="alphabeticalFilter">
+                                                    <label class="form-check-label" for="alphabeticalFilter">Alphabetical</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9 p-3" style="border-left: 1px solid #ddd;">
+                                                <div class="row scrollable-content">
+                                                    {% for ward in wards %}
+                                                    <div class="col-md-4">
+                                                        <div class="card mb-3 shadow-sm">
+                                                            <div class="card-body d-flex flex-column justify-content-between">
+                                                                <div>
+                                                                    <h5 class="card-title font-weight-bold">{{ ward.Name }}</h5>
+                                                                </div>
+                                                                <div class="d-flex justify-content-between align-items-center">
+                                                                    <p class="card-text mb-0" style="font-size: small;">Price: {{ ward.rp_price }} <img src="https://www.nicepng.com/png/full/17-174865_free-lol-riot-points-riot-points.png" class="stats-image" alt=""></p>
+                                                                    <button class="btn btn-primary" onclick="buyWard('{{ ward.ID }}', '{{ ward.rp_price }}')">Buy</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+                                
+                                <!-- Chests -->
+                                <div class="tab-pane fade h-100" id="v-pills-chests" role="tabpanel" aria-labelledby="v-pills-chests-tab">
+                                    <div class="card h-100 fixed-card">
+                                        <div class="row h-100">
+                                            <div class="col-md-3 filter-section p-5">
+                                                <h5 class="pb-2">Filters</h5>
+                                                <div class="form-check pt-2">
+                                                    <input class="form-check-input large-checkbox" type="checkbox" value="" id="alphabeticalFilter">
+                                                    <label class="form-check-label" for="alphabeticalFilter">Alphabetical</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9 p-3" style="border-left: 1px solid #ddd;">
+                                                <div class="row scrollable-content">
+                                                    {% for chest in chests %}
+                                                    <div class="col-md-4">
+                                                        <div class="card mb-3 shadow-sm">
+                                                            <div class="card-body d-flex flex-column justify-content-between">
+                                                                <div>
+                                                                    <h5 class="card-title font-weight-bold">{{ chest.Name }}</h5>
+                                                                </div>
+                                                                <div class="d-flex justify-content-between align-items-center">
+                                                                    <p class="card-text mb-0" style="font-size: small;">Price: {{ chest.rp_price }} <img src="https://www.nicepng.com/png/full/17-174865_free-lol-riot-points-riot-points.png" class="stats-image" alt=""></p>
+                                                                    <button class="btn btn-primary" onclick="buyChest('{{ chest.ID }}', '{{ chest.rp_price }}')">Buy</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
                             </div>
                         </div>
                         <div class="col-md-1">
@@ -195,5 +261,6 @@
     </div>
 </div>
 {% endblock %}
+
 
 

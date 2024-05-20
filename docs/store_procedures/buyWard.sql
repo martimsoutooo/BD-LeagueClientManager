@@ -1,6 +1,6 @@
-CREATE PROCEDURE BuySkin
+CREATE PROCEDURE BuyWard
     @UserID INT,
-    @SkinID INT,
+    @WardID INT,
     @RPCost INT
 AS
 BEGIN
@@ -13,12 +13,13 @@ BEGIN
     BEGIN
         UPDATE LCM.[User] SET RP = RP - @RPCost WHERE ID = @UserID;
         INSERT INTO LCM.User_Item (ID_User, ID_Item, Data, Hora)
-        VALUES (@UserID, @SkinID, GETDATE(), CONVERT(VARCHAR, GETDATE(), 108)); -- Corrige a inserção de Data e Hora
+        VALUES (@UserID, @WardID, GETDATE(), GETDATE());
 
-        SELECT 'Success' AS Result, 'Skin purchased successfully' AS Message;
+        SELECT 'Success' AS Result, 'Ward purchased successfully' AS Message;
     END
     ELSE
     BEGIN
         SELECT 'Error' AS Result, 'Not enough Riot Points' AS Message;
     END
 END;
+GO

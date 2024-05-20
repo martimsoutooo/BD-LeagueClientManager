@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify, session, redirect, url_for
-from ..data.models import buy_champion, buy_skin, get_user_balance
+from ..data.models import buy_champion, buy_skin, get_user_balance, buy_ward, buy_chest
 from ..data.database import get_db
 
 main_bp = Blueprint('main', __name__)
@@ -70,10 +70,27 @@ def profile():
     """, (user_id,))
     skins = cursor.fetchall()
 
+    cursor.execute("""
+    SELECT W.ID, W.Name AS ward
+    FROM LCM.Ward W
+    JOIN LCM.User_Item UI ON W.ID = UI.ID_Item
+    WHERE UI.ID_User = ?
+    """, (user_id,))
+    wards = cursor.fetchall()
+
+    cursor.execute("""
+    SELECT CH.ID , I.Name AS chest
+    FROM LCM.Chest CH
+    JOIN LCM.User_Item UI ON CH.ID = UI.ID_Item
+    JOIN LCM.Item I ON CH.ID = I.ID
+    WHERE UI.ID_User = ?
+    """, (user_id,))
+    chests = cursor.fetchall()
+
     print("Champions:", champions)  # Debugging
     print("Skins:", skins)  # Debugging
     
-    return render_template('profile.html', champions=champions, skins=skins,user_be=user_be, user_rp=user_rp)
+    return render_template('profile.html', champions=champions, skins=skins,wards=wards,chests=chests,user_be=user_be, user_rp=user_rp)
 
 
 
@@ -134,7 +151,33 @@ def store():
     cursor.execute(skin_query, [user_id])
     skins = cursor.fetchall()
 
-    return render_template('store.html', champions=champions, skins=skins, user_be=user_be, user_rp=user_rp)
+    # Fetching wards
+    cursor.execute("""
+    SELECT W.ID, W.Name, I.RP_Price as rp_price 
+    FROM LCM.Ward W
+    JOIN LCM.Item I ON W.ID = I.ID
+    WHERE W.ID NOT IN (
+        SELECT UI.ID_Item 
+        FROM LCM.User_Item UI 
+        WHERE UI.ID_User = ?
+    )
+    """, (user_id,))
+    wards = cursor.fetchall()
+
+    # Fetching chests
+    cursor.execute("""
+    SELECT Ch.ID, I.Name, I.RP_Price as rp_price 
+    FROM LCM.Chest Ch
+    JOIN LCM.Item I ON Ch.ID = I.ID
+    WHERE Ch.ID NOT IN (
+        SELECT UI.ID_Item 
+        FROM LCM.User_Item UI 
+        WHERE UI.ID_User = ?
+    )
+    """, (user_id,))
+    chests = cursor.fetchall()
+
+    return render_template('store.html', champions=champions, skins=skins, wards=wards, chests=chests, user_be=user_be, user_rp=user_rp)
 
 
 @main_bp.route('/buy_champion_route', methods=['POST'])
@@ -236,3 +279,29 @@ def purchase_rp():
     db.commit()
     
     return jsonify({"status": "success", "message": f"{rp_amount} RP added successfully"})
+
+@main_bp.route('/buy_ward_route', methods=['POST'])
+def buy_ward_route():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({"status": "error", "message": "Not logged in"}), 401
+
+    data = request.get_json()
+    ward_id = data.get('ward_id')
+    rp_price = data.get('rp_price')
+
+    result = buy_ward(user_id, ward_id, rp_price)
+    return jsonify(result)
+
+@main_bp.route('/buy_chest_route', methods=['POST'])
+def buy_chest_route():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({"status": "error", "message": "Not logged in"}), 401
+
+    data = request.get_json()
+    chest_id = data.get('chest_id')
+    rp_price = data.get('rp_price')
+
+    result = buy_chest(user_id, chest_id, rp_price)
+    return jsonify(result)

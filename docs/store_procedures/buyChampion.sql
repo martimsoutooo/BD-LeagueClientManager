@@ -13,7 +13,7 @@ BEGIN
     BEGIN
         UPDATE LCM.[User] SET BE = BE - @BECost WHERE ID = @UserID;
         INSERT INTO LCM.User_Item (ID_User, ID_Item, Data, Hora)
-        VALUES (@UserID, @ChampionID, GETDATE(), GETDATE());
+        VALUES (@UserID, @ChampionID, GETDATE(), CONVERT(VARCHAR, GETDATE(), 108)); -- Corrige a inserção de Data e Hora
 
         SELECT 'Success' AS Result, 'Champion purchased successfully' AS Message;
     END
@@ -22,4 +22,3 @@ BEGIN
         SELECT 'Error' AS Result, 'Not enough Blue Essence' AS Message;
     END
 END;
-

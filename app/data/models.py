@@ -52,6 +52,35 @@ def buy_skin(user_id, skin_id, rp_price):
     else:
         return {"status": "error", "message": result.Message}
 
+def buy_ward(user_id, ward_id, rp_price):
+    db = get_db()
+    cursor = db.cursor()
+    result = cursor.execute("EXEC BuyWard ?, ?, ?", (user_id, ward_id, rp_price))
+    result.fetchone()
+    db.commit()
+
+    if result and hasattr(result, 'Result') and hasattr(result, 'Message'):
+        if result.Result == 'Success':
+            return {"status": "success", "message": result.Message}
+        else:
+            return {"status": "error", "message": result.Message}
+    else:
+        return {"status": "error", "message": "An error occurred"}
+
+def buy_chest(user_id, chest_id, rp_price):
+    db = get_db()
+    cursor = db.cursor()
+    result = cursor.execute("EXEC BuyChest ?, ?, ?", (user_id, chest_id, rp_price))
+    result.fetchone()
+    db.commit()
+
+    if result and hasattr(result, 'Result') and hasattr(result, 'Message'):
+        if result.Result == 'Success':
+            return {"status": "success", "message": result.Message}
+        else:
+            return {"status": "error", "message": result.Message}
+    else:
+        return {"status": "error", "message": "An error occurred"}
 
 
 def get_user_balance(user_id):
