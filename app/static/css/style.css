@@ -84,6 +84,21 @@ body {
     background-color: #006fdd !important;
 }
 
+.selectable-card label {
+    border-radius: 5px;
+    border: 2px solid #e8e8e8; 
+}
+
+.selectable-card input[type="checkbox"]:checked + label {
+    border: 2px solid #007bff;  
+}
+
+#v-pills-champion-tab .fa-check {
+    margin-left: 25px; /* Space between the text and icon */
+    color: rgb(23, 108, 0); /* Icon color */
+    font-size: 18px; /* Icon size */
+}
+
 .stats-box {
     background-color: #ffffff;
     overflow-y: auto;

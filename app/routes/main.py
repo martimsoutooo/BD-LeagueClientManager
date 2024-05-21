@@ -33,11 +33,55 @@ def game():
     db = get_db()
     cursor = db.cursor()
 
+    # Fetching user rank points and RP
     cursor.execute("SELECT Rank_Points, RP FROM LCM.[User] WHERE ID = ?", (user_id,))
     user_data = cursor.fetchone()
-    user_rank_points = user_data[0]
+    user_rank_points, user_rp = user_data
 
-    return render_template('game.html', user_rank_points=user_rank_points)
+    # Fetching champions owned by the user
+    cursor.execute("""
+    SELECT C.ID, C.Name, C.Category, C.Kingdom 
+    FROM LCM.Champion C
+    JOIN LCM.User_Item UI ON C.ID = UI.ID_Item
+    WHERE UI.ID_User = ?
+    """, (user_id,))
+    champions = cursor.fetchall()
+
+    # Fetching skins owned by the user
+    cursor.execute("""
+    SELECT S.ID, S.Name AS skin, C.Name AS championName
+    FROM LCM.Skin S
+    JOIN LCM.Champion C ON S.Champion_ID = C.ID
+    JOIN LCM.User_Item UI ON S.ID = UI.ID_Item
+    WHERE UI.ID_User = ?
+    """, (user_id,))
+    skins = cursor.fetchall()
+
+    # Fetching wards owned by the user
+    cursor.execute("""
+    SELECT W.ID, W.Name AS ward
+    FROM LCM.Ward W
+    JOIN LCM.User_Item UI ON W.ID = UI.ID_Item
+    WHERE UI.ID_User = ?
+    """, (user_id,))
+    wards = cursor.fetchall()
+
+    # Fetching chests owned by the user
+    cursor.execute("""
+    SELECT CH.ID, I.Name AS chest
+    FROM LCM.Chest CH
+    JOIN LCM.Item I ON CH.ID = I.ID
+    JOIN LCM.User_Item UI ON CH.ID = UI.ID_Item
+    WHERE UI.ID_User = ?
+    """, (user_id,))
+    chests = cursor.fetchall()
+
+    return render_template('game.html', user_rank_points=user_rank_points, user_rp=user_rp,
+                           champions=champions, skins=skins, wards=wards, chests=chests)
+
+
+    
+
 
 @main_bp.route('/profile')
 def profile():
@@ -305,3 +349,15 @@ def buy_chest_route():
 
     result = buy_chest(user_id, chest_id, rp_price)
     return jsonify(result)
+
+@main_bp.route('/get_skins/<int:champion_id>')
+def get_skins(champion_id):
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("""
+        SELECT S.ID, S.Name AS skin_name
+        FROM LCM.Skin S
+        WHERE S.Champion_ID = ?
+    """, (champion_id,))
+    skins = cursor.fetchall()
+    return jsonify(skins)  # Returning JSON response
