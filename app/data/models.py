@@ -1,4 +1,3 @@
-import pyodbc
 from .database import get_db
 
 def create_user(username, email, password):
@@ -10,14 +9,14 @@ def create_user(username, email, password):
 def get_user_by_username(username):
     db = get_db()
     cursor = db.cursor()
-    cursor.execute("SELECT * FROM LCM.[User] WHERE Name = ?", (username,))
+    cursor.execute("SELECT * FROM GetUserByUsername(?)", (username,))
     user = cursor.fetchone()
     return user
 
 def get_user_by_email(email):
     db = get_db()
     cursor = db.cursor()
-    cursor.execute("SELECT * FROM LCM.[User] WHERE Email = ?", (email,))
+    cursor.execute("SELECT * FROM GetUserByEmail(?)", (email,))
     user = cursor.fetchone()
     return user
 
@@ -51,6 +50,13 @@ def buy_skin(user_id, skin_id, rp_price):
         return {"status": "success", "message": result.Message}
     else:
         return {"status": "error", "message": result.Message}
+    
+def get_user_balance(user_id):
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM GetUserBalance(?)", user_id)
+    balance = cursor.fetchone()
+    return balance
 
 def buy_ward(user_id, ward_id, rp_price):
     db = get_db()
@@ -59,13 +65,10 @@ def buy_ward(user_id, ward_id, rp_price):
     result.fetchone()
     db.commit()
 
-    if result and hasattr(result, 'Result') and hasattr(result, 'Message'):
-        if result.Result == 'Success':
-            return {"status": "success", "message": result.Message}
-        else:
-            return {"status": "error", "message": result.Message}
+    if result and result.Result == 'Success':
+        return {"status": "success", "message": result.Message}
     else:
-        return {"status": "error", "message": "An error occurred"}
+        return {"status": "error", "message": result.Message}
 
 def buy_chest(user_id, chest_id, rp_price):
     db = get_db()
@@ -74,21 +77,12 @@ def buy_chest(user_id, chest_id, rp_price):
     result.fetchone()
     db.commit()
 
-    if result and hasattr(result, 'Result') and hasattr(result, 'Message'):
-        if result.Result == 'Success':
-            return {"status": "success", "message": result.Message}
-        else:
-            return {"status": "error", "message": result.Message}
+    if result and result.Result == 'Success':
+        return {"status": "success", "message": result.Message}
     else:
-        return {"status": "error", "message": "An error occurred"}
+        return {"status": "error", "message": result.Message}
 
 
-def get_user_balance(user_id):
-    db = get_db()
-    cursor = db.cursor()
-    cursor.execute("SELECT * FROM GetUserBalance(?)", user_id)
-    balance = cursor.fetchone()
-    return balance
 
 def purchaseRP(user_id, rp_amount):
     db = get_db()

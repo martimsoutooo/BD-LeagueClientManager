@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify, session, redirect, url_for
-from ..data.models import buy_champion, buy_skin, get_user_balance, buy_ward, buy_chest
+from ..data.models import buy_champion, buy_skin, get_user_balance, buy_ward, buy_chest,purchaseRP
 from ..data.database import get_db
 
 main_bp = Blueprint('main', __name__)
@@ -79,10 +79,6 @@ def game():
     return render_template('game.html', user_rank_points=user_rank_points, user_rp=user_rp,
                            champions=champions, skins=skins, wards=wards, chests=chests)
 
-
-    
-
-
 @main_bp.route('/profile')
 def profile():
     user_id = session.get('user_id')
@@ -97,47 +93,19 @@ def profile():
     db = get_db()
     cursor = db.cursor()
     
-    cursor.execute("""
-    SELECT C.ID, C.Name, C.Category, C.Kingdom 
-    FROM LCM.Champion C
-    JOIN LCM.User_Item UI ON C.ID = UI.ID_Item
-    WHERE UI.ID_User = ?
-    """, (user_id,))
+    cursor.execute("SELECT ID, Name, Category, Kingdom FROM GetChampionsByUser(?)", (user_id,))
     champions = cursor.fetchall()
 
-    cursor.execute("""
-    SELECT S.ID, S.Name AS skin, C.Name AS championName
-    FROM LCM.Skin S
-    JOIN LCM.Champion C ON S.Champion_ID = C.ID
-    JOIN LCM.User_Item UI ON S.ID = UI.ID_Item
-    WHERE UI.ID_User = ?
-    """, (user_id,))
+    cursor.execute("SELECT ID, skin, championName FROM GetSkinsByUser(?)", (user_id,))
     skins = cursor.fetchall()
 
-    cursor.execute("""
-    SELECT W.ID, W.Name AS ward
-    FROM LCM.Ward W
-    JOIN LCM.User_Item UI ON W.ID = UI.ID_Item
-    WHERE UI.ID_User = ?
-    """, (user_id,))
+    cursor.execute("SELECT ID, ward FROM GetWardsByUser(?)", (user_id,))
     wards = cursor.fetchall()
 
-    cursor.execute("""
-    SELECT CH.ID , I.Name AS chest
-    FROM LCM.Chest CH
-    JOIN LCM.User_Item UI ON CH.ID = UI.ID_Item
-    JOIN LCM.Item I ON CH.ID = I.ID
-    WHERE UI.ID_User = ?
-    """, (user_id,))
+    cursor.execute("SELECT ID, chest FROM GetChestsByUser(?)", (user_id,))
     chests = cursor.fetchall()
-
-    print("Champions:", champions)  # Debugging
-    print("Skins:", skins)  # Debugging
     
     return render_template('profile.html', champions=champions, skins=skins,wards=wards,chests=chests,user_be=user_be, user_rp=user_rp)
-
-
-
 
 @main_bp.route('/store')
 def store():
@@ -152,73 +120,19 @@ def store():
     
     db = get_db()
     cursor = db.cursor()
-    
-    alphabetical = request.args.get('alphabetical', '0')
-    kingdom = request.args.get('kingdom', 'all')
-    category = request.args.get('category', 'all')
 
-    champion_query = """
-    SELECT C.ID, C.Name, C.BE_Price, C.Category, C.Kingdom 
-    FROM LCM.Champion C
-    WHERE C.ID NOT IN (
-        SELECT UI.ID_Item 
-        FROM LCM.User_Item UI 
-        WHERE UI.ID_User = ?
-    )
-    """
-    params = [user_id]
-    
-    if kingdom != 'all':
-        champion_query += " AND C.Kingdom = ?"
-        params.append(kingdom)
-    if category != 'all':
-        champion_query += " AND C.Category = ?"
-        params.append(category)
-    if alphabetical == '1':
-        champion_query += " ORDER BY C.Name"
-    else:
-        champion_query += " ORDER BY C.ID"
-
-    cursor.execute(champion_query, params)
+    cursor.execute("SELECT ID, Name, Category, Kingdom FROM GetChampionsByUser(?)",(user_id))
     champions = cursor.fetchall()
 
-    skin_query = """
-    SELECT S.ID, S.Name AS skin, C.Name AS champion, S.RP_Price as rp_price
-    FROM LCM.Skin S
-    JOIN LCM.Champion C ON S.Champion_ID = C.ID
-    WHERE S.ID NOT IN (
-        SELECT UI.ID_Item
-        FROM LCM.User_Item UI
-        WHERE UI.ID_User = ?
-    )
-    """
-    cursor.execute(skin_query, [user_id])
+    cursor.execute("SELECT ID, skin, champion, rp_price FROM GetAvailableSkinsForUser(?)",(user_id))
     skins = cursor.fetchall()
 
     # Fetching wards
-    cursor.execute("""
-    SELECT W.ID, W.Name, I.RP_Price as rp_price 
-    FROM LCM.Ward W
-    JOIN LCM.Item I ON W.ID = I.ID
-    WHERE W.ID NOT IN (
-        SELECT UI.ID_Item 
-        FROM LCM.User_Item UI 
-        WHERE UI.ID_User = ?
-    )
-    """, (user_id,))
+    cursor.execute("SELECT Name, ID, rp_price FROM GetAvailableWardsForUser(?)", (user_id))
     wards = cursor.fetchall()
 
     # Fetching chests
-    cursor.execute("""
-    SELECT Ch.ID, I.Name, I.RP_Price as rp_price 
-    FROM LCM.Chest Ch
-    JOIN LCM.Item I ON Ch.ID = I.ID
-    WHERE Ch.ID NOT IN (
-        SELECT UI.ID_Item 
-        FROM LCM.User_Item UI 
-        WHERE UI.ID_User = ?
-    )
-    """, (user_id,))
+    cursor.execute("SELECT ID, Name, rp_price FROM dbo.GetChestsAndPrices()")
     chests = cursor.fetchall()
 
     return render_template('store.html', champions=champions, skins=skins, wards=wards, chests=chests, user_be=user_be, user_rp=user_rp)
@@ -229,30 +143,14 @@ def buy_champion_route():
     user_id = session.get('user_id')
     if not user_id:
         return jsonify({"status": "error", "message": "Not logged in"}), 401
-    
-    print("in")
 
     data = request.get_json()
     champion_id = data.get('champion_id')
     be_price = data.get('be_price')
     
     result = buy_champion(user_id, int(champion_id), int(be_price))
-    print(jsonify(result))
     return jsonify(result)
-
-@main_bp.route('/buy_skin_route', methods=['POST'])
-def buy_skin_route():
-    user_id = session.get('user_id')
-    if not user_id:
-        return jsonify({"status": "error", "message": "Not logged in"}), 401
-    
-    data = request.get_json()
-    skin_id = data.get('skin_id')
-    rp_price = data.get('rp_price')
-    
-    result = buy_skin(user_id, skin_id, rp_price)
-    return jsonify(result)
-
+   
 @main_bp.route('/filter_champions', methods=['GET'])
 def filter_champions():
     user_id = session.get('user_id')
@@ -316,13 +214,21 @@ def purchase_rp():
     if not rp_amount or int(rp_amount) <= 0:
         return jsonify({"status": "error", "message": "Invalid amount"}), 400
     
-    db = get_db()
-    cursor = db.cursor()
-    
-    cursor.execute("UPDATE LCM.[User] SET RP = RP + ? WHERE ID = ?", (rp_amount, user_id))
-    db.commit()
-    
+    purchaseRP(user_id,rp_amount)
     return jsonify({"status": "success", "message": f"{rp_amount} RP added successfully"})
+
+@main_bp.route('/buy_skin_route', methods=['POST'])
+def buy_skin_route():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({"status": "error", "message": "Not logged in"}), 401
+    
+    data = request.get_json()
+    skin_id = data.get('skin_id')
+    rp_price = data.get('rp_price')
+    
+    result = buy_skin(user_id, skin_id, rp_price)
+    return jsonify(result)
 
 @main_bp.route('/buy_ward_route', methods=['POST'])
 def buy_ward_route():
