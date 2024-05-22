@@ -1,0 +1,8 @@
+CREATE FUNCTION GetUserInfo(@UserID INT)
+RETURNS TABLE
+AS
+RETURN (
+    SELECT Rank_Points, RP
+    FROM LCM.[User]
+    WHERE ID = @UserID
+);

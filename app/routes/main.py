@@ -23,51 +23,37 @@ def dashboard():
 
     return render_template('dashboard.html', user_name=user_name)
 
-@main_bp.route('/game')
+@main_bp.route('/game', methods=['GET', 'POST'])
 def game():
     user_id = session.get('user_id')
     if not user_id:
-        print("User ID not found in session")
         return redirect(url_for('auth.login'))
     
     db = get_db()
     cursor = db.cursor()
-
-    # Fetching user rank points and RP
-    cursor.execute("SELECT Rank_Points, RP FROM LCM.[User] WHERE ID = ?", (user_id,))
+    
+    # Fetch user data and champions
+    cursor.execute("SELECT * FROM GetUserInfo(?)", (user_id,))
     user_data = cursor.fetchone()
-    user_rank_points, user_rp = user_data
+    user_rank_points, user_rp = (user_data or (None, None))
 
-    # Fetching champions owned by the user
-    cursor.execute("""
-    SELECT C.ID, C.Name, C.Category, C.Kingdom 
-    FROM LCM.Champion C
-    JOIN LCM.User_Item UI ON C.ID = UI.ID_Item
-    WHERE UI.ID_User = ?
-    """, (user_id,))
+    cursor.execute("SELECT * FROM GetUserChampions(?)", (user_id,))
     champions = cursor.fetchall()
 
-    # Fetching skins owned by the user
-    cursor.execute("""
-    SELECT S.ID, S.Name AS skin, C.Name AS championName
-    FROM LCM.Skin S
-    JOIN LCM.Champion C ON S.Champion_ID = C.ID
-    JOIN LCM.User_Item UI ON S.ID = UI.ID_Item
-    WHERE UI.ID_User = ?
-    """, (user_id,))
-    skins = cursor.fetchall()
+    # Initialize skins and selected_champion_id
+    skins = []
+    selected_champion_id = None
 
-    # Fetching wards owned by the user
-    cursor.execute("""
-    SELECT W.ID, W.Name AS ward
-    FROM LCM.Ward W
-    JOIN LCM.User_Item UI ON W.ID = UI.ID_Item
-    WHERE UI.ID_User = ?
-    """, (user_id,))
+    if request.method == 'POST':
+        selected_champion_id = request.form.get('champion_id', type=int)
+        cursor.execute("SELECT * FROM GetUserSkinsFromChampion(?, ?)", (user_id, selected_champion_id))
+        skins = cursor.fetchall()
+
+    cursor.execute("SELECT * FROM GetUserWards(?)", (user_id,))
     wards = cursor.fetchall()
 
     return render_template('game.html', user_rank_points=user_rank_points, user_rp=user_rp,
-                           champions=champions, skins=skins, wards=wards)
+                           champions=champions, skins=skins, wards=wards, selected_champion_id=selected_champion_id)
 
 
     
