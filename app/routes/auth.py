@@ -1,5 +1,4 @@
 from flask import Blueprint, request, render_template, jsonify, session, redirect, url_for
-from werkzeug.security import generate_password_hash, check_password_hash
 from ..data.models import create_user, get_user_by_username, verify_user, get_user_by_email
 
 auth_bp = Blueprint('auth', __name__)

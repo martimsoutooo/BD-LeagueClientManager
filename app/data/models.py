@@ -90,6 +90,20 @@ def get_user_balance(user_id):
     balance = cursor.fetchone()
     return balance
 
+def purchaseRP(user_id, rp_amount):
+    db = get_db()
+    cursor = db.cursor()
+    result = cursor.execute("EXEC PurchaseRP ?,?",(user_id,rp_amount))
+    result.fetchone()
+    db.commit()
+
+    if result and hasattr(result, 'Result') and hasattr(result, 'Message'):
+        if result.Result == 'Success':
+            return {"status": "success", "message": result.Message}
+        else:
+            return {"status": "error", "message": result.Message}
+    else:
+        return {"status": "error", "message": "An error occurred"}
 
 
 
