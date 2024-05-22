@@ -33,10 +33,17 @@
                         Champion
                         <i id="champion-check-icon" class="fas fa-check" style="display: none;"></i> <!-- FontAwesome icon -->
                     </a>
-                    <a class="nav-link" id="v-pills-skins-tab" data-toggle="pill" href="#v-pills-skins" role="tab" aria-controls="v-pills-skins" aria-selected="false">Skin</a>
-                    <a class="nav-link" id="v-pills-wards-tab" data-toggle="pill" href="#v-pills-wards" role="tab" aria-controls="v-pills-wards" aria-selected="false">Ward</a>
-                    <button class="btn btn-danger mt-5 shadow-lg " >Start Game</button>
-            </div>
+                    <a class="nav-link" id="v-pills-skins-tab" data-toggle="pill" href="#v-pills-skins" role="tab" aria-controls="v-pills-skins" aria-selected="false">
+                        Skin
+                        <i id="skin-check-icon" class="fas fa-check" style="display: none;"></i> <!-- FontAwesome icon -->
+                    </a>
+                    <a class="nav-link" id="v-pills-wards-tab" data-toggle="pill" href="#v-pills-wards" role="tab" aria-controls="v-pills-wards" aria-selected="false">
+                        Ward
+                        <i id="ward-check-icon" class="fas fa-check" style="display: none;"></i> <!-- FontAwesome icon -->
+
+                    </a>
+                    <button id="startGameButton" class="btn btn-danger mt-5" disabled>Start Game</button>
+                </div>
         </div>
         <div class="col-md-10">
             <div class="shadow-sm rounded-lg w-100 card-container">
@@ -83,10 +90,10 @@
                                         </div>
                                         <div class="col-md-9 p-3" style="border-left: 1px solid #ddd;">
                                             <div class="row scrollable-content">
-                                                <div class="row scrollable-content pl-3">
+                                                <div class="row scrollable-content p-3">
                                                     {% for champion in champions %}
-                                                    <div class="col-md-6">
-                                                        <div class=" mb-3 selectable-card">
+                                                    <div class="col-md-4">
+                                                        <div class="mb-3 selectable-card d-flex flex-column justify-content-between">
                                                             <input type="checkbox" class="card-checkbox" name="champion" value="{{ champion.ID }}" id="champ-{{ champion.ID }}" hidden>
                                                             <label for="champ-{{ champion.ID }}" class="card-body">
                                                                 <h5 class="card-title font-weight-bold">{{ champion.Name }}</h5>
@@ -126,28 +133,72 @@
                                             </div>
                                         </div>
                                         <div class="col-md-9 p-3" style="border-left: 1px solid #ddd;">
-                                            <div class="row scrollable-content">
-                                                {% for skin in skins %}
-                                                <div class="col-md-4">
-                                                    <div class="card mb-3">
-                                                        <input type="checkbox" class="card-checkbox" name="skin" value="{{ skin.ID }}" id="skin-{{ skin.ID }}" hidden>
-                                                        <label for="skin-{{ skin.ID }}" class="card-body selectable-card">
-                                                            <h5 class="card-title font-weight-bold">{{ skin.skin }}</h5>
-                                                            <p class="card-text">Champion: {{ skin.championName }}</p>
-                                                        </label>
-                                                    </div>
+                                            <div class="row scrollable-content" id="skins-display-area">
+                                                <div style="text-align: center; width: 100%; height: 100%; align-items: center; height: 100%; display: flex; justify-content: center;">
+                                                    <p style="font-size: large; color: red;"> You must select a champion first.</p>
                                                 </div>
-                                                {% endfor %}
                                             </div> 
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade h-100" id="v-pills-chests" role="tabpanel" aria-labelledby="v-pills-chests-tab">
-                                <!-- Chests content here -->
-                            </div>
                             <div class="tab-pane fade h-100" id="v-pills-wards" role="tabpanel" aria-labelledby="v-pills-wards-tab">
-                                <!-- Wards content here -->
+                                
+                                <div class="card h-100 fixed-card">
+                                    <div class="row h-100">
+                                        <div class="col-md-3 filter-section p-5">
+                                            <h5 class="pb-2">Filters</h5>
+                                            <div class="form-check pt-2">
+                                                <input class="form-check-input large-checkbox" type="checkbox" value="" id="alphabeticalFilter">
+                                                <label class="form-check-label" for="alphabeticalFilter">Alphabetical</label>
+                                            </div>
+                                            <div class="form-group pt-3">
+                                                <label for="kingdomFilter">Kingdom:</label>
+                                                <select class="form-control" id="kingdomFilter">
+                                                    <option value="all">All</option>
+                                                    <option value="Demacia">Demacia</option>
+                                                    <option value="Noxus">Noxus</option>
+                                                    <option value="Ionia">Ionia</option>
+                                                    <option value="Freljord">Freljord</option>
+                                                    <option value="Targon">Targon</option>
+                                                    <option value="Bilgewater">Bilgewater</option>
+                                                    <option value="Shadow Isles">Shadow Isles</option>
+                                                    <option value="Shurima">Shurima</option>
+                                                    <option value="Zaun">Zaun</option>
+                                                    <option value="Piltover">Piltover</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group pt-2">
+                                                <label for="categoryFilter">Category:</label>
+                                                <select class="form-control" id="categoryFilter">
+                                                    <option value="all">All</option>
+                                                    <option value="Tank">Tank</option>
+                                                    <option value="Fighter">Fighter</option>
+                                                    <option value="Mage">Mage</option>
+                                                    <option value="Assassin">Assassin</option>
+                                                    <option value="Marksman">Marksman</option>
+                                                    <option value="Support">Support</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-9 p-3" style="border-left: 1px solid #ddd;">
+                                            <div class="row scrollable-content">
+                                                <div class="row scrollable-content ml-3">
+                                                    {% for ward in wards %}
+                                                    <div class="col-md-12">
+                                                        <div class="mb-3 selectable-card">
+                                                            <input type="checkbox" class="card-checkbox" name="ward" value="{{ ward.ID }}" id="ward-{{ ward.ID }}" hidden>
+                                                            <label for="ward-{{ ward.ID }}" class="card-body">
+                                                                <h5 class="card-title font-weight-bold">{{ ward.ward }}</h5>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -164,43 +215,136 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Select all checkboxes within the game content area
-        const allCheckboxes = document.querySelectorAll('.selectable-card input[type="checkbox"]');
-    
-        allCheckboxes.forEach(checkbox => {
+    // Function to handle checkbox changes
+    function handleCheckboxChange(checkboxes, iconId) {
+        checkboxes.forEach(checkbox => {
             checkbox.addEventListener('change', function() {
-                // When a checkbox is checked
+                // Reset other checkboxes
+                checkboxes.forEach(box => {
+                    if (box !== this) {
+                        box.checked = false;
+                    }
+                });
+                // Toggle icon visibility
+                const icon = document.getElementById(iconId);
                 if (this.checked) {
-                    // Uncheck all other checkboxes with the same 'name' attribute
-                    allCheckboxes.forEach(box => {
-                        if (box !== this && box.name === this.name) {
-                            box.checked = false;
-                        }
-                    });
+                    icon.style.display = 'inline';
+                } else {
+                    // Check if any checkbox is still checked; if not, hide the icon
+                    const anyChecked = Array.from(checkboxes).some(c => c.checked);
+                    if (!anyChecked) {
+                        icon.style.display = 'none';
+                    }
                 }
             });
         });
-    });
+        
+    }
+
+    // Initialize functionality for champions, skins, and wards
+    const championCheckboxes = document.querySelectorAll('input[name="champion"]');
+    const skinCheckboxes = document.querySelectorAll('input[name="skin"]');
+    const wardCheckboxes = document.querySelectorAll('input[name="ward"]');
+    handleCheckboxChange(championCheckboxes, 'champion-check-icon');
+    handleCheckboxChange(skinCheckboxes, 'skin-check-icon');
+    handleCheckboxChange(wardCheckboxes, 'ward-check-icon');
+
+});
+
 
 
     document.addEventListener('DOMContentLoaded', function() {
     const championCheckboxes = document.querySelectorAll('input[name="champion"]');
-    const championCheckIcon = document.getElementById('champion-check-icon');
 
     championCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            // Initially hide the icon
-            championCheckIcon.style.display = 'none';
+        checkbox.addEventListener('change', async function() {
+            const skinsDisplayArea = document.getElementById('skins-display-area');
+            const checkIcon = document.getElementById('champion-check-icon'); // Get the check icon element
+            skinsDisplayArea.innerHTML = ''; // Clear the area when a new champion is selected
 
-            // Display the icon if any champion checkbox is checked
-            championCheckboxes.forEach(box => {
-                if (box.checked) {
-                    championCheckIcon.style.display = 'inline';
+            // Update the check icon visibility
+            if (this.checked) {
+                checkIcon.style.display = 'inline'; // Show the check icon
+                try {
+                    const response = await fetch(`/selectSkin/${this.value}`);
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch skins');
+                    }
+                    const skins = await response.json();
+
+                    if (skins.length === 0) {
+                        skinsDisplayArea.innerHTML = `<div style="text-align: center; width: 100%; height: 100%; align-items: center; height: 100%; display: flex; justify-content: center;">
+                                                        <p style="font-size: large;"> You have no skins of this champion.</p>
+                                                    </div>`;
+                    } else {
+                        skins.forEach(skin => {
+                            const skinDiv = document.createElement('div');
+                            skinDiv.className = 'col-md-4 mb-3'; 
+                            const cardHtml = `
+                                <div class="selectable-card">
+                                    <input type="checkbox" class="card-checkbox" name="skin" value="${skin.id}" id="skin-${skin.id}" hidden>
+                                    <label for="skin-${skin.id}" class="card-body">
+                                        <h5 class="card-title font-weight-bold">${skin.skin_name}</h5>
+                                        <p class="card-text">Champion: ${skin.champion_name}</p>
+                                    </label>
+                                </div>
+                            `;
+                            skinDiv.innerHTML = cardHtml;
+                            skinsDisplayArea.appendChild(skinDiv);
+                        });
+
+                    }
+                } catch (error) {
+                    console.error('Error fetching skins:', error);
+                    skinsDisplayArea.innerHTML = '<p>Error loading skins. Please try again later.</p>';
                 }
-            });
+            } else {
+                checkIcon.style.display = 'none'; // Hide the check icon if unchecked
+            }
         });
     });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const container = document.getElementById('skins-display-area'); // Static parent
+
+    container.addEventListener('change', function(event) {
+        const target = event.target;
+        if (target.type === 'checkbox' && target.name === 'skin') {
+            // Reset all checkboxes for skins
+            document.querySelectorAll('input[name="skin"]').forEach(chk => {
+                if (chk !== target) chk.checked = false;
+            });
+
+            // Toggle the check icon based on whether any skin checkbox is checked
+            const skinCheckIcon = document.getElementById('skin-check-icon');
+            const anyChecked = Array.from(document.querySelectorAll('input[name="skin"]')).some(chk => chk.checked);
+            skinCheckIcon.style.display = anyChecked ? 'inline' : 'none';
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const startGameButton = document.querySelector('button.btn.btn-danger');
+    const championCheckboxes = document.querySelectorAll('input[name="champion"]');
+    const skinCheckboxes = document.querySelectorAll('input[name="skin"]');
+    const wardCheckboxes = document.querySelectorAll('input[name="ward"]');
+
+    function updateStartButtonState() {
+        console.log("ye");
+        const isChampionSelected = Array.from(championCheckboxes).some(chk => chk.checked);
+        const isWardSelected = Array.from(wardCheckboxes).some(chk => chk.checked);
+        console.log((isChampionSelected && isWardSelected));
+        startGameButton.disabled = !(isChampionSelected &&  isWardSelected);
+    }
+
+    championCheckboxes.forEach(checkbox => checkbox.addEventListener('change', updateStartButtonState));
+    skinCheckboxes.forEach(checkbox => checkbox.addEventListener('change', updateStartButtonState));
+    wardCheckboxes.forEach(checkbox => checkbox.addEventListener('change', updateStartButtonState));
+});
+
+
+
 
 
 </script>

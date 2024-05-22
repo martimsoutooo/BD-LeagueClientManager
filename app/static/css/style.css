@@ -94,8 +94,20 @@ body {
 }
 
 #v-pills-champion-tab .fa-check {
-    margin-left: 25px; /* Space between the text and icon */
-    color: rgb(23, 108, 0); /* Icon color */
+    margin-left: 30px; /* Space between the text and icon */
+    color: rgb(0, 224, 52); /* Icon color */
+    font-size: 18px; /* Icon size */
+}
+
+#v-pills-skins-tab .fa-check {
+    margin-left: 73px; /* Space between the text and icon */
+    color: rgb(0, 224, 52); /* Icon color */
+    font-size: 18px; /* Icon size */
+}
+
+#v-pills-wards-tab .fa-check {
+    margin-left: 64px; /* Space between the text and icon */
+    color: rgb(0, 224, 52); /* Icon color */
     font-size: 18px; /* Icon size */
 }
 

@@ -66,18 +66,8 @@ def game():
     """, (user_id,))
     wards = cursor.fetchall()
 
-    # Fetching chests owned by the user
-    cursor.execute("""
-    SELECT CH.ID, I.Name AS chest
-    FROM LCM.Chest CH
-    JOIN LCM.Item I ON CH.ID = I.ID
-    JOIN LCM.User_Item UI ON CH.ID = UI.ID_Item
-    WHERE UI.ID_User = ?
-    """, (user_id,))
-    chests = cursor.fetchall()
-
     return render_template('game.html', user_rank_points=user_rank_points, user_rp=user_rp,
-                           champions=champions, skins=skins, wards=wards, chests=chests)
+                           champions=champions, skins=skins, wards=wards)
 
 
     
@@ -361,3 +351,26 @@ def get_skins(champion_id):
     """, (champion_id,))
     skins = cursor.fetchall()
     return jsonify(skins)  # Returning JSON response
+
+@main_bp.route('/selectSkin/<int:champion_id>', methods=['GET'])
+def select_skin(champion_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'User not logged in'}), 401
+
+    db = get_db()
+    cursor = db.cursor()
+    try:
+        cursor.execute("""
+            SELECT S.ID, S.Name AS skin_name, C.Name AS champion_name
+            FROM LCM.Skin S
+            JOIN LCM.Champion C ON S.Champion_ID = C.ID
+            JOIN LCM.User_Item UI ON S.ID = UI.ID_Item
+            WHERE S.Champion_ID = ? AND UI.ID_User = ?
+        """, (champion_id, user_id))
+        skins = cursor.fetchall()
+
+        skins_list = [{'id': skin[0], 'skin_name': skin[1], 'champion_name': skin[2]} for skin in skins]
+        return jsonify(skins_list)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
