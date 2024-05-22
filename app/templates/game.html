@@ -185,11 +185,11 @@
                                             <div class="row scrollable-content">
                                                 <div class="row scrollable-content ml-3">
                                                     {% for ward in wards %}
-                                                    <div class="col-md-12">
+                                                    <div class="col-md-4">
                                                         <div class="mb-3 selectable-card">
                                                             <input type="checkbox" class="card-checkbox" name="ward" value="{{ ward.ID }}" id="ward-{{ ward.ID }}" hidden>
                                                             <label for="ward-{{ ward.ID }}" class="card-body">
-                                                                <h5 class="card-title font-weight-bold">{{ ward.ward }}</h5>
+                                                                <h5 class="card-title font-weight-bold">{{ ward.Ward }}</h5>
                                                             </label>
                                                         </div>
                                                     </div>
