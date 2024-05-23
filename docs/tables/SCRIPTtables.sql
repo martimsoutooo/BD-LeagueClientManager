@@ -88,16 +88,19 @@ CREATE TABLE LCM.Map (
 
 -- Tabela Game
 CREATE TABLE LCM.Game (
-    ID INT PRIMARY KEY,
-    Duration TIME,
-    Outcome INT,
+    ID INT PRIMARY KEY IDENTITY(1,1),
+    Duration INT,
+    Result VARCHAR(10),
+    Outcome_RP INT,
+    Outcome_BE INT,
     ID_Map INT,
     ID_User_Select INT,
     Data DATE,
-    Hora TIME,
+    Hora TIME, 
     FOREIGN KEY (ID_Map) REFERENCES LCM.Map(ID),
     FOREIGN KEY (ID_User_Select) REFERENCES LCM.User_Select(ID)
 );
+
 
 
 
