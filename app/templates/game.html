@@ -210,10 +210,21 @@
                                     <div class="row h-100">
                                         <div class="col-md-3 filter-section p-5">
                                             
-                                            <h4>Selected Game Items:</h4>
+                                            <h5 class="font-weight-bold" style="font-size: medium;">Selections:</h5>
                                             <p id="game-champion">Champion: None</p>
                                             <p id="game-skin">Skin: None</p>
                                             <p id="game-ward">Ward: None</p>
+
+                                            <form action="" type="submit">
+                                                <div class="form-group">
+                                                    <label for="mapSelect" class="font-weight-bold">Map</label>
+                                                    <select class="form-control" id="mapSelect" name="map">
+                                                        {% for map in maps %}
+                                                            <option value="{{ map[0] }}">{{ map[1] }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </form> 
 
                                             <div class="btn btn-outline-info"> Start Game</div>
 
@@ -222,7 +233,7 @@
                                             <div class="row scrollable-content">
                                                 <div class="row scrollable-content ml-3">
                                                     
-
+                                                    
 
 
 

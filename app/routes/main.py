@@ -45,7 +45,6 @@ def game():
     selected_champion_id = None
 
     if request.method == 'GET':
-        # Fetch user data and champions
         cursor.execute("SELECT * FROM GetUserInfo(?)", (user_id,))
         user_data = cursor.fetchone()
         user_rank_points, user_rp = (user_data or (None, None))
@@ -56,8 +55,12 @@ def game():
         cursor.execute("SELECT * FROM GetUserWards(?)", (user_id,))
         wards = cursor.fetchall()
 
+        # Fetch maps
+        cursor.execute("SELECT ID, Name FROM LCM.Map")
+        maps = cursor.fetchall()
+
         return render_template('game.html', user_rank_points=user_rank_points, user_rp=user_rp,
-                               champions=champions, wards=wards)
+                               champions=champions, wards=wards, maps=maps)
 
     elif request.method == 'POST':
         data = request.get_json()
@@ -66,12 +69,12 @@ def game():
         ward_id = data.get('ward_id')
 
         try:
-            # Call stored procedure to insert user selections
             cursor.execute("""
                 EXEC sp_InsertUserSelection @UserID=?, @SkinID=?, @ChampionID=?, @WardID=?""",
                 (user_id, skin_id, champion_id, ward_id))
             db.commit()
             return jsonify({"status": "success", "message": "Selection done successfully"})
+
         except Exception as e:
             db.rollback()
             return jsonify({"status": "error", "message": str(e)}), 500
@@ -79,8 +82,11 @@ def game():
     cursor.execute("SELECT * FROM GetUserWards(?)", (user_id,))
     wards = cursor.fetchall()
 
+    cursor.execute("SELECT ID, Name FROM LCM.Map")
+    maps = cursor.fetchall()
+
     return render_template('game.html', user_rank_points=user_rank_points, user_rp=user_rp,
-                           champions=champions, skins=skins, wards=wards, selected_champion_id=selected_champion_id)
+                           champions=champions, skins=skins, wards=wards, selected_champion_id=selected_champion_id, maps=maps)
 
 @main_bp.route('/profile')
 def profile():
