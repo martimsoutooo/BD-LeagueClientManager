@@ -66,7 +66,7 @@ CREATE TABLE LCM.Ward (
 
 -- Tabela User_Select
 CREATE TABLE LCM.User_Select (
-    ID INT PRIMARY KEY,
+    ID INT IDENTITY(1,1) PRIMARY KEY,
     ID_User INT,
     ID_Skin INT,
     ID_Champion INT,

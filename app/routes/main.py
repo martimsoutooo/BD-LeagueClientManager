@@ -44,10 +44,37 @@ def game():
     skins = []
     selected_champion_id = None
 
-    if request.method == 'POST':
-        selected_champion_id = request.form.get('champion_id', type=int)
-        cursor.execute("SELECT * FROM GetUserSkinsFromChampion(?, ?)", (user_id, selected_champion_id))
-        skins = cursor.fetchall()
+    if request.method == 'GET':
+        # Fetch user data and champions
+        cursor.execute("SELECT * FROM GetUserInfo(?)", (user_id,))
+        user_data = cursor.fetchone()
+        user_rank_points, user_rp = (user_data or (None, None))
+
+        cursor.execute("SELECT * FROM GetUserChampions(?)", (user_id,))
+        champions = cursor.fetchall()
+
+        cursor.execute("SELECT * FROM GetUserWards(?)", (user_id,))
+        wards = cursor.fetchall()
+
+        return render_template('game.html', user_rank_points=user_rank_points, user_rp=user_rp,
+                               champions=champions, wards=wards)
+
+    elif request.method == 'POST':
+        data = request.get_json()
+        champion_id = data.get('champion_id')
+        skin_id = data.get('skin_id')
+        ward_id = data.get('ward_id')
+
+        try:
+            # Call stored procedure to insert user selections
+            cursor.execute("""
+                EXEC sp_InsertUserSelection @UserID=?, @SkinID=?, @ChampionID=?, @WardID=?""",
+                (user_id, skin_id, champion_id, ward_id))
+            db.commit()
+            return jsonify({"status": "success", "message": "Selection done successfully"})
+        except Exception as e:
+            db.rollback()
+            return jsonify({"status": "error", "message": str(e)}), 500
 
     cursor.execute("SELECT * FROM GetUserWards(?)", (user_id,))
     wards = cursor.fetchall()

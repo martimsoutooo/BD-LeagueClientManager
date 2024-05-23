@@ -42,7 +42,9 @@
                         <i id="ward-check-icon" class="fas fa-check" style="display: none;"></i> <!-- FontAwesome icon -->
 
                     </a>
-                    <button id="startGameButton" class="btn btn-danger mt-5" disabled>Start Game</button>
+                    <a class="nav-link mt-5" id="v-pills-game-tab" data-toggle="pill" href="#v-pills-game" role="tab" aria-controls="v-pills-game-tab" aria-selected="false">
+                        <button id="startGameButton" class="btn btn-danger" disabled style="width: 100%; height: 100%;">Confirm</button>
+                    </a>
                 </div>
         </div>
         <div class="col-md-10">
@@ -200,6 +202,40 @@
                                     </div>
                                 </div>
                             </div>
+
+
+                            <div class="tab-pane fade h-100" id="v-pills-game" role="tabpanel" aria-labelledby="v-pills-game-tab">
+                                
+                                <div class="card h-100 fixed-card">
+                                    <div class="row h-100">
+                                        <div class="col-md-3 filter-section p-5">
+                                            
+                                            <h4>Selected Game Items:</h4>
+                                            <p id="game-champion">Champion: None</p>
+                                            <p id="game-skin">Skin: None</p>
+                                            <p id="game-ward">Ward: None</p>
+
+                                            <div class="btn btn-outline-info"> Start Game</div>
+
+                                        </div>
+                                        <div class="col-md-9 p-3" style="border-left: 1px solid #ddd;">
+                                            <div class="row scrollable-content">
+                                                <div class="row scrollable-content ml-3">
+                                                    
+
+
+
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            
                         </div>
                     </div>
                     <div class="col-md-1">
@@ -325,18 +361,29 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    const startGameButton = document.querySelector('button.btn.btn-danger');
+    const startGameButton = document.querySelector('button#startGameButton');
     const championCheckboxes = document.querySelectorAll('input[name="champion"]');
     const skinCheckboxes = document.querySelectorAll('input[name="skin"]');
     const wardCheckboxes = document.querySelectorAll('input[name="ward"]');
 
     function updateStartButtonState() {
-        console.log("ye");
         const isChampionSelected = Array.from(championCheckboxes).some(chk => chk.checked);
         const isWardSelected = Array.from(wardCheckboxes).some(chk => chk.checked);
-        console.log((isChampionSelected && isWardSelected));
-        startGameButton.disabled = !(isChampionSelected &&  isWardSelected);
+        startGameButton.disabled = !(isChampionSelected && isWardSelected);
     }
+
+    startGameButton.addEventListener('click', function() {
+        const selectedChampion = document.querySelector('input[name="champion"]:checked');
+        const selectedSkin = document.querySelector('input[name="skin"]:checked');
+        const selectedWard = document.querySelector('input[name="ward"]:checked');
+
+        document.getElementById('game-champion').textContent = `Champion: ${selectedChampion ? selectedChampion.nextElementSibling.textContent.trim() : 'None'}`;
+        document.getElementById('game-skin').textContent = `Skin: ${selectedSkin ? selectedSkin.nextElementSibling.textContent.trim() : 'Default'}`;
+        document.getElementById('game-ward').textContent = `Ward: ${selectedWard ? selectedWard.nextElementSibling.textContent.trim() : 'None'}`;
+
+        // Optionally switch to the game tab automatically
+        $('#v-pills-game-tab').tab('show');  // This requires jQuery
+    });
 
     championCheckboxes.forEach(checkbox => checkbox.addEventListener('change', updateStartButtonState));
     skinCheckboxes.forEach(checkbox => checkbox.addEventListener('change', updateStartButtonState));
@@ -344,6 +391,30 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+document.getElementById('startGameButton').addEventListener('click', function() {
+    const selectedChampion = document.querySelector('input[name="champion"]:checked');
+    const selectedSkin = document.querySelector('input[name="skin"]:checked');
+    const selectedWard = document.querySelector('input[name="ward"]:checked');
+
+    const data = {
+        champion_id: selectedChampion ? selectedChampion.value : null,
+        skin_id: selectedSkin ? selectedSkin.value : null,
+        ward_id: selectedWard ? selectedWard.value : null
+    };
+
+    fetch('/game', {  // Note the URL here should match your Flask route
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);  // Display success/error message
+    })
+    .catch(error => console.error('Error starting game:', error));
+});
 
 
 
