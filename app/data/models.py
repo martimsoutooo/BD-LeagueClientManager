@@ -1,4 +1,3 @@
-import pyodbc
 from .database import get_db
 
 def create_user(username, email, password):
@@ -10,14 +9,14 @@ def create_user(username, email, password):
 def get_user_by_username(username):
     db = get_db()
     cursor = db.cursor()
-    cursor.execute("SELECT * FROM LCM.[User] WHERE Name = ?", (username,))
+    cursor.execute("SELECT * FROM GetUserByUsername(?)", (username,))
     user = cursor.fetchone()
     return user
 
 def get_user_by_email(email):
     db = get_db()
     cursor = db.cursor()
-    cursor.execute("SELECT * FROM LCM.[User] WHERE Email = ?", (email,))
+    cursor.execute("SELECT * FROM GetUserByEmail(?)", (email,))
     user = cursor.fetchone()
     return user
 
@@ -51,44 +50,41 @@ def buy_skin(user_id, skin_id, rp_price):
         return {"status": "success", "message": result.Message}
     else:
         return {"status": "error", "message": result.Message}
-
-def buy_ward(user_id, ward_id, rp_price):
-    db = get_db()
-    cursor = db.cursor()
-    result = cursor.execute("EXEC BuyWard ?, ?, ?", (user_id, ward_id, rp_price))
-    result.fetchone()
-    db.commit()
-
-    if result and hasattr(result, 'Result') and hasattr(result, 'Message'):
-        if result.Result == 'Success':
-            return {"status": "success", "message": result.Message}
-        else:
-            return {"status": "error", "message": result.Message}
-    else:
-        return {"status": "error", "message": "An error occurred"}
-
-def buy_chest(user_id, chest_id, rp_price):
-    db = get_db()
-    cursor = db.cursor()
-    result = cursor.execute("EXEC BuyChest ?, ?, ?", (user_id, chest_id, rp_price))
-    result.fetchone()
-    db.commit()
-
-    if result and hasattr(result, 'Result') and hasattr(result, 'Message'):
-        if result.Result == 'Success':
-            return {"status": "success", "message": result.Message}
-        else:
-            return {"status": "error", "message": result.Message}
-    else:
-        return {"status": "error", "message": "An error occurred"}
-
-
+    
 def get_user_balance(user_id):
     db = get_db()
     cursor = db.cursor()
     cursor.execute("SELECT * FROM GetUserBalance(?)", user_id)
     balance = cursor.fetchone()
     return balance
+
+def buy_ward(user_id, ward_id, rp_price):
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("EXEC BuyWard ?, ?, ?", (user_id, ward_id, rp_price))
+    result = cursor.fetchone()
+    db.commit()
+
+    if result and result[0] == 'Success':
+        return {"status": "success", "message": result[1]}
+    else:
+        return {"status": "error", "message": result[1] if result else "Unknown error occurred"}
+
+
+def buy_chest(user_id, chest_id, rp_price):
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("EXEC BuyChest ?, ?, ?", (user_id, chest_id, rp_price))
+    result = cursor.fetchone()
+    db.commit()
+
+    if result and result[0] == 'Success':
+        return {"status": "success", "message": result[1]}
+    else:
+        return {"status": "error", "message": result[1] if result else "Unknown error occurred"}
+
+
+
 
 def purchaseRP(user_id, rp_amount):
     db = get_db()
