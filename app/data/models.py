@@ -70,7 +70,6 @@ def buy_ward(user_id, ward_id, rp_price):
     else:
         return {"status": "error", "message": result[1] if result else "Unknown error occurred"}
 
-
 def buy_chest(user_id, chest_id, rp_price):
     db = get_db()
     cursor = db.cursor()
@@ -82,9 +81,6 @@ def buy_chest(user_id, chest_id, rp_price):
         return {"status": "success", "message": result[1]}
     else:
         return {"status": "error", "message": result[1] if result else "Unknown error occurred"}
-
-
-
 
 def purchaseRP(user_id, rp_amount):
     db = get_db()
