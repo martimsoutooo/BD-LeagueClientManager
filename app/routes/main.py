@@ -121,7 +121,7 @@ def store():
     db = get_db()
     cursor = db.cursor()
 
-    cursor.execute("SELECT ID, Name, Category, Kingdom FROM GetChampionsByUser(?)",(user_id))
+    cursor.execute("SELECT ID, Name, Category,BE_Price,Kingdom FROM GetAvailableChampionsForUser(?)",(user_id))
     champions = cursor.fetchall()
 
     cursor.execute("SELECT ID, skin, champion, rp_price FROM GetAvailableSkinsForUser(?)",(user_id))
@@ -255,6 +255,7 @@ def buy_chest_route():
 
     result = buy_chest(user_id, chest_id, rp_price)
     return jsonify(result)
+
 
 @main_bp.route('/get_skins/<int:champion_id>')
 def get_skins(champion_id):

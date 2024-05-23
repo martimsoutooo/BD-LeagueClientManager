@@ -235,6 +235,19 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById("logoutButton").addEventListener("click", function() {
+    fetch('/logout')
+        .then(response => {
+            if (response.ok) {
+                window.location.href = '/login';
+            } else {
+                alert('Logout failed');
+            }
+        });
+    });
+</script>
 {% endblock %}
 
 

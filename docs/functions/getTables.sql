@@ -41,6 +41,20 @@ RETURN
     WHERE UI.ID_User = @UserID
 );
 
+CREATE FUNCTION GetAvailableChampionsForUser (@UserID INT)
+RETURNS TABLE
+AS
+RETURN
+(
+    SELECT C.ID, C.Name, C.BE_Price, C.Category, C.Kingdom 
+    FROM LCM.Champion C
+    WHERE C.ID NOT IN (
+        SELECT UI.ID_Item 
+        FROM LCM.User_Item UI 
+        WHERE UI.ID_User = @UserID
+    )
+);
+
 CREATE FUNCTION GetAvailableSkinsForUser (@UserID INT)
 RETURNS TABLE
 AS
