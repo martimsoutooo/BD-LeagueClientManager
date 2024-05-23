@@ -8,6 +8,9 @@ CREATE TABLE LCM.[User] (
     Email VARCHAR(255) UNIQUE NOT NULL,
     Password VARCHAR(255) NOT NULL,
     Rank_Points INT DEFAULT 0,
+	chestsSkin_qty INT DEFAULT 0,
+	chestsChampion_qty INT DEFAULT 0,
+	chestsWard_qty INT DEFAULT 0,
     BE INT DEFAULT 0,
     RP INT DEFAULT 0
 );

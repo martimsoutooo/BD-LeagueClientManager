@@ -157,30 +157,36 @@
                                                     <input class="form-check-input large-checkbox" type="checkbox" value="" id="alphabeticalFilter">
                                                     <label class="form-check-label" for="alphabeticalFilter">Alphabetical</label>
                                                 </div>
-                                                <div class="form-group pt-3">
-                                                    <label for="championFilter">Champion:</label>
-                                                    <select class="form-control" id="championFilter">
-                                                        <option value="all">All</option>
-                                                        <option value="garen">garen</option>
-                                                        <option value="darius">darius</option>
-                                                        <option value="ashe">ashe</option>
-                                                        <option value="lux">lux</option>
-                                                        <option value="zed">zed</option>
-                                                        <option value="ahri">ahri</option>
-                                                    </select>
-                                                </div>
                                             </div>
                                             <div class="col-md-9 p-3" style="border-left: 1px solid #ddd;">
                                                 <div class="row scrollable-content">
-                                                    {% for chest in chests %}
                                                     <div class="col-md-4">
                                                         <div class="card mb-3">
                                                             <div class="card-body">
-                                                                <h5 class="card-title font-weight-bold">{{ chest.chest }}</h5>
+                                                                <h5 class="card-title font-weight-bold">Skin Chests</h5>
+                                                                <p>Qty: {{ chest_quantities.chestsSkin_qty }}</p>
+                                                                <button class="btn btn-primary" onclick="openChest('Skin')">Open</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="card mb-3">
+                                                            <div class="card-body">
+                                                                <h5 class="card-title font-weight-bold">Champion Chests</h5>
+                                                                <p>Qty: {{ chest_quantities.chestsChampion_qty }}</p>
+                                                                <button class="btn btn-primary" onclick="openChest('Champion')">Open</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="card mb-3">
+                                                            <div class="card-body">
+                                                                <h5 class="card-title font-weight-bold">Ward Chests</h5>
+                                                                <p>Qty: {{ chest_quantities.chestsWard_qty }}</p>
+                                                                <button class="btn btn-primary" onclick="openChest('Ward')">Open</button>
                                                             </div>
                                                         </div>
                                                     </div>                                               
-                                                    {% endfor %}
                                                 </div>
                                             </div>
                                         </div>
@@ -247,8 +253,31 @@
             }
         });
     });
+
+    function openChest(chestType) {
+        fetch(`/open_chest/${chestType}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Response data:", data);
+            alert(data.message);
+            if (data.status === 'success') {
+                location.reload();  // Reload the page to update the inventory
+            }
+        })
+        .catch(error => {
+            console.error("Error during fetch:", error);
+            alert("An error occurred while processing your request.");
+        });
+    }
 </script>
 {% endblock %}
-
-
-

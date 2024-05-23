@@ -1,3 +1,4 @@
+import random
 from flask import Blueprint, render_template, request, jsonify, session, redirect, url_for
 from ..data.models import buy_champion, buy_skin, get_user_balance, buy_ward, buy_chest,purchaseRP
 from ..data.database import get_db
@@ -107,8 +108,20 @@ def profile():
 
     cursor.execute("SELECT ID, chest FROM GetChestsByUser(?)", (user_id,))
     chests = cursor.fetchall()
+
+    # Fetch chest quantities
+    cursor.execute("SELECT chestsSkin_qty, chestsChampion_qty, chestsWard_qty FROM LCM.[User] WHERE ID = ?", (user_id,))
+    chest_quantities = cursor.fetchone()
     
-    return render_template('profile.html', champions=champions, skins=skins,wards=wards,chests=chests,user_be=user_be, user_rp=user_rp)
+    return render_template('profile.html', 
+                           champions=champions, 
+                           skins=skins, 
+                           wards=wards, 
+                           chests=chests,
+                           user_be=user_be, 
+                           user_rp=user_rp,
+                           chest_quantities=chest_quantities)
+
 
 @main_bp.route('/store')
 def store():
@@ -206,8 +219,12 @@ def buy_chest_route():
     data = request.get_json()
     chest_id = data.get('chest_id')
     rp_price = data.get('rp_price')
+    chest_type = data.get('chest_type')
 
-    result = buy_chest(user_id, chest_id, rp_price)
+    print('Ola')
+    print(chest_type)
+
+    result = buy_chest(user_id, chest_id, rp_price,chest_type)
     return jsonify(result)
 
 
@@ -233,3 +250,68 @@ def select_skin(champion_id):
         return jsonify(skins_list)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@main_bp.route('/open_chest/<chest_type>', methods=['POST'])
+def open_chest(chest_type):
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({"status": "error", "message": "Not logged in"}), 401
+
+    db = get_db()
+    cursor = db.cursor()
+
+    # Função auxiliar para selecionar um item aleatório que o usuário ainda não possui
+    def get_random_item_not_owned(query, user_id):
+        cursor.execute(query, (user_id,))
+        items = cursor.fetchall()
+        if not items:
+            return None
+        return random.choice(items)
+
+    # Check and decrement chest quantity based on chest_type
+    if chest_type == 'Skin':
+        cursor.execute("SELECT chestsSkin_qty FROM LCM.[User] WHERE ID = ?", (user_id,))
+        current_qty = cursor.fetchone()[0]
+        if current_qty > 0:
+            cursor.execute("UPDATE LCM.[User] SET chestsSkin_qty = chestsSkin_qty - 1 WHERE ID = ?", (user_id,))
+            item = get_random_item_not_owned("SELECT ID, Name FROM LCM.Skin WHERE ID NOT IN (SELECT ID_Item FROM LCM.User_Item WHERE ID_User = ?) AND Name <> 'default'", user_id)
+            if item:
+                cursor.execute("INSERT INTO LCM.User_Item (ID_User, ID_Item, Data, Hora) VALUES (?, ?, GETDATE(), GETDATE())", (user_id, item[0]))
+                db.commit()
+                return jsonify({"status": "success", "message": f"Skin Chest opened successfully, you won {item[1]}"})
+            else:
+                return jsonify({"status": "error", "message": "No available skins to win"}), 400
+        else:
+            return jsonify({"status": "error", "message": "No Skin Chests available"}), 400
+    elif chest_type == 'Champion':
+        cursor.execute("SELECT chestsChampion_qty FROM LCM.[User] WHERE ID = ?", (user_id,))
+        current_qty = cursor.fetchone()[0]
+        if current_qty > 0:
+            cursor.execute("UPDATE LCM.[User] SET chestsChampion_qty = chestsChampion_qty - 1 WHERE ID = ?", (user_id,))
+            item = get_random_item_not_owned("SELECT ID, Name FROM LCM.Champion WHERE ID NOT IN (SELECT ID_Item FROM LCM.User_Item WHERE ID_User = ?)", user_id)
+            if item:
+                cursor.execute("INSERT INTO LCM.User_Item (ID_User, ID_Item, Data, Hora) VALUES (?, ?, GETDATE(), GETDATE())", (user_id, item[0]))
+                db.commit()
+                return jsonify({"status": "success", "message": f"Champion Chest opened successfully, you won {item[1]}"})
+            else:
+                return jsonify({"status": "error", "message": "No available champions to win"}), 400
+        else:
+            return jsonify({"status": "error", "message": "No Champion Chests available"}), 400
+    elif chest_type == 'Ward':
+        cursor.execute("SELECT chestsWard_qty FROM LCM.[User] WHERE ID = ?", (user_id,))
+        current_qty = cursor.fetchone()[0]
+        if current_qty > 0:
+            cursor.execute("UPDATE LCM.[User] SET chestsWard_qty = chestsWard_qty - 1 WHERE ID = ?", (user_id,))
+            item = get_random_item_not_owned("SELECT ID, Name FROM LCM.Ward WHERE ID NOT IN (SELECT ID_Item FROM LCM.User_Item WHERE ID_User = ?)", user_id)
+            if item:
+                cursor.execute("INSERT INTO LCM.User_Item (ID_User, ID_Item, Data, Hora) VALUES (?, ?, GETDATE(), GETDATE())", (user_id, item[0]))
+                db.commit()
+                return jsonify({"status": "success", "message": f"Ward Chest opened successfully, you won {item[1]}"})
+            else:
+                return jsonify({"status": "error", "message": "No available wards to win"}), 400
+        else:
+            return jsonify({"status": "error", "message": "No Ward Chests available"}), 400
+    else:
+        return jsonify({"status": "error", "message": "Invalid chest type"}), 400
+
+

@@ -72,14 +72,14 @@ function buyWard(wardId, rpPrice) {
     });
 }
 
-function buyChest(chestId, rpPrice) {
-    console.log("Attempting to buy chest with ID:", chestId, "and RP Price:", rpPrice);
+function buyChest(chestId, rpPrice, chestType) {
+    console.log("Attempting to buy chest with ID:", chestId, "and RP Price:", rpPrice, "and Chest Type:", chestType);
     fetch('/buy_chest_route', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ chest_id: chestId, rp_price: rpPrice })
+        body: JSON.stringify({ chest_id: chestId, rp_price: rpPrice, chest_type: chestType })
     })
     .then(response => {
         if (!response.ok) {
@@ -99,6 +99,7 @@ function buyChest(chestId, rpPrice) {
         alert("An error occurred while processing your request.");
     });
 }
+
 
 
 function purchaseRP() {

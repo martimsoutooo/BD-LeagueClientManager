@@ -70,10 +70,18 @@ def buy_ward(user_id, ward_id, rp_price):
     else:
         return {"status": "error", "message": result[1] if result else "Unknown error occurred"}
 
-def buy_chest(user_id, chest_id, rp_price):
+def buy_chest(user_id, chest_id, rp_price, chest_type):
+    
+    if 'Skin' in chest_type:
+        chest_type = 'Skin'
+    elif 'Champion' in chest_type:
+        chest_type = 'Champion'
+    elif 'Ward' in chest_type:
+        chest_type = 'Ward'
+
     db = get_db()
     cursor = db.cursor()
-    cursor.execute("EXEC BuyChest ?, ?, ?", (user_id, chest_id, rp_price))
+    cursor.execute("EXEC BuyChest ?, ?, ?, ?", (user_id, chest_id, rp_price, chest_type))
     result = cursor.fetchone()
     db.commit()
 
@@ -81,6 +89,7 @@ def buy_chest(user_id, chest_id, rp_price):
         return {"status": "success", "message": result[1]}
     else:
         return {"status": "error", "message": result[1] if result else "Unknown error occurred"}
+
 
 def purchaseRP(user_id, rp_amount):
     db = get_db()
