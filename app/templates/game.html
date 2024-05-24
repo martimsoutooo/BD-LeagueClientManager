@@ -15,10 +15,14 @@
                 Game
             </div>
             <div class="col-md-2 stats-box">
-                    BE: {{ user_be }}
+                    Blue Essence: {{ user_be }}
+                    <img src="https://server.blix.gg/imgproxy/nP7l6vA2EI8fTz4xs51FwU7acvVmJx2yR-Fo_iUmeHI/rs:fit:260:260:0/g:no/aHR0cDovL21pbmlvOjkwMDAvaW1hZ2VzLzQxM2I0ZTQzNzFjYjQxYTliMzQwNDJhNTBmNDg4NjVhLnBuZw.webp"
+                    alt="" class="stats-image">
             </div>
             <div class="col-md-2 stats-box">
                 Rank Points: {{ user_rank_points }}
+                <i class="fa fa-star" aria-hidden="true" style="color: rgb(229, 145, 0);"></i>
+            
             </div>
             <div class="col-md-2 stats-box-rank">
                 Rank: Unranked
@@ -26,7 +30,7 @@
             </div>
         </div>
     
-    <div class="row align-items-center mb-5">
+    <div class="row align-items-center mt-4 mb-4">
         <div class="col-md-2">
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 <h4 class="mb-3">Item Selection</h4>
@@ -212,16 +216,18 @@
                                         <div class="col-md-3 filter-section p-5">
                                             
                                             <h5 class="font-weight-bold" style="font-size: medium;">Selections:</h5>
-                                            <p id="game-champion">Champion: None</p>
-                                            <p id="game-skin">Skin: None</p>
-                                            <p id="game-ward">Ward: None</p>
+                                            <div style="font-size: 15px;">
+                                                <p id="game-champion">Champion: None</p>
+                                                <p id="game-skin">Skin: None</p>
+                                                <p id="game-ward">Ward: None</p>
+                                            </div>
 
                                             <form action="" type="submit">
                                                 <div class="form-group">
                                                     <label for="mapSelect" class="font-weight-bold">Map</label>
-                                                    <select class="form-control" id="mapSelect" name="map">
+                                                    <select class="form-control" id="mapSelect" name="map" style="font-size: 13px;">
                                                         {% for map in maps %}
-                                                            <option value="{{ map[0] }}">{{ map[1] }}</option>
+                                                            <option value="{{ map[0] }}">{{ map[1] }} </option>
                                                         {% endfor %}
                                                     </select>
                                                 </div>
@@ -240,7 +246,7 @@
                                                         <div id="game-result" style="display: none;">
                                                             <p id="game-result-detail"></p>
 
-                                                            <div class="btn btn-info" id="claim-button">Claim</div>
+                                                            <div class="btn btn-outline-info" id="claim-button">Claim</div>
                                                         </div>
                                                      </div>
                                             </div>
@@ -392,8 +398,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const selectedSkin = document.querySelector('input[name="skin"]:checked');
         const selectedWard = document.querySelector('input[name="ward"]:checked');
 
-        document.getElementById('game-champion').textContent = `Champion: ${selectedChampion ? selectedChampion.nextElementSibling.textContent.trim() : 'None'}`;
-        document.getElementById('game-skin').textContent = `Skin: ${selectedSkin ? selectedSkin.nextElementSibling.textContent.trim() : 'Default'}`;
+        document.getElementById('game-champion').textContent = `Champion: ${selectedChampion ? selectedChampion.nextElementSibling.querySelector('h5').textContent.trim() : 'None'}`;
+        document.getElementById('game-skin').textContent = `Skin: ${selectedSkin ? selectedSkin.nextElementSibling.querySelector('h5').textContent.trim() : 'Default'}`;
         document.getElementById('game-ward').textContent = `Ward: ${selectedWard ? selectedWard.nextElementSibling.textContent.trim() : 'None'}`;
 
         // Optionally switch to the game tab automatically
