@@ -310,3 +310,30 @@ def open_chest(chest_type):
         return jsonify({"status": "error", "message": "Invalid chest type"}), 400
 
 
+@main_bp.route('/filter_data')
+def filter_data():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify([])
+
+    data_type = request.args.get('type', 'Champion')
+    alphabetical = request.args.get('alphabetical', '0')
+    filter1 = request.args.get('filter1', 'all')
+    filter2 = request.args.get('filter2', 'all')
+
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute("""
+        EXEC GetFilteredData @UserID=?, @Type=?, @Alphabetical=?, @Filter1=?, @Filter2=?
+    """, (user_id, data_type, alphabetical, filter1, filter2))
+    
+    if data_type == 'Champion':
+        columns = ['ID', 'Name', 'Category', 'Kingdom']
+    elif data_type == 'Skin':
+        columns = ['ID', 'Skin', 'ChampionName']
+    elif data_type == 'Ward':
+        columns = ['ID', 'Ward']
+    
+    result = [dict(zip(columns, row)) for row in cursor.fetchall()]
+    return jsonify(result)
