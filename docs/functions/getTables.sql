@@ -85,7 +85,7 @@ RETURN
     )
 );
 
-CREATE FUNCTION dbo.GetChestsAndPrices()
+CREATE FUNCTION GetChestsAndPrices()
 RETURNS TABLE
 AS
 RETURN
@@ -94,4 +94,6 @@ RETURN
     FROM LCM.Chest Ch
     JOIN LCM.Item I ON Ch.ID = I.ID
 );
+
+
 
