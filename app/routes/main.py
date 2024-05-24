@@ -32,62 +32,50 @@ def game():
     
     db = get_db()
     cursor = db.cursor()
-    
-    # Fetch user data and champions
-    cursor.execute("SELECT * FROM GetUserInfo(?)", (user_id,))
-    user_data = cursor.fetchone()
-    user_rank_points, user_rp = (user_data or (None, None))
-
-    cursor.execute("SELECT * FROM GetUserChampions(?)", (user_id,))
-    champions = cursor.fetchall()
-
-    # Initialize skins and selected_champion_id
-    skins = []
-    selected_champion_id = None
 
     if request.method == 'GET':
+        # Carrega dados iniciais para a tela de seleção de jogo
         cursor.execute("SELECT * FROM GetUserInfo(?)", (user_id,))
         user_data = cursor.fetchone()
         user_rank_points, user_rp = (user_data or (None, None))
 
         cursor.execute("SELECT * FROM GetUserChampions(?)", (user_id,))
         champions = cursor.fetchall()
-
         cursor.execute("SELECT * FROM GetUserWards(?)", (user_id,))
         wards = cursor.fetchall()
-
-        # Fetch maps
         cursor.execute("SELECT ID, Name FROM LCM.Map")
         maps = cursor.fetchall()
 
         return render_template('game.html', user_rank_points=user_rank_points, user_rp=user_rp,
                                champions=champions, wards=wards, maps=maps)
-
+    
     elif request.method == 'POST':
+        # Recebe os dados do formulário quando o usuário clica em "Start Game"
         data = request.get_json()
         champion_id = data.get('champion_id')
-        skin_id = data.get('skin_id')
+        skin_id = data.get('skin_id', None)  # Pode ser None se nenhuma skin for selecionada
         ward_id = data.get('ward_id')
+        map_id = data.get('map_id')
 
         try:
+            # Insere a seleção do usuário e inicia o jogo
             cursor.execute("""
                 EXEC sp_InsertUserSelection @UserID=?, @SkinID=?, @ChampionID=?, @WardID=?""",
                 (user_id, skin_id, champion_id, ward_id))
+            user_select_id = cursor.fetchone()[0]
             db.commit()
-            return jsonify({"status": "success", "message": "Selection done successfully"})
 
+            cursor.execute("""
+                EXEC sp_StartGame @ID_Map=?, @ID_User_Select=?""",
+                (map_id, user_select_id))
+            db.commit()
+
+            return jsonify({"status": "success", "message": "Game started successfully"})
         except Exception as e:
             db.rollback()
             return jsonify({"status": "error", "message": str(e)}), 500
-
-    cursor.execute("SELECT * FROM GetUserWards(?)", (user_id,))
-    wards = cursor.fetchall()
-
-    cursor.execute("SELECT ID, Name FROM LCM.Map")
-    maps = cursor.fetchall()
-
-    return render_template('game.html', user_rank_points=user_rank_points, user_rp=user_rp,
-                           champions=champions, skins=skins, wards=wards, selected_champion_id=selected_champion_id, maps=maps)
+        
+        
 
 @main_bp.route('/profile')
 def profile():

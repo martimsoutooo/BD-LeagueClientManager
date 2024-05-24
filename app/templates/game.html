@@ -226,7 +226,7 @@
                                                 </div>
                                             </form> 
 
-                                            <div class="btn btn-outline-info"> Start Game</div>
+                                            <div class="btn btn-outline-info" id="startGameButton" onclick="startGame()"> Start Game</div>
 
                                         </div>
                                         <div class="col-md-9 p-3" style="border-left: 1px solid #ddd;">
@@ -402,30 +402,40 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-document.getElementById('startGameButton').addEventListener('click', function() {
+function startGame() {
     const selectedChampion = document.querySelector('input[name="champion"]:checked');
     const selectedSkin = document.querySelector('input[name="skin"]:checked');
     const selectedWard = document.querySelector('input[name="ward"]:checked');
+    const selectedMap = document.getElementById('mapSelect');
 
-    const data = {
-        champion_id: selectedChampion ? selectedChampion.value : null,
-        skin_id: selectedSkin ? selectedSkin.value : null,
-        ward_id: selectedWard ? selectedWard.value : null
-    };
+    if (selectedChampion && selectedWard && selectedMap) {
+        const data = {
+            champion_id: selectedChampion.value,
+            skin_id: selectedSkin ? selectedSkin.value : null,
+            ward_id: selectedWard.value,
+            map_id: selectedMap.value
+        };
 
-    fetch('/game', {  // Note the URL here should match your Flask route
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert(data.message);  // Display success/error message
-    })
-    .catch(error => console.error('Error starting game:', error));
-});
+        fetch('/game', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "success") {
+                alert("Game started successfully!");
+            } else {
+                alert("Error: " + data.message);
+            }
+        })
+        .catch(error => console.error('Error starting game:', error));
+    } else {
+        alert("Please make sure all selections are made.");
+    }
+}
 
 
 
