@@ -2,7 +2,7 @@ CREATE FUNCTION GetUserInfo(@UserID INT)
 RETURNS TABLE
 AS
 RETURN (
-    SELECT Rank_Points, RP
+    SELECT Rank_Points, RP, BE
     FROM LCM.[User]
     WHERE ID = @UserID
 );

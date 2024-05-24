@@ -34,10 +34,9 @@ def game():
     cursor = db.cursor()
 
     if request.method == 'GET':
-        # Carrega dados iniciais para a tela de seleção de jogo
         cursor.execute("SELECT * FROM GetUserInfo(?)", (user_id,))
         user_data = cursor.fetchone()
-        user_rank_points, user_rp = (user_data or (None, None))
+        user_rank_points, user_rp, user_be = (user_data or (None, None, None))
 
         cursor.execute("SELECT * FROM GetUserChampions(?)", (user_id,))
         champions = cursor.fetchall()
@@ -46,31 +45,33 @@ def game():
         cursor.execute("SELECT ID, Name FROM LCM.Map")
         maps = cursor.fetchall()
 
-        return render_template('game.html', user_rank_points=user_rank_points, user_rp=user_rp,
+        return render_template('game.html', user_rank_points=user_rank_points, user_rp=user_rp, user_be=user_be,
                                champions=champions, wards=wards, maps=maps)
     
     elif request.method == 'POST':
-        # Recebe os dados do formulário quando o usuário clica em "Start Game"
         data = request.get_json()
-        champion_id = data.get('champion_id')
-        skin_id = data.get('skin_id', None)  # Pode ser None se nenhuma skin for selecionada
-        ward_id = data.get('ward_id')
-        map_id = data.get('map_id')
+        champion_id = data['champion_id']
+        skin_id = data.get('skin_id')
+        ward_id = data['ward_id']
+        map_id = data['map_id']
 
         try:
-            # Insere a seleção do usuário e inicia o jogo
-            cursor.execute("""
-                EXEC sp_InsertUserSelection @UserID=?, @SkinID=?, @ChampionID=?, @WardID=?""",
-                (user_id, skin_id, champion_id, ward_id))
+            cursor.execute("EXEC sp_InsertUserSelection @UserID=?, @SkinID=?, @ChampionID=?, @WardID=?",
+                           (user_id, skin_id, champion_id, ward_id))
             user_select_id = cursor.fetchone()[0]
             db.commit()
 
-            cursor.execute("""
-                EXEC sp_StartGame @ID_Map=?, @ID_User_Select=?""",
-                (map_id, user_select_id))
+            cursor.execute("EXEC sp_StartGame @ID_Map=?, @ID_User_Select=?", (map_id, user_select_id))
             db.commit()
 
-            return jsonify({"status": "success", "message": "Game started successfully"})
+            cursor.execute("SELECT Result, Duration, Outcome_RP, Outcome_BE FROM LCM.Game WHERE ID_User_Select=?", (user_select_id,))
+            game_result = cursor.fetchone()
+            return jsonify({"status": "success", "message": "Game started successfully", "game": {
+                "Result": game_result[0],
+                "Duration": game_result[1],
+                "Outcome_RP": game_result[2],
+                "Outcome_BE": game_result[3]
+            }})
         except Exception as e:
             db.rollback()
             return jsonify({"status": "error", "message": str(e)}), 500

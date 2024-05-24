@@ -14,7 +14,8 @@
                 </a>
                 Game
             </div>
-            <div class="col-md-2">
+            <div class="col-md-2 stats-box">
+                    BE: {{ user_be }}
             </div>
             <div class="col-md-2 stats-box">
                 Rank Points: {{ user_rank_points }}
@@ -42,7 +43,7 @@
                         <i id="ward-check-icon" class="fas fa-check" style="display: none;"></i> <!-- FontAwesome icon -->
 
                     </a>
-                    <a class="nav-link mt-5" id="v-pills-game-tab" data-toggle="pill" href="#v-pills-game" role="tab" aria-controls="v-pills-game-tab" aria-selected="false">
+                    <a class="mt-5" id="v-pills-game-tab" data-toggle="pill" href="#v-pills-game" role="tab" aria-controls="v-pills-game-tab" aria-selected="false">
                         <button id="startGameButton" class="btn btn-danger" disabled style="width: 100%; height: 100%;">Confirm</button>
                     </a>
                 </div>
@@ -226,19 +227,22 @@
                                                 </div>
                                             </form> 
 
-                                            <div class="btn btn-outline-info" id="startGameButton" onclick="startGame()"> Start Game</div>
+                                            <div class="btn btn-primary id="startGameButton" onclick="startGame()"> Start Game</div>
 
                                         </div>
                                         <div class="col-md-9 p-3" style="border-left: 1px solid #ddd;">
-                                            <div class="row scrollable-content">
-                                                <div class="row scrollable-content ml-3">
-                                                    
-                                                    
+                                            <div class="row scrollable-content" class="d-flex flex-column" style="margin: 0; height: 100%; justify-content: center; text-align: center; align-items: center;">
+                                                    <!-- Loader Element -->
+                                                    <div>
+                                                        <div id="loader" style="display: none;" class="loader"></div>
 
+                                                        <!-- Game Result Display -->
+                                                        <div id="game-result" style="display: none;">
+                                                            <p id="game-result-detail"></p>
 
-
-
-                                                </div>
+                                                            <div class="btn btn-info" id="claim-button">Claim</div>
+                                                        </div>
+                                                     </div>
                                             </div>
                                         </div>
                                     </div>
@@ -403,40 +407,64 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 function startGame() {
+    const loader = document.getElementById('loader');
+    const gameResultDiv = document.getElementById('game-result');
+    const gameResultDetail = document.getElementById('game-result-detail');
+    const mapSelect = document.getElementById('mapSelect');
     const selectedChampion = document.querySelector('input[name="champion"]:checked');
     const selectedSkin = document.querySelector('input[name="skin"]:checked');
     const selectedWard = document.querySelector('input[name="ward"]:checked');
-    const selectedMap = document.getElementById('mapSelect');
 
-    if (selectedChampion && selectedWard && selectedMap) {
-        const data = {
-            champion_id: selectedChampion.value,
-            skin_id: selectedSkin ? selectedSkin.value : null,
-            ward_id: selectedWard.value,
-            map_id: selectedMap.value
-        };
+    // Prepare data to send
+    const data = {
+        champion_id: selectedChampion ? selectedChampion.value : null,
+        skin_id: selectedSkin ? selectedSkin.value : null,
+        ward_id: selectedWard ? selectedWard.value : null,
+        map_id: mapSelect.value
+    };
+
+    // Show loader
+    gameResultDiv.style.display = 'none';
+    loader.style.display = 'block';
+
+    setTimeout(() => {  // This setTimeout is for simulation purposes, replace it with your fetch call
+        loader.style.display = 'none';
+        gameResultDiv.style.display = 'block';
+        // Handle showing results here
+
 
         fetch('/game', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === "success") {
-                alert("Game started successfully!");
-            } else {
-                alert("Error: " + data.message);
-            }
-        })
-        .catch(error => console.error('Error starting game:', error));
-    } else {
-        alert("Please make sure all selections are made.");
-    }
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    }).then(response => response.json())
+    .then(data => {
+        // Hide loader
+        loader.style.display = 'none';
+        if (data.status === "success") {
+            // Display game results
+            gameResultDetail.innerHTML = `<h1><span class="font-weight-bold">${data.game.Result} </span></h1>Duration: ${data.game.Duration} minutes<br>Outcome RP: ${data.game.Outcome_RP}<br>Outcome BE: ${data.game.Outcome_BE}`;
+            gameResultDiv.style.display = 'block';
+        } else {
+            alert("Error: " + data.message);
+        }
+    }).catch(error => {
+        console.error('Error starting game:', error);
+        loader.style.display = 'none'; // Hide loader on error
+        alert('Failed to start game.');
+    });
+    }, 2000);
+
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    const claimButton = document.getElementById('claim-button');
+    if (claimButton) {
+        claimButton.addEventListener('click', function() {
+            window.location.reload(); // Refresh the page
+        });
+    }
+});
 
 
 </script>
