@@ -24,10 +24,8 @@
                 <img src="https://www.nicepng.com/png/full/17-174865_free-lol-riot-points-riot-points.png"
                     class="stats-image" alt="">
             </div>
-            <div class="col-md-2 stats-box-rank">
-                Rank: Gold
-                <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/764bbd9c-6d80-481d-8136-96848f01e843/ddx6pbw-df50a375-a9ab-4ab9-acea-281c6ceab93f.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzc2NGJiZDljLTZkODAtNDgxZC04MTM2LTk2ODQ4ZjAxZTg0M1wvZGR4NnBidy1kZjUwYTM3NS1hOWFiLTRhYjktYWNlYS0yODFjNmNlYWI5M2YucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.UfunOvrkALQ0M1Aqb5Dxjh4Pap3JX906ptJFVLldlLA"
-                    class="stats-image" alt="">
+            <div class="col-md-2 stats-box {{user_rank}}">
+                Rank: {{ user_rank }}
             </div>
             <div class="btn btn-danger col-md-1 stats-box" id="logoutButton" style="width: 100px">
                 Logout

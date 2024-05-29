@@ -3,7 +3,7 @@ RETURNS TABLE
 AS
 RETURN
 (
-    SELECT BE, RP
+    SELECT BE, RP, Rank
     FROM LCM.[User]
     WHERE ID = @UserID
 );

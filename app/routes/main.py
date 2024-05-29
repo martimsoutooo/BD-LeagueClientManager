@@ -108,6 +108,7 @@ def profile():
     balance = get_user_balance(user_id)
     user_be = balance.BE
     user_rp = balance.RP
+    user_rank = balance.Rank
     
     db = get_db()
     cursor = db.cursor()
@@ -135,7 +136,8 @@ def profile():
                            chests=chests,
                            user_be=user_be, 
                            user_rp=user_rp,
-                           chest_quantities=chest_quantities)
+                           chest_quantities=chest_quantities,
+                           user_rank=user_rank)
 
 
 @main_bp.route('/store')
