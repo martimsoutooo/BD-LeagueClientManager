@@ -34,19 +34,39 @@ def game():
     cursor = db.cursor()
 
     if request.method == 'GET':
-        cursor.execute("SELECT * FROM GetUserInfo(?)", (user_id,))
-        user_data = cursor.fetchone()
-        user_rank_points, user_rp, user_be = (user_data or (None, None, None))
+       # Fetch user information with default values initially set
+        user_data = {
+            "user_rank_points": None,
+            "user_rp": None,
+            "user_be": None,
+            "user_rank": "Unranked"
+        }
 
+        cursor.execute("SELECT Rank_Points, RP, BE, Rank FROM GetUserInfo(?)", (user_id,))
+        result = cursor.fetchone()
+        
+        if result:
+            # Map the database results to user_data
+            user_data_keys = list(user_data.keys())
+            for i, value in enumerate(result):
+                if value is not None:  # Update the value only if it's not None
+                    user_data[user_data_keys[i]] = value
+
+        # Fetch other user related data for the game view
         cursor.execute("SELECT * FROM GetUserChampions(?)", (user_id,))
         champions = cursor.fetchall()
+
         cursor.execute("SELECT * FROM GetUserWards(?)", (user_id,))
         wards = cursor.fetchall()
+
         cursor.execute("SELECT ID, Name FROM LCM.Map")
         maps = cursor.fetchall()
 
+        # Unpack user_data for rendering
+        user_rank_points, user_rp, user_be, user_rank = user_data.values()
+
         return render_template('game.html', user_rank_points=user_rank_points, user_rp=user_rp, user_be=user_be,
-                               champions=champions, wards=wards, maps=maps)
+                               champions=champions, wards=wards, maps=maps, user_rank=user_rank)
     
     elif request.method == 'POST':
         data = request.get_json()

@@ -101,9 +101,22 @@ CREATE TABLE LCM.Game (
     FOREIGN KEY (ID_User_Select) REFERENCES LCM.User_Select(ID)
 );
 
-
-
-
+-- Alter Table User - Rank
+ALTER TABLE LCM.[User]
+ADD Rank AS (
+    CASE
+		WHEN Rank_Points >= 800 THEN 'Challenger'
+        WHEN Rank_Points >= 700 THEN 'Grandmaster'
+        WHEN Rank_Points >= 600 THEN 'Master'
+        WHEN Rank_Points >= 500 THEN 'Diamond'
+        WHEN Rank_Points >= 400 THEN 'Platinum'
+        WHEN Rank_Points >= 300 THEN 'Gold'
+        WHEN Rank_Points >= 200 THEN 'Silver'
+        WHEN Rank_Points >= 100  THEN 'Bronze'
+		WHEN Rank_Points >= 1  THEN 'Iron'
+        ELSE 'Unranked'
+    END
+);
 
 
 
