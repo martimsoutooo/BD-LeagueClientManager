@@ -331,9 +331,9 @@ def filter_data():
     if data_type == 'Champion':
         columns = ['ID', 'Name', 'Category', 'Kingdom']
     elif data_type == 'Skin':
-        columns = ['ID', 'Skin', 'ChampionName']
+        columns = ['ID', 'skin', 'championName']
     elif data_type == 'Ward':
-        columns = ['ID', 'Ward']
+        columns = ['ID', 'ward']
     
     result = [dict(zip(columns, row)) for row in cursor.fetchall()]
     return jsonify(result)

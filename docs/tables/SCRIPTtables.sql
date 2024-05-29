@@ -67,7 +67,6 @@ CREATE TABLE LCM.Ward (
     FOREIGN KEY (ID) REFERENCES LCM.Item(ID)
 );
 
--- Tabela User_Select
 CREATE TABLE LCM.User_Select (
     ID INT IDENTITY(1,1) PRIMARY KEY,
     ID_User INT,
@@ -87,6 +86,7 @@ CREATE TABLE LCM.Map (
 );
 
 -- Tabela Game
+-- Tabela Game
 CREATE TABLE LCM.Game (
     ID INT PRIMARY KEY IDENTITY(1,1),
     Duration INT,
@@ -100,7 +100,6 @@ CREATE TABLE LCM.Game (
     FOREIGN KEY (ID_Map) REFERENCES LCM.Map(ID),
     FOREIGN KEY (ID_User_Select) REFERENCES LCM.User_Select(ID)
 );
-
 
 
 

@@ -192,18 +192,6 @@
                                                 <h5 class="pb-2">Filters</h5>
                                                 <input type="checkbox" class="form-check-input large-checkbox" id="alphabeticalFilterWard">
                                                 <label class="form-check-label" for="alphabeticalFilterWard">Alphabetical</label>
-                                                <div class="form-group pt-3">
-                                                    <label for="championFilterWard">Champion:</label>
-                                                    <select class="form-control" id="championFilterWard">
-                                                        <option value="all">All</option>
-                                                        <option value="garen">garen</option>
-                                                        <option value="darius">darius</option>
-                                                        <option value="ashe">ashe</option>
-                                                        <option value="lux">lux</option>
-                                                        <option value="zed">zed</option>
-                                                        <option value="ahri">ahri</option>
-                                                    </select>
-                                                </div>
                                             </div>
                                             <div class="col-md-9 p-3" style="border-left: 1px solid #ddd;">
                                                 <div class="row scrollable-content" id="ward-list">
@@ -331,6 +319,7 @@
                 });
             });
     }
+
 
     function updateWardList() {
         const alphabetical = document.getElementById('alphabeticalFilterWard').checked ? '1' : '0';
