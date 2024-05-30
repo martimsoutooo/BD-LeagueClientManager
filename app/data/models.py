@@ -23,9 +23,9 @@ def get_user_by_email(email):
 def verify_user(username, password):
     db = get_db()
     cursor = db.cursor()
-    cursor.execute("EXEC VerifyUser ?, ?", (username, password))
+    cursor.execute("EXEC VerifyUser ?jonyboi, ?", (username, password))
     user = cursor.fetchone()
-    return user
+    return user             
 
 def purchaseRP(user_id, rp_amount):
     db = get_db()

@@ -192,7 +192,7 @@
                     if (!anyChecked) {
                         icon.style.display = 'none';
                     }
-                }
+                }   
             });
         });
         
@@ -236,9 +236,9 @@
                     } else {
                         skins.forEach(skin => {
                             const skinDiv = document.createElement('div');
-                            skinDiv.className = 'col-md-4 mb-3'; 
+                            skinDiv.className = 'col-md-3 mb-3'; 
                             const cardHtml = `
-                                <div class="selectable-card">
+                                <div class="selectable-card d-flex flex-column justify-content-between p-3">
                                     <input type="checkbox" class="card-checkbox" name="skin" value="${skin.id}" id="skin-${skin.id}" hidden>
                                     <label for="skin-${skin.id}" class="card-body">
                                         <h5 class="card-title font-weight-bold">${skin.skin_name}</h5>
