@@ -437,6 +437,7 @@ def filter_data_store():
         print(result)
         return render_template('partials/_store_skin_list.html', skins=result)
     elif data_type == 'Ward':
+        print(result)
         return render_template('partials/_store_ward_list.html', wards=result)
     
     return jsonify([])
