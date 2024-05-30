@@ -247,7 +247,7 @@ def buy_chest_route():
 
 @main_bp.route('/selectSkin/<int:champion_id>', methods=['GET'])
 def select_skin(champion_id):
-    user_id = session.get('user_id')
+    user_id = session.get('user_i')
     if not user_id:
         return jsonify({'error': 'User not logged in'}), 401
 
@@ -338,17 +338,27 @@ def filter_data():
     if not user_id:
         return jsonify([])
 
+    context = request.args.get('context', 'profile')
     data_type = request.args.get('type', 'Champion')
     alphabetical = request.args.get('alphabetical', '0')
-    filter1 = request.args.get('filter1', 'all')
-    filter2 = request.args.get('filter2', 'all')
+    kingdom = request.args.get('kingdom', 'all')
+    category = request.args.get('category', 'all')
+
+    if alphabetical == 'on':
+        alphabetical = 1
+    else:
+        alphabetical = 0
+
+    print(kingdom)
+    print(category)
+    print(data_type)
 
     db = get_db()
     cursor = db.cursor()
 
     cursor.execute("""
         EXEC GetFilteredData @UserID=?, @Type=?, @Alphabetical=?, @Filter1=?, @Filter2=?
-    """, (user_id, data_type, alphabetical, filter1, filter2))
+    """, (user_id, data_type, alphabetical, kingdom, category))
     
     if data_type == 'Champion':
         columns = ['ID', 'Name', 'Category', 'Kingdom']
@@ -356,6 +366,20 @@ def filter_data():
         columns = ['ID', 'skin', 'championName']
     elif data_type == 'Ward':
         columns = ['ID', 'ward']
-    
+
+
     result = [dict(zip(columns, row)) for row in cursor.fetchall()]
-    return jsonify(result)
+    
+    
+    # Render the partial template for the appropriate context and data type
+    if context == 'profile':
+        if data_type == 'Champion':
+            return render_template('partials/_profile_champion_list.html', champions=result)
+        elif data_type == 'Skin':
+            print(result)
+            return render_template('partials/_profile_skin_list.html', skins=result)
+        elif data_type == 'Ward':
+            return render_template('partials/_profile_ward_list.html', wards=result)
+    
+    return jsonify([])
+
