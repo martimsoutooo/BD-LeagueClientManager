@@ -60,8 +60,8 @@
                                             <div class="col-md-3 filter-section p-5">
                                                 <form hx-get="/filter_data?type=Champion" hx-target="#champion-list" >
                                                     <h5 class="pb-2">Filters</h5>
-                                                    <input type="checkbox" class="form-check-input large-checkbox" name="alphabetical" id="alphabeticalFilterChampion">
-                                                    <label class="form-check-label" for="alphabeticalFilterChampion">Alphabetical</label>
+                                                    <input type="checkbox" class="form-check-input large-checkbox ml-0" name="alphabetical" id="alphabeticalFilterChampion">
+                                                    <label class="form-check-label pl-4" for="alphabeticalFilterChampion">Alphabetical</label>
                                                     <div class="form-group pt-3">
                                                         <label for="kingdomFilterChampion">Kingdom:</label>
                                                         <select class="form-control" id="kingdomFilterChampion" name="kingdom"> 
@@ -117,8 +117,8 @@
                                             <div class="col-md-3 filter-section p-5">
                                                 <form hx-get="/filter_data?type=Skin" hx-target="#skin-list">
                                                     <h5 class="pb-2">Filters</h5>
-                                                    <input type="checkbox" class="form-check-input large-checkbox" name="alphabetical" id="alphabeticalFilterSkin">
-                                                    <label class="form-check-label" for="alphabeticalFilterSkin">Alphabetical</label>
+                                                    <input type="checkbox" class="form-check-input large-checkbox ml-0" name="alphabetical" id="alphabeticalFilterSkin">
+                                                    <label class="form-check-label pl-4" for="alphabeticalFilterSkin">Alphabetical</label>
                                                     <div class="form-group pt-3">
                                                         <label for="championFilterSkin">Champion:</label>
                                                         <select class="form-control" name="kingdom" id="championFilterSkin">
@@ -127,7 +127,7 @@
                                                             <option value="{{ champion.Name }}">{{ champion.Name }}</option>
                                                             {% endfor %}
                                                         </select>
-                                                    <input type="submit" value="Apply">
+                                                    <input type="submit" value="Apply" class="mt-4">
                                                     </div> 
                                                 </form>
                                             </div>
@@ -151,13 +151,9 @@
                                 <div class="tab-pane fade h-100" id="v-pills-chests" role="tabpanel" aria-labelledby="v-pills-chests-tab">
                                     <div class="card h-100 fixed-card">
                                         <div class="row h-100">
-                                            <div class="col-md-3 filter-section p-5">
-                                                <h5 class="pb-2">Filters</h5>
-                                                <input type="checkbox" class="form-check-input large-checkbox" id="alphabeticalFilterChest">
-                                                <label class="form-check-label" for="alphabeticalFilterChest">Alphabetical</label>
-                                            </div>
-                                            <div class="col-md-9 p-3" style="border-left: 1px solid #ddd;">
+                                            <div class="col-md-9 pl-5 pt-4 style="border-left: 1px solid #ddd;">
                                                 <div class="row scrollable-content">
+                                                    {% if chest_quantities.chestsSkin_qty > 0 %}
                                                     <div class="col-md-4">
                                                         <div class="card mb-3">
                                                             <div class="card-body">
@@ -167,6 +163,8 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    {% endif %}
+                                                    {% if chest_quantities.chestsChampion_qty > 0 %}
                                                     <div class="col-md-4">
                                                         <div class="card mb-3">
                                                             <div class="card-body">
@@ -176,6 +174,8 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    {% endif %}
+                                                    {% if chest_quantities.chestsWard_qty > 0 %}
                                                     <div class="col-md-4">
                                                         <div class="card mb-3">
                                                             <div class="card-body">
@@ -184,7 +184,9 @@
                                                                 <button class="btn btn-primary" onclick="openChest('Ward')">Open</button>
                                                             </div>
                                                         </div>
-                                                    </div>                                               
+                                                    </div>
+                                                    {% endif %}
+                                               
                                                 </div>
                                             </div>
                                         </div>
@@ -196,9 +198,9 @@
                                             <div class="col-md-3 filter-section p-5">
                                                 <form hx-get="/filter_data?type=Ward" hx-target="#ward-list">
                                                     <h5 class="pb-2">Filters</h5>
-                                                    <input type="checkbox" class="form-check-input large-checkbox" name="alphabetical" id="alphabeticalFilterWard">
-                                                    <label class="form-check-label" for="alphabeticalFilterWard">Alphabetical</label>
-                                                    <input type="submit" value="Apply">
+                                                    <input type="checkbox" class="form-check-input large-checkbox ml-0" name="alphabetical" id="alphabeticalFilterWard">
+                                                    <label class="form-check-label pl-4" for="alphabeticalFilterWard">Alphabetical</label>
+                                                    <input type="submit" value="Apply" class="mt-4">
                                                 </form>
                                             </div>
                                             <div class="col-md-9 p-3" style="border-left: 1px solid #ddd;">
@@ -242,7 +244,7 @@
                                     </table>
                                 </div>
                                 
-                                <div class="tab-pane fade  h-100" id="v-pills-purchaseHistory" role="tabpanel" aria-labelledby="v-pills-purchaseHistory-tab">
+                                <div class="tab-pane fade h-100" id="v-pills-purchaseHistory" role="tabpanel" aria-labelledby="v-pills-purchaseHistory-tab">
 
                                     <table class="table">
                                         <thead>
@@ -253,16 +255,18 @@
                                                 <th>Name</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            {% for purchase in purchase_history %}
-                                            <tr>
-                                                <td>{{ purchase.Data }}</td>
-                                                <td>{{ purchase.Hora }}</td>
-                                                <td>{{ purchase.Type }}</td>
-                                                <td>{{ purchase.Name }}</td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
+                                        <div class="scrollable-table">
+                                            <tbody>
+                                                {% for purchase in purchase_history %}
+                                                <tr>
+                                                    <td>{{ purchase.Data }}</td>
+                                                    <td>{{ purchase.Hora }}</td>
+                                                    <td>{{ purchase.Type }}</td>
+                                                    <td>{{ purchase.Name }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </div>
                                     </table>
                                 </div>
                                 

@@ -107,7 +107,7 @@
                                                             <option value="Marksman">Marksman</option>
                                                             <option value="Support">Support</option>
                                                         </select>
-                                                        <input type="submit" value="Apply">
+                                                        <input type="submit" value="Apply" class="mt-4">
                                                     </div>
                                                 </form>
                                             </div>
@@ -157,7 +157,7 @@
                                                             <option value="{{ champion.Name }}">{{ champion.Name }}</option>
                                                             {% endfor %}
                                                         </select>
-                                                        <input type="submit" value="Apply">
+                                                        <input type="submit" value="Apply" class="mt-4">
                                                     </div>
                                                 </form>
                                             </div>
@@ -196,7 +196,7 @@
                                                         <input class="form-check-input large-checkbox" type="checkbox" name="alphabetical" id="alphabeticalFilter">
                                                         <label class="form-check-label" for="alphabeticalFilter">Alphabetical</label>
                                                     </div>
-                                                    <input type="submit" value="Apply">
+                                                    <input type="submit" value="Apply"  class="mt-4">
                                                 </form>
                                             </div>
                                             <div class="col-md-9 p-3" style="border-left: 1px solid #ddd;">
@@ -226,15 +226,8 @@
                                 <div class="tab-pane fade h-100" id="v-pills-chests" role="tabpanel" aria-labelledby="v-pills-chests-tab">
                                     <div class="card h-100 fixed-card">
                                         <div class="row h-100">
-                                            <div class="col-md-3 filter-section p-5">
-                                                <h5 class="pb-2">Filters</h5>
-                                                <div class="form-check pt-2">
-                                                    <input class="form-check-input large-checkbox" type="checkbox" value="" id="alphabeticalFilter">
-                                                    <label class="form-check-label" for="alphabeticalFilter">Alphabetical</label>
-                                                </div>
-                                            </div>
                                             <div class="col-md-9 p-3" style="border-left: 1px solid #ddd;">
-                                                <div class="row scrollable-content">
+                                                <div class="row scrollable-content ml-0">
                                                     {% for chest in chests %}
                                                     <div class="col-md-4">
                                                         <div class="card mb-3 shadow-sm">
