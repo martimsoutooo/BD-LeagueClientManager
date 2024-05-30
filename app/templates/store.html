@@ -69,47 +69,50 @@
                     <div class="row h-100">
                         <div class="col-md-12">
                             <div class="tab-content h-100" id="v-pills-tabContent">
-                                <!-- Champions -->
+                                
                                 <div class="tab-pane fade show active h-100" id="v-pills-champion" role="tabpanel" aria-labelledby="v-pills-champion-tab">
                                     <div class="card h-100 fixed-card">
                                         <div class="row h-100">
                                             <div class="col-md-3 filter-section p-5">
-                                                <h5 class="pb-2">Filters</h5>
-                                                <div class="form-check pt-2">
-                                                    <input class="form-check-input large-checkbox" type="checkbox" value="" id="alphabeticalFilter">
-                                                    <label class="form-check-label" for="alphabeticalFilter">Alphabetical</label>
-                                                </div>
-                                                <div class="form-group pt-3">
-                                                    <label for="kingdomFilter">Kingdom:</label>
-                                                    <select class="form-control" id="kingdomFilter">
-                                                        <option value="all">All</option>
-                                                        <option value="Demacia">Demacia</option>
-                                                        <option value="Noxus">Noxus</option>
-                                                        <option value="Ionia">Ionia</option>
-                                                        <option value="Freljord">Freljord</option>
-                                                        <option value="Targon">Targon</option>
-                                                        <option value="Bilgewater">Bilgewater</option>
-                                                        <option value="Shadow Isles">Shadow Isles</option>
-                                                        <option value="Shurima">Shurima</option>
-                                                        <option value="Zaun">Zaun</option>
-                                                        <option value="Piltover">Piltover</option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group pt-2">
-                                                    <label for="categoryFilter">Category:</label>
-                                                    <select class="form-control" id="categoryFilter">
-                                                        <option value="all">All</option>
-                                                        <option value="Tank">Tank</option>
-                                                        <option value="Fighter">Fighter</option>
-                                                        <option value="Mage">Mage</option>
-                                                        <option value="Assassin">Assassin</option>
-                                                        <option value="Marksman">Marksman</option>
-                                                        <option value="Support">Support</option>
-                                                    </select>
-                                                </div>
+                                                <form hx-get="/filter_data_store?type=Champion" hx-target="#champion-list">
+                                                    <h5 class="pb-2">Filters</h5>
+                                                    <div class="form-check pt-2">
+                                                        <input class="form-check-input large-checkbox" type="checkbox" name="alphabetical" id="alphabeticalFilter">
+                                                        <label class="form-check-label" for="alphabeticalFilter">Alphabetical</label>
+                                                    </div>
+                                                    <div class="form-group pt-3">
+                                                        <label for="kingdomFilter">Kingdom:</label>
+                                                        <select class="form-control" name="kingdom" id="kingdomFilter">
+                                                            <option value="all">All</option>
+                                                            <option value="Demacia">Demacia</option>
+                                                            <option value="Noxus">Noxus</option>
+                                                            <option value="Ionia">Ionia</option>
+                                                            <option value="Freljord">Freljord</option>
+                                                            <option value="Targon">Targon</option>
+                                                            <option value="Bilgewater">Bilgewater</option>
+                                                            <option value="Shadow Isles">Shadow Isles</option>
+                                                            <option value="Shurima">Shurima</option>
+                                                            <option value="Zaun">Zaun</option>
+                                                            <option value="Piltover">Piltover</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group pt-2">
+                                                        <label for="categoryFilter">Category:</label>
+                                                        <select class="form-control" name="category" id="categoryFilter">
+                                                            <option value="all">All</option>
+                                                            <option value="Tank">Tank</option>
+                                                            <option value="Fighter">Fighter</option>
+                                                            <option value="Mage">Mage</option>
+                                                            <option value="Assassin">Assassin</option>
+                                                            <option value="Marksman">Marksman</option>
+                                                            <option value="Support">Support</option>
+                                                        </select>
+                                                        <input type="submit" value="Apply">
+                                                    </div>
+                                                </form>
                                             </div>
                                             <div class="col-md-9 p-3" style="border-left: 1px solid #ddd;">
-                                                <div class="row scrollable-content">
+                                                <div class="row scrollable-content" id="champion-list">
                                                     {% for champion in champions %}
                                                     <div class="col-md-4">
                                                         <div class="card mb-3 shadow-sm">
@@ -139,26 +142,27 @@
                                     <div class="card h-100 fixed-card">
                                         <div class="row h-100">
                                             <div class="col-md-3 filter-section p-5">
-                                                <h5 class="pb-2">Filters</h5>
-                                                <div class="form-check pt-2">
-                                                    <input class="form-check-input large-checkbox" type="checkbox" value="" id="alphabeticalFilter">
-                                                    <label class="form-check-label" for="alphabeticalFilter">Alphabetical</label>
-                                                </div>
-                                                <div class="form-group pt-3">
-                                                    <label for="championFilter">Champion:</label>
-                                                    <select class="form-control" id="championFilter">
-                                                        <option value="all">All</option>
-                                                        <option value="garen">garen</option>
-                                                        <option value="darius">darius</option>
-                                                        <option value="ashe">ashe</option>
-                                                        <option value="lux">lux</option>
-                                                        <option value="zed">zed</option>
-                                                        <option value="ahri">ahri</option>
-                                                    </select>
-                                                </div>
+                                                <form hx-get="/filter_data_store?type=Skin" hx-target="#skin-list">
+                                                    <h5 class="pb-2">Filters</h5>
+                                                    <div class="form-check pt-2">
+                                                        <input class="form-check-input large-checkbox" name="alphabetical" type="checkbox" id="alphabeticalFilter">
+                                                        <label class="form-check-label" for="alphabeticalFilter">Alphabetical</label>
+
+                                                    </div>
+                                                    <div class="form-group pt-3">
+                                                        <label for="championFilter">Champion:</label>
+                                                        <select class="form-control" name="kingdom" id="championFilter">
+                                                            <option value="all">All</option>
+                                                            {% for champion in champions %}
+                                                            <option value="{{ champion.Name }}">{{ champion.Name }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                        <input type="submit" value="Apply">
+                                                    </div>
+                                                </form>
                                             </div>
                                             <div class="col-md-9 p-3" style="border-left: 1px solid #ddd;">
-                                                <div class="row scrollable-content">
+                                                <div class="row scrollable-content" id="skin-list">
                                                     {% for skin in skins %}
                                                     <div class="col-md-4">
                                                         <div class="card mb-3 shadow-sm">
@@ -186,14 +190,17 @@
                                     <div class="card h-100 fixed-card">
                                         <div class="row h-100">
                                             <div class="col-md-3 filter-section p-5">
-                                                <h5 class="pb-2">Filters</h5>
-                                                <div class="form-check pt-2">
-                                                    <input class="form-check-input large-checkbox" type="checkbox" value="" id="alphabeticalFilter">
-                                                    <label class="form-check-label" for="alphabeticalFilter">Alphabetical</label>
-                                                </div>
+                                                <form hx-get="/filter_data_store?type=Ward" hx-target="#ward-list">
+                                                    <h5 class="pb-2">Filters</h5>
+                                                    <div class="form-check pt-2">
+                                                        <input class="form-check-input large-checkbox" type="checkbox" name="alphabetical" id="alphabeticalFilter">
+                                                        <label class="form-check-label" for="alphabeticalFilter">Alphabetical</label>
+                                                    </div>
+                                                    <input type="submit" value="Apply">
+                                                </form>
                                             </div>
                                             <div class="col-md-9 p-3" style="border-left: 1px solid #ddd;">
-                                                <div class="row scrollable-content">
+                                                <div class="row scrollable-content" id="ward-list">
                                                     {% for ward in wards %}
                                                     <div class="col-md-4">
                                                         <div class="card mb-3 shadow-sm">

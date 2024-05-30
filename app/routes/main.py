@@ -247,7 +247,7 @@ def buy_chest_route():
 
 @main_bp.route('/selectSkin/<int:champion_id>', methods=['GET'])
 def select_skin(champion_id):
-    user_id = session.get('user_i')
+    user_id = session.get('user_id')
     if not user_id:
         return jsonify({'error': 'User not logged in'}), 401
 
@@ -338,7 +338,6 @@ def filter_data():
     if not user_id:
         return jsonify([])
 
-    context = request.args.get('context', 'profile')
     data_type = request.args.get('type', 'Champion')
     alphabetical = request.args.get('alphabetical', '0')
     kingdom = request.args.get('kingdom', 'all')
@@ -348,10 +347,6 @@ def filter_data():
         alphabetical = 1
     else:
         alphabetical = 0
-
-    print(kingdom)
-    print(category)
-    print(data_type)
 
     db = get_db()
     cursor = db.cursor()
@@ -367,19 +362,62 @@ def filter_data():
     elif data_type == 'Ward':
         columns = ['ID', 'ward']
 
-
     result = [dict(zip(columns, row)) for row in cursor.fetchall()]
     
-    
-    # Render the partial template for the appropriate context and data type
-    if context == 'profile':
-        if data_type == 'Champion':
-            return render_template('partials/_profile_champion_list.html', champions=result)
-        elif data_type == 'Skin':
-            print(result)
-            return render_template('partials/_profile_skin_list.html', skins=result)
-        elif data_type == 'Ward':
-            return render_template('partials/_profile_ward_list.html', wards=result)
+    if data_type == 'Champion':
+        return render_template('partials/_profile_champion_list.html', champions=result)
+    elif data_type == 'Skin':
+        print(result)
+        return render_template('partials/_profile_skin_list.html', skins=result)
+    elif data_type == 'Ward':
+        return render_template('partials/_profile_ward_list.html', wards=result)
     
     return jsonify([])
+
+@main_bp.route('/filter_data_store')
+def filter_data_store():
+
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify([])
+    
+    data_type = request.args.get('type', 'Champion')
+    alphabetical = request.args.get('alphabetical', '0')
+    kingdom = request.args.get('kingdom', 'all')
+    category = request.args.get('category', 'all')
+
+    if alphabetical == 'on':
+        alphabetical = 1
+    else:
+        alphabetical = 0
+
+    print(alphabetical)
+
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute("""
+        EXEC GetFilteredDataStore @UserID=?, @Type=?, @Alphabetical=?, @Filter1=?, @Filter2=?
+    """, (user_id, data_type, alphabetical, kingdom, category))
+
+    if data_type == 'Champion':
+        columns = ['ID', 'Name', 'Category', 'BE_Price','Kingdom']
+    elif data_type == 'Skin':
+        columns = ['ID', 'skin', 'champion', 'rp_price']
+    elif data_type == 'Ward':
+        columns = ['ID', 'Name', 'rp_price']
+
+    result = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+
+    if data_type == 'Champion':
+        return render_template('partials/_store_champion_list.html', champions=result)
+    elif data_type == 'Skin':
+        print(result)
+        return render_template('partials/_store_skin_list.html', skins=result)
+    elif data_type == 'Ward':
+        return render_template('partials/_store_ward_list.html', wards=result)
+    
+    return jsonify([])
+
 
