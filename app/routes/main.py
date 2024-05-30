@@ -1,14 +1,15 @@
 import random
 from flask import Blueprint, render_template, request, jsonify, session, redirect, url_for
-from ..data.models import buy_champion, buy_skin, get_user_balance, buy_ward, buy_chest,purchaseRP
+from ..data.models import purchaseRP
 from ..data.database import get_db
 
 main_bp = Blueprint('main', __name__)
 
+# já vi
 @main_bp.route('/')
 def index():
     return render_template('login.html')
-
+# já vi
 @main_bp.route('/dashboard')
 def dashboard():
     user_id = session.get('user_id')
@@ -34,36 +35,23 @@ def game():
     cursor = db.cursor()
 
     if request.method == 'GET':
-       # Fetch user information with default values initially set
-        user_data = {
-            "user_rank_points": None,
-            "user_rp": None,
-            "user_be": None,
-            "user_rank": "Unranked"
-        }
 
         cursor.execute("SELECT Rank_Points, RP, BE, Rank FROM GetUserInfo(?)", (user_id,))
-        result = cursor.fetchone()
-        
-        if result:
-            # Map the database results to user_data
-            user_data_keys = list(user_data.keys())
-            for i, value in enumerate(result):
-                if value is not None:  # Update the value only if it's not None
-                    user_data[user_data_keys[i]] = value
+        info = cursor.fetchone()
 
-        # Fetch other user related data for the game view
-        cursor.execute("SELECT * FROM GetUserChampions(?)", (user_id,))
+        user_rank_points = info.Rank_Points
+        user_rp = info.RP
+        user_be = info.BE
+        user_rank = info.Rank
+
+        cursor.execute("SELECT * FROM GetChampionsByUser(?)", (user_id,))
         champions = cursor.fetchall()
 
-        cursor.execute("SELECT * FROM GetUserWards(?)", (user_id,))
+        cursor.execute("SELECT * FROM GetWardsByUser(?)", (user_id,))
         wards = cursor.fetchall()
 
         cursor.execute("SELECT ID, Name FROM LCM.Map")
         maps = cursor.fetchall()
-
-        # Unpack user_data for rendering
-        user_rank_points, user_rp, user_be, user_rank = user_data.values()
 
         return render_template('game.html', user_rank_points=user_rank_points, user_rp=user_rp, user_be=user_be,
                                champions=champions, wards=wards, maps=maps, user_rank=user_rank)
@@ -92,6 +80,7 @@ def game():
                 "Outcome_RP": game_result[2],
                 "Outcome_BE": game_result[3]
             }})
+        
         except Exception as e:
             db.rollback()
             return jsonify({"status": "error", "message": str(e)}), 500
@@ -105,24 +94,23 @@ def profile():
         print("User ID not found in session")
         return redirect(url_for('auth.login'))
     
-    balance = get_user_balance(user_id)
-    user_be = balance.BE
-    user_rp = balance.RP
-    user_rank = balance.Rank
-    
     db = get_db()
     cursor = db.cursor()
     
+    cursor.execute("SELECT * FROM GetUserInfo(?)", user_id)
+    info = cursor.fetchone()
+
+    user_be = info.BE
+    user_rp = info.RP
+    user_rank = info.Rank
+
     cursor.execute("""
         SELECT *
         FROM LCM.View_UserGameHistory ui
         WHERE ui.ID_User = (?)
     """, (user_id,))
     game_history = cursor.fetchall()
-    print(game_history)  # Check what is being returned right here.
 
-
-    # Fetch purchase history
     cursor.execute("""
         SELECT *
         FROM LCM.View_UserBuyHistory ui
@@ -168,12 +156,14 @@ def store():
         print("User ID not found in session")
         return redirect(url_for('auth.login'))
     
-    balance = get_user_balance(user_id)
-    user_be = balance.BE
-    user_rp = balance.RP
-    
     db = get_db()
     cursor = db.cursor()
+
+    cursor.execute("SELECT * FROM GetUserInfo(?)", user_id)
+    info = cursor.fetchone()
+
+    user_be = info.BE
+    user_rp = info.RP
 
     cursor.execute("SELECT ID, Name, Category, BE_Price, Kingdom FROM GetAvailableChampionsForUser(?)",(user_id))
     champions = cursor.fetchall()
@@ -200,8 +190,17 @@ def buy_champion_route():
     champion_id = data.get('champion_id')
     be_price = data.get('be_price')
     
-    result = buy_champion(user_id, int(champion_id), int(be_price))
-    return jsonify(result)
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute("EXEC BuyChampion ?, ?, ?", (user_id, champion_id, be_price))
+    result = cursor.fetchone()
+    db.commit()
+
+    if result and result.Result == 'Success':
+        return {"status": "success", "message": result.Message}
+    else:
+        return {"status": "error", "message": result.Message}
 
 
 @main_bp.route('/purchase_rp', methods=['POST'])
@@ -230,8 +229,16 @@ def buy_skin_route():
     skin_id = data.get('skin_id')
     rp_price = data.get('rp_price')
     
-    result = buy_skin(user_id, skin_id, rp_price)
-    return jsonify(result)
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("EXEC BuySkin ?, ?, ?", (user_id, skin_id, rp_price))
+    result = cursor.fetchone()
+    db.commit()
+
+    if result and result.Result == 'Success':
+        return {"status": "success", "message": result.Message}
+    else:
+        return {"status": "error", "message": result.Message}
 
 
 @main_bp.route('/buy_ward_route', methods=['POST'])
@@ -244,8 +251,16 @@ def buy_ward_route():
     ward_id = data.get('ward_id')
     rp_price = data.get('rp_price')
 
-    result = buy_ward(user_id, ward_id, rp_price)
-    return jsonify(result)
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("EXEC BuyWard ?, ?, ?", (user_id, ward_id, rp_price))
+    result = cursor.fetchone()
+    db.commit()
+
+    if result and result[0] == 'Success':
+        return {"status": "success", "message": result[1]}
+    else:
+        return {"status": "error", "message": result[1] if result else "Unknown error occurred"}
 
 
 @main_bp.route('/buy_chest_route', methods=['POST'])
@@ -259,11 +274,23 @@ def buy_chest_route():
     rp_price = data.get('rp_price')
     chest_type = data.get('chest_type')
 
-    print('Ola')
-    print(chest_type)
+    if 'Skin' in chest_type:
+        chest_type = 'Skin'
+    elif 'Champion' in chest_type:
+        chest_type = 'Champion'
+    elif 'Ward' in chest_type:
+        chest_type = 'Ward'
 
-    result = buy_chest(user_id, chest_id, rp_price,chest_type)
-    return jsonify(result)
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("EXEC BuyChest ?, ?, ?, ?", (user_id, chest_id, rp_price, chest_type))
+    result = cursor.fetchone()
+    db.commit()
+
+    if result and result[0] == 'Success':
+        return {"status": "success", "message": result[1]}
+    else:
+        return {"status": "error", "message": result[1] if result else "Unknown error occurred"}
 
 
 @main_bp.route('/selectSkin/<int:champion_id>', methods=['GET'])

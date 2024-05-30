@@ -11,7 +11,7 @@ def register():
         password = request.form.get('password')
         
         print(f"Received: username={username}, email={email}, password={password}")  # Debugging
-        
+
         if get_user_by_username(username):
             return jsonify({"status": "error", "message": "Username already exists"}), 409
         if get_user_by_email(email):

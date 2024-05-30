@@ -118,7 +118,7 @@ function purchaseRP() {
             alert(data.message);
             location.reload();
         } else {
-            alert(data.message);
+            location.reload();
         }
     })
     .catch(error => {

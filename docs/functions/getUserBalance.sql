@@ -1,9 +1,0 @@
-CREATE FUNCTION GetUserBalance(@UserID INT)
-RETURNS TABLE
-AS
-RETURN
-(
-    SELECT BE, RP, Rank
-    FROM LCM.[User]
-    WHERE ID = @UserID
-);
