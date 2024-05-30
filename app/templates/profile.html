@@ -5,7 +5,7 @@
 {% block content %}
 <div class="vh-100 d-flex align-items-center justify-content-center">
     <div class="container">
-        <div class="row align-items-center">
+        <div class="row">
             <div class="font-weight-bold col-md-4" style="font-size: 80px">
                 <a href="{{ url_for('main.dashboard') }}">
                     <div class="btn">
@@ -43,8 +43,12 @@
                         aria-controls="v-pills-wards" aria-selected="false">Wards</a>
                     <a class="nav-link" id="v-pills-chests-tab" data-toggle="pill" href="#v-pills-chests" role="tab"
                         aria-controls="v-pills-chests" aria-selected="false">Chests</a>
+                    <h4 class="mb-3 mt-3">History</h4>
+                    <a class="nav-link " href="#v-pills-gameHistory" data-toggle="pill" id="v-pills-gameHistory-tab" role="tab" aria-controls="v-pills-gameHistory">Match</a>
+                    <a class="nav-link" href="#v-pills-purchaseHistory" data-toggle="pill" id="v-pills-purchaseHistory-tab" role="tab" aria-controls="v-pills-purchaseHistory" >Purchase</a>
                 </div>
             </div>
+            
             <div class="col-md-10">
                 <div class="shadow-sm rounded-lg w-100 card-container">
                     <div class="row h-100">
@@ -213,7 +217,56 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                                <div class="tab-pane fade" id="v-pills-gameHistory" role="tabpanel" aria-labelledby="v-pills-gameHistory-tab">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Time</th>
+                                                <th>Map</th>
+                                                <th>Duration</th>
+                                                <th>Result</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for game in game_history %}
+                                            <tr>
+                                                <td>{{ game.Data }}</td>
+                                                <td>{{ game.Hora }}</td>
+                                                <td>{{ game.MapName }}</td>
+                                                <td>{{ game.Duration }} minutes</td>
+                                                <td>{{ game.Result }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                <div class="tab-pane fade  h-100" id="v-pills-purchaseHistory" role="tabpanel" aria-labelledby="v-pills-purchaseHistory-tab">
+
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Hour</th>
+                                                <th>Item Type</th>
+                                                <th>Name</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for purchase in purchase_history %}
+                                            <tr>
+                                                <td>{{ purchase.Data }}</td>
+                                                <td>{{ purchase.Hora }}</td>
+                                                <td>{{ purchase.Type }}</td>
+                                                <td>{{ purchase.Name }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                
                         </div>
                         <div class="col-md-1">
                             <div class="vertical-line"></div>
