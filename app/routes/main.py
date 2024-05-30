@@ -113,6 +113,24 @@ def profile():
     db = get_db()
     cursor = db.cursor()
     
+    cursor.execute("""
+        SELECT *
+        FROM LCM.View_UserGameHistory ui
+        WHERE ui.ID_User = (?)
+    """, (user_id,))
+    game_history = cursor.fetchall()
+    print(game_history)  # Check what is being returned right here.
+
+
+    # Fetch purchase history
+    cursor.execute("""
+        SELECT *
+        FROM LCM.View_UserBuyHistory ui
+        JOIN LCM.Item i ON ui.ID_Item = i.ID
+        WHERE ui.ID_User = (?)
+    """, (user_id,))
+    purchase_history = cursor.fetchall()
+
     cursor.execute("SELECT ID, Name, Category, Kingdom FROM GetChampionsByUser(?)", (user_id,))
     champions = cursor.fetchall()
 
@@ -137,7 +155,10 @@ def profile():
                            user_be=user_be, 
                            user_rp=user_rp,
                            chest_quantities=chest_quantities,
-                           user_rank=user_rank)
+                           user_rank=user_rank,
+                           game_history=game_history,
+                           purchase_history=purchase_history
+                           )
 
 
 @main_bp.route('/store')
