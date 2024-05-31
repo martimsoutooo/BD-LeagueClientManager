@@ -163,6 +163,23 @@ Examente como acontece na página do perfil, só aparecem os items que pertencem
 EXEC sp_InsertUserSelection @UserID=?, @SkinID=?, @ChampionID=?, @WardID=?, (user_id, skin_id, champion_id, ward_id)
 ```
 
+#### Game - Start Game
+
+![Exemplo Screenshot!](screenshots/game2.png "AnImage")
+```sql
+-- Uso do SP StartGame quando se clica no butao "Start Game"
+EXEC sp_StartGame @ID_Map=?, @ID_User_Select=?, (map_id, user_select_id)
+```
+
+#### Game - Claim
+
+![Exemplo Screenshot!](screenshots/game3.png "AnImage")
+```sql
+-- Uso da Query para mostrar o resulta do jogo
+SELECT Result, Duration, Outcome_RP, Outcome_BE FROM LCM.Game WHERE ID_User_Select=? (user_select_id)```
+
+
+
 ## Normalização
 
 
