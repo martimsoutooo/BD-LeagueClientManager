@@ -199,12 +199,11 @@ Ao revermos o nosso sistema, verificámos que este já se encontrava conforme a 
 Para melhorar a velocidade das pesquisas de champions e skins, optámos por utilizar índices. Apesar da nossa base de dados ser de tamanho relativamente pequeno, decidimos implementar esta estrutura nessas tabelas devido à sua utillizaçao frequente.
 
 ```sql
--- Create an index to speed
 CREATE INDEX idx_skin_name ON LCM.Skin (Name);
 CREATE INDEX idx_champion_name ON LCM.Champion(Name);
 ```
 
-## Mais informaçoes
+## Mais informações
 
 
  
