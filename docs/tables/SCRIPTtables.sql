@@ -117,11 +117,3 @@ ADD Rank AS (
         ELSE 'Unranked'
     END
 );
-
-
-
-
-
-
-
-

@@ -35,5 +35,3 @@ BEGIN
             CASE WHEN @Alphabetical = 0 THEN ID END ASC
     END
 END
-
-
