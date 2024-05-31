@@ -70,8 +70,10 @@ createUser(username, email, password)
 -- Uso da UDF HashPassword para encriptar a password
 HashPassword(password)
 ```
+### Profile 
+Nesta página o user tem acesso aos seus dados pessoais, como inventário e histórico. 
 
-### Profile - Top Info Bar
+#### Profile - Top Info Bar
 
 ![Exemplo Screenshot!](screenshots/profile1.png "AnImage")
 
@@ -81,7 +83,7 @@ SELECT * FROM GetUserInfo(user_id)
 ```
 
 
-### Profile - Inventory (Filtering)
+#### Profile - Inventory (Filtering)
 Filtros usados nas abas Champion/Skins/Wards
 ```sql
 -- Uso da SP  GetFilteredData para fazer a filtragem nas respetivas abas 
@@ -89,7 +91,7 @@ EXEC GetFilteredData @UserID=?, @Type=?, @Alphabetical=?, @Filter1=?, @Filter2=?
     """, (user_id, data_type, alphabetical, kingdom, category))
 ```
 
-### Profile - Inventory (Champion)
+#### Profile - Inventory (Champion)
 
 ![Exemplo Screenshot!](screenshots/profile1.png "AnImage")
 
@@ -98,7 +100,7 @@ EXEC GetFilteredData @UserID=?, @Type=?, @Alphabetical=?, @Filter1=?, @Filter2=?
 SELECT ID, Name, Category, Kingdom FROM GetChampionsByUser(user_id)
 ```
 
-### Profile - Inventory (Skins)
+#### Profile - Inventory (Skins)
 
 ![Exemplo Screenshot!](screenshots/profile2.png "AnImage")
 
@@ -107,7 +109,7 @@ SELECT ID, Name, Category, Kingdom FROM GetChampionsByUser(user_id)
 SELECT ID, skin, championName FROM GetSkinsByUser(user_id)
 ```
 
-### Profile - Inventory (Wards)
+#### Profile - Inventory (Wards)
 
 ![Exemplo Screenshot!](screenshots/profile3.png "AnImage")
 
@@ -116,7 +118,7 @@ SELECT ID, skin, championName FROM GetSkinsByUser(user_id)
 SELECT ID, ward FROM GetWardsByUser(user_id)
 ```
 
-### Profile - Inventory (Chests)
+#### Profile - Inventory (Chests)
 
 ![Exemplo Screenshot!](screenshots/profile4.png "AnImage")
 
@@ -127,7 +129,7 @@ SELECT ID, Name, Category, Kingdom FROM GetChampionsByUser(user_id)
 SELECT chestsSkin_qty, chestsChampion_qty, chestsWard_qty FROM LCM.[User] WHERE ID = user_id
 ```
 
-### Profile - History (Match)
+#### Profile - History (Match)
 
 ![Exemplo Screenshot!](screenshots/profile5.png "AnImage")
 
@@ -136,7 +138,7 @@ SELECT chestsSkin_qty, chestsChampion_qty, chestsWard_qty FROM LCM.[User] WHERE 
 SELECT * FROM LCM.View_UserGameHistory ui WHERE ui.ID_User = user_id
 ```
 
-### Profile - History (Purchase)
+#### Profile - History (Purchase)
 
 ![Exemplo Screenshot!](screenshots/profile6.png "AnImage")
 
@@ -148,16 +150,17 @@ JOIN LCM.Item i ON ui.ID_Item = i.ID
 WHERE ui.ID_User = user_id
 ```
 
-### Game - Item Selection
+### Game
 
 Nesta página, acontece a simulaçao de um jogo. O user fazer a seleçao de items que pertencem ao seu inventário para jogar.
-Examente como acontece na página do perfil, só aparecem os items que pertencem ao seu inventário
+Examente como acontece na página do perfil, só aparecem os items que pertencem ao seu inventário. Desta forma nao fazemos referencia às UDF em causa por uma questao de nao nos repetirmos desnecessáriamente. 
+
+#### Game - Item Selection
 
 ![Exemplo Screenshot!](screenshots/game1.png "AnImage")
 ```sql
--- Uso do SP InsertUserSelection quando o user carrega no butao
-"EXEC sp_InsertUserSelection @UserID=?, @SkinID=?, @ChampionID=?, @WardID=?",
-                           (user_id, skin_id, champion_id, ward_id))
+-- Uso do SP InsertUserSelection quando o user carrega no butao "Confirm"
+EXEC sp_InsertUserSelection @UserID=?, @SkinID=?, @ChampionID=?, @WardID=?, (user_id, skin_id, champion_id, ward_id)
 ```
 
 ## Normalização
