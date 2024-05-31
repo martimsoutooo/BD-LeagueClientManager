@@ -148,6 +148,18 @@ JOIN LCM.Item i ON ui.ID_Item = i.ID
 WHERE ui.ID_User = user_id
 ```
 
+### Game - Item Selection
+
+Nesta página, acontece a simulaçao de um jogo. O user fazer a seleçao de items que pertencem ao seu inventário para jogar.
+Examente como acontece na página do perfil, só aparecem os items que pertencem ao seu inventário
+
+![Exemplo Screenshot!](screenshots/game1.png "AnImage")
+```sql
+-- Uso do SP InsertUserSelection quando o user carrega no butao
+"EXEC sp_InsertUserSelection @UserID=?, @SkinID=?, @ChampionID=?, @WardID=?",
+                           (user_id, skin_id, champion_id, ward_id))
+```
+
 ## Normalização
 
 
@@ -165,7 +177,8 @@ Para melhorar a velocidade das pesquisas de champions e skins, optámos por util
 
 ```sql
 -- Create an index to speed
-CREATE INDEX index_name ON table_name (column1, column2, ...);
+CREATE INDEX idx_skin_name ON LCM.Skin (Name);
+CREATE INDEX idx_champion_name ON LCM.Champion(Name);
 ```
 
 ## Views
