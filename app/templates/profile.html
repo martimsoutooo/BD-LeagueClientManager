@@ -263,7 +263,7 @@
                                                     <td>{{ purchase.Hora }}</td>
                                                     <td>{{ purchase.Type }}</td>
                                                     <td>{{ purchase.Name }}</td>
-                                                    <td><button class="btn btn-danger" onclick="undoPurchase({{ purchase.ID }})">Remove</button></td>
+                                                    <td><button class="btn btn-danger" onclick="undoPurchase('{{ purchase.ID }}')">Remove</button></td>
                                                 </tr>
                                                 {% endfor %}
                                             </tbody>
