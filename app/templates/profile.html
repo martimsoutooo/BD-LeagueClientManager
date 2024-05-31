@@ -263,6 +263,7 @@
                                                     <td>{{ purchase.Hora }}</td>
                                                     <td>{{ purchase.Type }}</td>
                                                     <td>{{ purchase.Name }}</td>
+                                                    <td><button class="btn btn-danger" onclick="undoPurchase({{ purchase.ID }})">Remove</button></td>
                                                 </tr>
                                                 {% endfor %}
                                             </tbody>
@@ -283,6 +284,26 @@
 </div>
 
 <script>
+    function undoPurchase(itemId) {
+    fetch(`/undo_purchase/${itemId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+        if (data.status === 'success') {
+            location.reload();  // Reload the page to update the history
+        }
+    })
+    .catch(error => {
+        console.error("Error during fetch:", error);
+        alert("Failed to undo the purchase.");
+    });
+}
+
     document.getElementById("logoutButton").addEventListener("click", function() {
         fetch('/logout')
             .then(response => {

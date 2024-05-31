@@ -148,6 +148,8 @@ SELECT *
 FROM LCM.View_UserBuyHistory ui
 JOIN LCM.Item i ON ui.ID_Item = i.ID
 WHERE ui.ID_User = user_id
+-- Uso da Query para remover um compra efetuada e esta mesma voltar a passar disponível para ser comprada novamente
+DELETE FROM LCM.User_Item WHERE ID_Item = ? AND ID_User = ?, (item_id, user_id)
 ```
 
 ### Store
@@ -198,6 +200,24 @@ Examente como acontece na página do perfil, só aparecem os items que pertencem
 EXEC sp_InsertUserSelection @UserID=?, @SkinID=?, @ChampionID=?, @WardID=?, (user_id, skin_id, champion_id, ward_id)
 ```
 
+#### Game - Start Game
+
+![Exemplo Screenshot!](screenshots/game2.png "AnImage")
+```sql
+-- Uso do SP StartGame quando se clica no butao "Start Game" - insere logo o outcome do jogo na tabela do user
+EXEC sp_StartGame @ID_Map=?, @ID_User_Select=?, (map_id, user_select_id)
+```
+
+#### Game - Result
+
+![Exemplo Screenshot!](screenshots/game3.png "AnImage")
+```sql
+-- Uso da Query para mostrar o resulta do jogo
+SELECT Result, Duration, Outcome_RP, Outcome_BE FROM LCM.Game WHERE ID_User_Select=? (user_select_id)
+```
+
+
+
 ## Normalização
 
 
@@ -209,22 +229,19 @@ Ao revermos o nosso sistema, verificámos que este já se encontrava conforme a 
 
 ## UDF
 
+## Views
+
 ## Indexes
 
 Para melhorar a velocidade das pesquisas de champions e skins, optámos por utilizar índices. Apesar da nossa base de dados ser de tamanho relativamente pequeno, decidimos implementar esta estrutura nessas tabelas devido à sua utillizaçao frequente.
 
 ```sql
--- Create an index to speed
 CREATE INDEX idx_skin_name ON LCM.Skin (Name);
 CREATE INDEX idx_champion_name ON LCM.Champion(Name);
 ```
 
-## Views
+## Mais informações
 
-
-
-
-
-
-
+### Features implementadas após a apresentação
+- Opção de dar remove de uma compra efetuada (página do profile) 
  
