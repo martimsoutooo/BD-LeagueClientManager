@@ -11,7 +11,6 @@ BEGIN
         DECLARE @UserBE INT;
         SELECT @UserBE = BE FROM LCM.[User] WHERE ID = @UserID;
 
-        IF @UserBE >= @BECost
         BEGIN
             UPDATE LCM.[User] SET BE = BE - @BECost WHERE ID = @UserID;
             INSERT INTO LCM.User_Item (ID_User, ID_Item, Data, Hora)
@@ -20,12 +19,6 @@ BEGIN
             COMMIT TRANSACTION;
             SELECT 'Success' AS Result, 'Champion purchased successfully' AS Message;
         END
-        ELSE
-        BEGIN
-            ROLLBACK TRANSACTION;
-            SELECT 'Error' AS Result, 'Not enough Blue Essence' AS Message;
-        END
-
     END TRY
     BEGIN CATCH
         ROLLBACK TRANSACTION;

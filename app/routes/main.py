@@ -25,6 +25,7 @@ def dashboard():
 
     return render_template('dashboard.html', user_name=user_name)
 
+# já vi
 @main_bp.route('/game', methods=['GET', 'POST'])
 def game():
     user_id = session.get('user_id')
@@ -86,7 +87,7 @@ def game():
             return jsonify({"status": "error", "message": str(e)}), 500
         
         
-
+#já vi
 @main_bp.route('/profile')
 def profile():
     user_id = session.get('user_id')
@@ -131,7 +132,6 @@ def profile():
     cursor.execute("SELECT ID, chest FROM GetChestsByUser(?)", (user_id,))
     chests = cursor.fetchall()
 
-    # Fetch chest quantities
     cursor.execute("SELECT chestsSkin_qty, chestsChampion_qty, chestsWard_qty FROM LCM.[User] WHERE ID = ?", (user_id,))
     chest_quantities = cursor.fetchone()
     
@@ -148,7 +148,7 @@ def profile():
                            purchase_history=purchase_history
                            )
 
-
+# já vi
 @main_bp.route('/store')
 def store():
     user_id = session.get('user_id')
@@ -174,7 +174,7 @@ def store():
     cursor.execute("SELECT Name, ID, rp_price FROM GetAvailableWardsForUser(?)", (user_id))
     wards = cursor.fetchall()
 
-    cursor.execute("SELECT ID, Name, rp_price FROM dbo.GetChestsAndPrices()")
+    cursor.execute("SELECT ID, Name, rp_price FROM GetChestsAndPrices()")
     chests = cursor.fetchall()
 
     return render_template('store.html', champions=champions, skins=skins, wards=wards, chests=chests, user_be=user_be, user_rp=user_rp)
@@ -193,14 +193,20 @@ def buy_champion_route():
     db = get_db()
     cursor = db.cursor()
 
-    cursor.execute("EXEC BuyChampion ?, ?, ?", (user_id, champion_id, be_price))
-    result = cursor.fetchone()
-    db.commit()
+    try:
+        cursor.execute("EXEC BuyChampion ?, ?, ?", (user_id, champion_id, be_price))
+        result = cursor.fetchone()
+        db.commit()
 
-    if result and result.Result == 'Success':
-        return {"status": "success", "message": result.Message}
-    else:
-        return {"status": "error", "message": result.Message}
+        if result and result.Result == 'Success':
+            return {"status": "success", "message": result.Message}
+        else:
+            return {"status": "error", "message": result.Message}
+
+    except Exception as e:
+        db.rollback()
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 
 
 @main_bp.route('/purchase_rp', methods=['POST'])
@@ -231,14 +237,23 @@ def buy_skin_route():
     
     db = get_db()
     cursor = db.cursor()
-    cursor.execute("EXEC BuySkin ?, ?, ?", (user_id, skin_id, rp_price))
-    result = cursor.fetchone()
-    db.commit()
+    try:
+        cursor.execute("EXEC BuySkin ?, ?, ?", (user_id, skin_id, rp_price))
+        result = cursor.fetchone()
+        db.commit()
 
-    if result and result.Result == 'Success':
-        return {"status": "success", "message": result.Message}
-    else:
-        return {"status": "error", "message": result.Message}
+        if result and result.Result == 'Success':
+            return {"status": "success", "message": result.Message}
+        else:
+            return {"status": "error", "message": result.Message}
+
+    except Exception as e:
+        db.rollback()
+        # Capturar mensagem de erro do trigger
+        if 'required champion' in str(e):
+            return jsonify({"status": "error", "message": "You do not own the required champion to purchase this skin"}), 400
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 
 
 @main_bp.route('/buy_ward_route', methods=['POST'])
@@ -302,16 +317,11 @@ def select_skin(champion_id):
     db = get_db()
     cursor = db.cursor()
     try:
-        cursor.execute("""
-            SELECT S.ID, S.Name AS skin_name, C.Name AS champion_name
-            FROM LCM.Skin S
-            JOIN LCM.Champion C ON S.Champion_ID = C.ID
-            JOIN LCM.User_Item UI ON S.ID = UI.ID_Item
-            WHERE S.Champion_ID = ? AND UI.ID_User = ?
-        """, (champion_id, user_id))
+        cursor.execute("SELECT * FROM GetUserSkinsFromChampion(?,?)", (user_id, champion_id))
         skins = cursor.fetchall()
 
         skins_list = [{'id': skin[0], 'skin_name': skin[1], 'champion_name': skin[2]} for skin in skins]
+
         return jsonify(skins_list)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -325,59 +335,62 @@ def open_chest(chest_type):
     db = get_db()
     cursor = db.cursor()
 
-    # Função auxiliar para selecionar um item aleatório que o usuário ainda não possui
-    def get_random_item_not_owned(query, user_id):
-        cursor.execute(query, (user_id,))
+    chest_type_map = {
+        'Skin': (
+            'chestsSkin_qty',
+            """
+            SELECT s.ID, s.Name 
+            FROM LCM.Skin s
+            JOIN LCM.Champion c ON s.Champion_ID = c.ID
+            JOIN LCM.User_Item ui ON c.ID = ui.ID_Item
+            WHERE s.ID NOT IN (SELECT ID_Item FROM LCM.User_Item WHERE ID_User = ?)
+            AND ui.ID_User = ?
+            AND s.Name <> 'default'
+            """,
+            'Skin Chest'
+        ),
+        'Champion': (
+            'chestsChampion_qty',
+            "SELECT ID, Name FROM LCM.Champion WHERE ID NOT IN (SELECT ID_Item FROM LCM.User_Item WHERE ID_User = ?)",
+            'Champion Chest'
+        ),
+        'Ward': (
+            'chestsWard_qty',
+            "SELECT ID, Name FROM LCM.Ward WHERE ID NOT IN (SELECT ID_Item FROM LCM.User_Item WHERE ID_User = ?)",
+            'Ward Chest'
+        )
+    }
+
+    if chest_type not in chest_type_map:
+        return jsonify({"status": "error", "message": "Invalid chest type"}), 400
+
+    chest_qty_col, query, chest_name = chest_type_map[chest_type]
+
+    try:
+        cursor.execute(f"SELECT {chest_qty_col} FROM LCM.[User] WHERE ID = ?", (user_id,))
+        current_qty = cursor.fetchone()[0]
+
+        if current_qty <= 0:
+            return jsonify({"status": "error", "message": f"No {chest_name}s available"}), 400
+
+        cursor.execute(f"UPDATE LCM.[User] SET {chest_qty_col} = {chest_qty_col} - 1 WHERE ID = ?", (user_id,))
+
+        cursor.execute(query, (user_id, user_id))
         items = cursor.fetchall()
         if not items:
-            return None
-        return random.choice(items)
+            return jsonify({"status": "error", "message": f"No available items to win in {chest_name}"}), 400
 
-    # Check and decrement chest quantity based on chest_type
-    if chest_type == 'Skin':
-        cursor.execute("SELECT chestsSkin_qty FROM LCM.[User] WHERE ID = ?", (user_id,))
-        current_qty = cursor.fetchone()[0]
-        if current_qty > 0:
-            cursor.execute("UPDATE LCM.[User] SET chestsSkin_qty = chestsSkin_qty - 1 WHERE ID = ?", (user_id,))
-            item = get_random_item_not_owned("SELECT ID, Name FROM LCM.Skin WHERE ID NOT IN (SELECT ID_Item FROM LCM.User_Item WHERE ID_User = ?) AND Name <> 'default'", user_id)
-            if item:
-                cursor.execute("INSERT INTO LCM.User_Item (ID_User, ID_Item, Data, Hora) VALUES (?, ?, GETDATE(), GETDATE())", (user_id, item[0]))
-                db.commit()
-                return jsonify({"status": "success", "message": f"Skin Chest opened successfully, you won {item[1]}"})
-            else:
-                return jsonify({"status": "error", "message": "No available skins to win"}), 400
-        else:
-            return jsonify({"status": "error", "message": "No Skin Chests available"}), 400
-    elif chest_type == 'Champion':
-        cursor.execute("SELECT chestsChampion_qty FROM LCM.[User] WHERE ID = ?", (user_id,))
-        current_qty = cursor.fetchone()[0]
-        if current_qty > 0:
-            cursor.execute("UPDATE LCM.[User] SET chestsChampion_qty = chestsChampion_qty - 1 WHERE ID = ?", (user_id,))
-            item = get_random_item_not_owned("SELECT ID, Name FROM LCM.Champion WHERE ID NOT IN (SELECT ID_Item FROM LCM.User_Item WHERE ID_User = ?)", user_id)
-            if item:
-                cursor.execute("INSERT INTO LCM.User_Item (ID_User, ID_Item, Data, Hora) VALUES (?, ?, GETDATE(), GETDATE())", (user_id, item[0]))
-                db.commit()
-                return jsonify({"status": "success", "message": f"Champion Chest opened successfully, you won {item[1]}"})
-            else:
-                return jsonify({"status": "error", "message": "No available champions to win"}), 400
-        else:
-            return jsonify({"status": "error", "message": "No Champion Chests available"}), 400
-    elif chest_type == 'Ward':
-        cursor.execute("SELECT chestsWard_qty FROM LCM.[User] WHERE ID = ?", (user_id,))
-        current_qty = cursor.fetchone()[0]
-        if current_qty > 0:
-            cursor.execute("UPDATE LCM.[User] SET chestsWard_qty = chestsWard_qty - 1 WHERE ID = ?", (user_id,))
-            item = get_random_item_not_owned("SELECT ID, Name FROM LCM.Ward WHERE ID NOT IN (SELECT ID_Item FROM LCM.User_Item WHERE ID_User = ?)", user_id)
-            if item:
-                cursor.execute("INSERT INTO LCM.User_Item (ID_User, ID_Item, Data, Hora) VALUES (?, ?, GETDATE(), GETDATE())", (user_id, item[0]))
-                db.commit()
-                return jsonify({"status": "success", "message": f"Ward Chest opened successfully, you won {item[1]}"})
-            else:
-                return jsonify({"status": "error", "message": "No available wards to win"}), 400
-        else:
-            return jsonify({"status": "error", "message": "No Ward Chests available"}), 400
-    else:
-        return jsonify({"status": "error", "message": "Invalid chest type"}), 400
+        item = random.choice(items)
+        cursor.execute("INSERT INTO LCM.User_Item (ID_User, ID_Item, Data, Hora) VALUES (?, ?, GETDATE(), GETDATE())", (user_id, item[0]))
+        db.commit()
+
+        return jsonify({"status": "success", "message": f"{chest_name} opened successfully, you won {item[1]}"})
+
+    except Exception as e:
+        db.rollback()
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
 
 
 @main_bp.route('/filter_data')

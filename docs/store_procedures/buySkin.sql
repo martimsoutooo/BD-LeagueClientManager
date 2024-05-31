@@ -1,4 +1,4 @@
-CREATE PROCEDURE BuySkin
+CREATE OR ALTER PROCEDURE BuySkin
     @UserID INT,
     @SkinID INT,
     @RPCost INT
@@ -17,8 +17,6 @@ BEGIN
 
         SELECT 'Success' AS Result, 'Skin purchased successfully' AS Message;
     END
-    ELSE
-    BEGIN
-        SELECT 'Error' AS Result, 'Not enough Riot Points' AS Message;
-    END
-END;
+	ELSE
+		SELECT 'Error' AS Result, ERROR_MESSAGE() AS Message;	
+END
