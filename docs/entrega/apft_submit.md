@@ -48,22 +48,106 @@ O Utilizador pode…
 
 ## SQL DML - Data Manipulation Language
 
-Uma secção por formulário.
-A section for each form.
+### Login
 
-### Formulario exemplo/Example Form
-
-![Exemplo Screenshot!](screenshots/screenshot_1.jpg "AnImage")
+![Exemplo Screenshot!](screenshots/login.png "AnImage")
 
 ```sql
--- Show data on the form
-SELECT * FROM MY_TABLE ....;
-
--- Insert new element
-INSERT INTO MY_TABLE ....;
+-- Uso da SP verifyUser para verificar se as credenciais sao válidas
+verifyUser(username, password)
 ```
 
-...
+### Register
+
+![Exemplo Screenshot!](screenshots/register.png "AnImage")
+
+```sql
+-- Uso das UDF's getUserByEmail e getUserByUsername para verificar se os valores introduzidos já existem da DB.
+getUserByEmail(email)
+getUserByUsername(username)
+-- Uso do SP createUser para criar o jogador na tabela LCM.[User]
+createUser(username, email, password)
+-- Uso da UDF HashPassword para encriptar a password
+HashPassword(password)
+```
+
+### Profile - Top Info Bar
+
+![Exemplo Screenshot!](screenshots/profile1.png "AnImage")
+
+```sql
+-- Uso da UDF GetUserInfo para dar display da Blue Essence, Riot Point e Rank presentes na top bar
+SELECT * FROM GetUserInfo(user_id)
+```
+
+
+### Profile - Inventory (Filtering)
+Filtros usados nas abas Champion/Skins/Wards
+```sql
+-- Uso da SP  GetFilteredData para fazer a filtragem nas respetivas abas 
+
+ EXEC GetFilteredData @UserID=?, @Type=?, @Alphabetical=?, @Filter1=?, @Filter2=?
+    """, (user_id, data_type, alphabetical, kingdom, category))
+```
+
+### Profile - Inventory (Champion)
+
+![Exemplo Screenshot!](screenshots/profile1.png "AnImage")
+
+```sql
+-- Uso da UDF getChampionByUser para mostar os Champions que pertecem ao inventário do user
+SELECT ID, Name, Category, Kingdom FROM GetChampionsByUser(user_id)
+```
+
+### Profile - Inventory (Skins)
+
+![Exemplo Screenshot!](screenshots/profile2.png "AnImage")
+
+```sql
+-- Uso da UDF getSkinsByUser para mostar as Skins que pertecem ao inventário do user
+SELECT ID, skin, championName FROM GetSkinsByUser(user_id)
+```
+
+### Profile - Inventory (Wards)
+
+![Exemplo Screenshot!](screenshots/profile3.png "AnImage")
+
+```sql
+-- Uso da UDF getWardsByUser para mostar as Warsds que pertecem ao inventário do user
+SELECT ID, ward FROM GetWardsByUser(user_id)
+```
+
+### Profile - Inventory (Chests)
+
+![Exemplo Screenshot!](screenshots/profile4.png "AnImage")
+
+```sql
+-- Uso da UDF getChestsByUser para mostar os Chests que pertecem ao inventário do user
+SELECT ID, Name, Category, Kingdom FROM GetChampionsByUser(user_id)
+-- Query para ver a quantidade de chests possuidos
+SELECT chestsSkin_qty, chestsChampion_qty, chestsWard_qty FROM LCM.[User] WHERE ID = user_id
+```
+
+### Profile - History (Match)
+
+![Exemplo Screenshot!](screenshots/profile5.png "AnImage")
+
+```sql
+-- Uso da view View_UserGameHistory para ver histórico total de jogos realizados pelo user
+SELECT * FROM LCM.View_UserGameHistory ui WHERE ui.ID_User = user_id
+```
+
+### Profile - History (Purchase)
+
+![Exemplo Screenshot!](screenshots/profile6.png "AnImage")
+
+```sql
+-- Uso da view View_UserPurchaseHistory para ver histórico total de compras realizadas pelo user
+SELECT *
+FROM LCM.View_UserBuyHistory ui
+JOIN LCM.Item i ON ui.ID_Item = i.ID
+WHERE ui.ID_User = user_id
+```
 
 ## Normalização
 
