@@ -1,4 +1,4 @@
--- Inserções na tabela Item para Wards
+-- Inserï¿½ï¿½es na tabela Item para Wards
 INSERT INTO LCM.Item (Name, Type, BE_Price, RP_Price) VALUES ('Ward of Vision', 'Ward', 0, 500);
 INSERT INTO LCM.Item (Name, Type, BE_Price, RP_Price) VALUES ('Ward of Shadows', 'Ward', 0, 600);
 INSERT INTO LCM.Item (Name, Type, BE_Price, RP_Price) VALUES ('Ward of Light', 'Ward', 0, 700);
@@ -10,12 +10,12 @@ INSERT INTO LCM.Item (Name, Type, BE_Price, RP_Price) VALUES ('Ward of the Ancie
 INSERT INTO LCM.Item (Name, Type, BE_Price, RP_Price) VALUES ('Ward of the Forest', 'Ward', 0, 1300);
 INSERT INTO LCM.Item (Name, Type, BE_Price, RP_Price) VALUES ('Ward of the Sea', 'Ward', 0, 1400);
 
--- Inserções na tabela Item para Chests
+-- Inserï¿½ï¿½es na tabela Item para Chests
 INSERT INTO LCM.Item (Name, Type, BE_Price, RP_Price) VALUES ('Champion Chest', 'Chest', 0, 1000);
 INSERT INTO LCM.Item (Name, Type, BE_Price, RP_Price) VALUES ('Skin Chest', 'Chest', 0, 1500);
 INSERT INTO LCM.Item (Name, Type, BE_Price, RP_Price) VALUES ('Ward Chest', 'Chest', 0, 500);
 
--- Inserções na tabela Ward
+-- Inserï¿½ï¿½es na tabela Ward
 INSERT INTO LCM.Ward (ID, Name) VALUES ((SELECT ID FROM LCM.Item WHERE Name = 'Ward of Vision'), 'Ward of Vision');
 INSERT INTO LCM.Ward (ID, Name) VALUES ((SELECT ID FROM LCM.Item WHERE Name = 'Ward of Shadows'), 'Ward of Shadows');
 INSERT INTO LCM.Ward (ID, Name) VALUES ((SELECT ID FROM LCM.Item WHERE Name = 'Ward of Light'), 'Ward of Light');
@@ -27,8 +27,13 @@ INSERT INTO LCM.Ward (ID, Name) VALUES ((SELECT ID FROM LCM.Item WHERE Name = 'W
 INSERT INTO LCM.Ward (ID, Name) VALUES ((SELECT ID FROM LCM.Item WHERE Name = 'Ward of the Forest'), 'Ward of the Forest');
 INSERT INTO LCM.Ward (ID, Name) VALUES ((SELECT ID FROM LCM.Item WHERE Name = 'Ward of the Sea'), 'Ward of the Sea');
 
--- Inserções na tabela Chest
+-- Inserï¿½ï¿½es na tabela Chest
 INSERT INTO LCM.Chest (ID) VALUES ((SELECT ID FROM LCM.Item WHERE Name = 'Champion Chest'));
 INSERT INTO LCM.Chest (ID) VALUES ((SELECT ID FROM LCM.Item WHERE Name = 'Skin Chest'));
 INSERT INTO LCM.Chest (ID) VALUES ((SELECT ID FROM LCM.Item WHERE Name = 'Ward Chest'));
+
+-- Inserï¿½ï¿½es na tabela Map
+INSERT INTO LCM.Map (ID, Name) VALUES (1, 'Summoners Rift');
+INSERT INTO LCM.Map (ID, Name) VALUES (2, 'Howling Abyss');
+INSERT INTO LCM.Map (ID, Name) VALUES (3, 'Twisted Treeline');
 

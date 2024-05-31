@@ -3,7 +3,7 @@ from flask import g
 
 def get_db():
     if 'db' not in g:
-        g.db = pyodbc.connect('DRIVER={SQL Server};SERVER=localhost\\SQLEXPRESS;DATABASE=LeagueClientManager;Trusted_Connection=yes;')
+        g.db = pyodbc.connect('DRIVER={SQL Server};SERVER=tcp:mednat.ieeta.pt\SQLSERVER,8101;DATABASE=p11g1;UID=p11g1;PWD=RMachado@10')
     return g.db
 
 def close_db(e=None):

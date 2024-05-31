@@ -4,7 +4,7 @@ import random
 
 def fetch_champion_data():
     # Estabelece conexão com o banco de dados
-    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=localhost\\SQLEXPRESS;DATABASE=LeagueClientManager;Trusted_Connection=yes;')
+    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=tcp:mednat.ieeta.pt\SQLSERVER,8101;DATABASE=p11g1;UID=p11g1;PWD=RMachado@10')
     cursor = conn.cursor()
     
     version_url = "https://ddragon.leagueoflegends.com/api/versions.json"
