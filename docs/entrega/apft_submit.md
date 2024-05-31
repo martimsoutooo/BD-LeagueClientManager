@@ -44,7 +44,7 @@ O Utilizador pode…
 
 ## ​SQL DDL - Data Definition Language
 
-[SQL DDL File](sql/01_ddl.sql "SQLFileQuestion")
+[SQL DDL File](../DDL.sql "SQLFileQuestion")
 
 ## SQL DML - Data Manipulation Language
 
@@ -158,7 +158,7 @@ Nesta página, é onde o utilizador consegue comprar items do jogo. Neste caso d
 
 #### Store - Show Available Champions
 
-![alt text](image.png)
+![alt text](screenshots/store1.png)
 ```sql
 -- Uso da UDF GetAvailableChampionsForUser para mostrar os champions que o user não tem
 SELECT ID, Name, Category, BE_Price, Kingdom FROM GetAvailableChampionsForUse(?)(user_id)
@@ -166,13 +166,13 @@ SELECT ID, Name, Category, BE_Price, Kingdom FROM GetAvailableChampionsForUse(?)
 ```
 
 #### Store - Show Available Skins
-![alt text](image-1.png)
+![alt text](screenshots/store2.png)
 ```sql
 -- Uso da UDF GetAvailableSkinsForUser para mostrar skins que o user não tem
 SELECT ID, skin, champion, rp_price FROM GetAvailableSkinsForUser(?),(user_id)
 ```
 #### Store - Show Available Wards
-![alt text](image-2.png)
+![alt text](screenshots/store3.png)
 ```sql
 -- Uso da UDF GetAvailableWardsForUser para mostrar wards que o user não tem 
  SELECT Name, ID, rp_price FROM GetAvailableWardsForUser(?), (user_id)
@@ -184,8 +184,43 @@ SELECT ID, skin, champion, rp_price FROM GetAvailableSkinsForUser(?),(user_id)
 SELECT ID, Name, rp_price FROM GetChestsAndPrices()
 ```
 
-#### Store - Buy
+#### Store - BuyItems
 
+![alt text](screenshots/store4.png)
+```sql
+-- A interface mostrada acima é igual para todo o tipo de items
+-- Para comprar items usamos SPs, fizemos uma SP para cada tipo de item.
+EXEC BuyChampion ?, ?, ?, (user_id, champion_id, be_price)
+EXEC BuySkin ?, ?, ?, (user_id, skin_id, rp_price)
+EXEC BuyWard ?, ?, ?, (user_id, ward_id, rp_price)
+EXEC BuyChest ?, ?, ?, ?, (user_id, chest_id, rp_price, chest_type)
+-- Para além das store procedures, usámos o trigger trg_check_points para bloquear compras que deixariam o saldo negativo, e o trigger trg_check_skin_purchase para bloquear compras de skins que user não tivesse o champion
+```
+
+#### Store - Search for Champions or Skins
+
+![alt text](screenshots/store5.png)
+```sql
+-- Para fazer a pesquisa de champions usamos a SP SearchChampions e para fazer pesquisa de Skins usamos a SP SearchSkins. 
+EXEC SearchChampions @UserID=?, @SearchQuery=?, @MaxResults=?, (user_id, search_query, max_results)
+
+EXEC SearchSkins @UserID=?, @SearchQuery=?, @MaxResults=?, (user_id, search_query, max_results)
+-- Passamos um argumento max_results para otimizar a pesquisa e também usamos indexação, 
+CREATE INDEX idx_skin_name ON LCM.Skin (Name);
+CREATE INDEX idx_champion_name ON LCM.Champion(Name);
+```
+
+#### Store - Purchase RP
+
+![alt text](screenshots/store6.png)
+```sql
+-- Para fazer a compra de RP usamos a SP PurchaseRP 
+EXEC PurchaseRP ?,?,(user_id,rp_amount)
+```
+
+#### Store - Apply Filters
+
+- Os filtros desta página têm exatamente a mesma lógica da página de perfil, mas mudamos a SP utilizada pelo facto dos champions disponiveis serem o contrário então usamos a SP GetFilteredDataStore.
 
 ### Game
 
@@ -225,11 +260,18 @@ Ao revermos o nosso sistema, verificámos que este já se encontrava conforme a 
 
 ## Stored Procedures
 
+- [SQL SPs File](../SPs.sql "SQLFileQuestion")
+
 ## Triggers
 
+- [SQL TRGs File](../TRGs.sql "SQLFileQuestion")
+
 ## UDF
+- [SQL UDFs File](../UDFs.sql "SQLFileQuestion")
 
 ## Views
+
+- [SQL VIEWs File](../VIEWs.sql "SQLFileQuestion")
 
 ## Indexes
 

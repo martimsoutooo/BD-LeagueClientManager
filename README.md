@@ -12,10 +12,10 @@ Before you run the project you need to put in your local database these files in
 
 - [SQL DDL File](docs/DDL.sql "SQLFileQuestion")
 - [SQL IDXs File](docs/IDXs.sql "SQLFileQuestion")
-- [SQL SPs File](docs/IDXs.sql "SQLFileQuestion")
-- [SQL TRGs File](docs/IDXs.sql "SQLFileQuestion")
-- [SQL UDFs File](docs/IDXs.sql "SQLFileQuestion")
-- [SQL VIEWs File](docs/IDXs.sql "SQLFileQuestion")
+- [SQL SPs File](docs/SPs.sql "SQLFileQuestion")
+- [SQL TRGs File](docs/TRGs.sql "SQLFileQuestion")
+- [SQL UDFs File](docs/UDFs.sql "SQLFileQuestion")
+- [SQL VIEWs File](docs/VIEWs.sql "SQLFileQuestion")
 
 Then you need to run ther insertions files:
 
