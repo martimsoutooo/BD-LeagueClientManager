@@ -94,6 +94,7 @@
                                                             <option value="Shurima">Shurima</option>
                                                             <option value="Zaun">Zaun</option>
                                                             <option value="Piltover">Piltover</option>
+                                                            <option value="Unknown">Unknown</option>
                                                         </select>
                                                     </div>
                                                     <div class="form-group pt-2">
@@ -112,9 +113,14 @@
                                                 </form>
                                             </div>
                                             <div class="col-md-9 p-3" style="border-left: 1px solid #ddd;">
+                                                <div class="row">
+                                                    <div class="col-md-12 mb-3">
+                                                        <input type="text" class="form-control" id="championSearch" placeholder="Search for a champion..." onkeyup="searchChampion()">
+                                                    </div>
+                                                </div>
                                                 <div class="row scrollable-content" id="champion-list">
                                                     {% for champion in champions %}
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-4 champion-item">
                                                         <div class="card mb-3 shadow-sm">
                                                             <div class="card-body d-flex flex-column justify-content-between">
                                                                 <div>
@@ -147,7 +153,6 @@
                                                     <div class="form-check pt-2">
                                                         <input class="form-check-input large-checkbox" name="alphabetical" type="checkbox" id="alphabeticalFilter">
                                                         <label class="form-check-label" for="alphabeticalFilter">Alphabetical</label>
-
                                                     </div>
                                                     <div class="form-group pt-3">
                                                         <label for="championFilter">Champion:</label>
@@ -162,9 +167,14 @@
                                                 </form>
                                             </div>
                                             <div class="col-md-9 p-3" style="border-left: 1px solid #ddd;">
-                                                <div class="row scrollable-content" id="skin-list">
+                                                    <div class="row">
+                                                        <div class="col-md-12 mb-3">
+                                                            <input type="text" class="form-control" id="skinSearch" placeholder="Search for a skin..." onkeyup="searchSkin()">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row scrollable-content" id="skin-list">
                                                     {% for skin in skins %}
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-4 skin-item">
                                                         <div class="card mb-3 shadow-sm">
                                                             <div class="card-body d-flex flex-column justify-content-between">
                                                                 <div>
@@ -260,7 +270,98 @@
         </div>
     </div>
 </div>
+
+<script>
+let searchTimeout = null;
+const maxResults = 50; // Limitar a 50 resultados
+
+function searchChampion() {
+    const query = document.getElementById("championSearch").value;
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        fetchChampions(query);
+    }, 300);
+}
+
+function fetchChampions(query) {
+    fetch(`/search_champions?query=${encodeURIComponent(query)}&max_results=${maxResults}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log("Champions data:", data); // Adiciona um log para verificar os dados recebidos
+            const champions = data.champions;
+            const championList = document.getElementById("champion-list");
+            championList.innerHTML = '';
+            champions.forEach(champion => {
+                console.log("Champion item:", champion); // Adiciona um log para verificar cada item de campeão
+                const card = `
+                    <div class="col-md-4 champion-item">
+                        <div class="card mb-3 shadow-sm">
+                            <div class="card-body d-flex flex-column justify-content-between">
+                                <div>
+                                    <h5 class="card-title font-weight-bold">${champion.Name}</h5>
+                                    <p class="card-text" style="margin-bottom: 0.2rem;">Category: ${champion.Category}</p>
+                                    <p class="card-text" style="margin-bottom: 1rem;">Kingdom: ${champion.Kingdom}</p>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <p class="card-text mb-0" style="font-size: small;">Price: ${champion.BE_Price} 
+                                        <img src="https://server.blix.gg/imgproxy/nP7l6vA2EI8fTz4xs51FwU7acvVmJx2yR-Fo_iUmeHI/rs:fit:260:260:0/g:no/aHR0cDovL21pbmlvOjkwMDAvaW1hZ2VzLzQxM2I0ZTQzNzFjYjQxYTliMzQwNDJhNTBmNDg4NjVhLnBuZw.webp" 
+                                        alt="" class="stats-image">
+                                    </p>
+                                    <button class="btn btn-primary" onclick="buyChampion('${champion.ID}','${champion.BE_Price}')">Buy</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+                championList.innerHTML += card;
+            });
+        })
+        .catch(error => console.error("Error fetching champions:", error)); // Adiciona um log para erros
+}
+
+function searchSkin() {
+    const query = document.getElementById("skinSearch").value;
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        fetchSkins(query);
+    }, 300);
+}
+
+function fetchSkins(query) {
+    fetch(`/search_skins?query=${encodeURIComponent(query)}&max_results=${maxResults}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log("Skins data:", data); // Adiciona um log para verificar os dados recebidos
+            const skins = data.skins;
+            const skinList = document.getElementById("skin-list");
+            skinList.innerHTML = '';
+            skins.forEach(skin => {
+                console.log("Skin item:", skin); // Adiciona um log para verificar cada item de skin
+                const card = `
+                    <div class="col-md-4 skin-item">
+                        <div class="card mb-3 shadow-sm">
+                            <div class="card-body d-flex flex-column justify-content-between">
+                                <div>
+                                    <h5 class="card-title font-weight-bold">${skin.Skin}</h5>
+                                    <p class="card-text" style="margin-bottom: 0.2rem;">Champion: ${skin.Champion}</p>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <p class="card-text mb-0" style="font-size: small;">Price: ${skin.RP_Price} 
+                                        <img src="https://www.nicepng.com/png/full/17-174865_free-lol-riot-points-riot-points.png" 
+                                        class="stats-image" alt="">
+                                    </p>
+                                    <button class="btn btn-primary" onclick="buySkin('${skin.ID}', '${skin.RP_Price}')">Buy</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+                skinList.innerHTML += card;
+            });
+        })
+        .catch(error => console.error("Error fetching skins:", error)); // Adiciona um log para erros
+}
+
+document.getElementById("championSearch").addEventListener("keyup", searchChampion);
+document.getElementById("skinSearch").addEventListener("keyup", searchSkin);
+
+</script>
 {% endblock %}
-
-
-

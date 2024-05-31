@@ -469,4 +469,43 @@ def filter_data_store():
     
     return jsonify([])
 
+@main_bp.route('/search_champions', methods=['GET'])
+def search_champions():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify([])
+
+    search_query = request.args.get('query', '')
+    max_results = int(request.args.get('max_results', 50))
+
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute("EXEC SearchChampions @UserID=?, @SearchQuery=?, @MaxResults=?", (user_id, search_query, max_results))
+    champions = cursor.fetchall()
+
+    champion_list = [{'ID': champ[0], 'Name': champ[1], 'Category': champ[2], 'BE_Price': champ[3], 'Kingdom': champ[4]} for champ in champions]
+    
+    return jsonify(champions=champion_list)
+
+@main_bp.route('/search_skins', methods=['GET'])
+def search_skins():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify([])
+
+    search_query = request.args.get('query', '')
+    max_results = int(request.args.get('max_results', 50))
+
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute("EXEC SearchSkins @UserID=?, @SearchQuery=?, @MaxResults=?", (user_id, search_query, max_results))
+    skins = cursor.fetchall()
+
+    skin_list = [{'ID': skin[0], 'Skin': skin[1], 'Champion': skin[2], 'RP_Price': skin[3]} for skin in skins]
+    
+    return jsonify(skins=skin_list)
+
+
 
