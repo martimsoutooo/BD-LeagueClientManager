@@ -22,18 +22,17 @@ BEGIN
     BEGIN
         SET @Result = 'Loss';
         SET @Outcome_RP = -25;
-        SET @Outcome_BE = 0; -- Assuming no BE is awarded for a loss
+        SET @Outcome_BE = 0;
     END
 
-    -- Set the current date and time
+
     SET @Data = GETDATE();
     SET @Hora = CONVERT(TIME, GETDATE());
 
-    -- Insert into LCM.Game table
     INSERT INTO LCM.Game (Duration, Result, Outcome_RP, Outcome_BE, ID_Map, ID_User_Select, Data, Hora)
     VALUES (@Duration, @Result, @Outcome_RP, @Outcome_BE, @ID_Map, @ID_User_Select, @Data, @Hora);
 
-    -- Update User's RP and BE based on game outcome
+
     UPDATE LCM.[User]
     SET Rank_Points = CASE 
             WHEN Rank_Points + @Outcome_RP < 0 THEN 0 
@@ -42,10 +41,10 @@ BEGIN
     BE = BE + @Outcome_BE
 WHERE ID = @UserID;
     
-    -- Check for errors and commit the transaction
+
     IF @@ERROR <> 0
     BEGIN
-        -- Consider adding error handling and rollback logic here
+
         RETURN;
     END
 

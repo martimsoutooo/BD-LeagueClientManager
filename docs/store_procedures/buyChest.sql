@@ -2,7 +2,7 @@ CREATE PROCEDURE BuyChest
     @UserID INT,
     @ChestID INT,
     @RPCost INT,
-    @ChestType VARCHAR(50)  -- Tipo do chest: 'Skin', 'Champion', ou 'Ward'
+    @ChestType VARCHAR(50) 
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -10,16 +10,15 @@ BEGIN
     DECLARE @UserRP INT;
     DECLARE @CurrentQty INT;
 
-    -- Obter a quantidade atual de Riot Points (RP) do usuário
+
     SELECT @UserRP = RP FROM LCM.[User] WHERE ID = @UserID;
 
-    -- Verificar se o usuário tem RP suficiente
     IF @UserRP >= @RPCost
     BEGIN
-        -- Decrementar a quantidade de RP do usuário
+
         UPDATE LCM.[User] SET RP = RP - @RPCost WHERE ID = @UserID;
 
-        -- Verificar a quantidade atual do tipo de chest e atualizar conforme necessário
+       
         IF @ChestType = 'Skin'
         BEGIN
             SELECT @CurrentQty = chestsSkin_qty FROM LCM.[User] WHERE ID = @UserID;
@@ -57,12 +56,11 @@ BEGIN
             END
         END
 
-        -- Retornar mensagem de sucesso
         SELECT 'Success' AS Result, 'Chest purchased successfully' AS Message;
     END
     ELSE
     BEGIN
-        -- Retornar mensagem de erro
+
         SELECT 'Error' AS Result, 'Not enough Riot Points' AS Message;
     END
 END;
