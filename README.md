@@ -23,7 +23,7 @@ Then you need to run ther insertions files:
 - [SkinsInsert](docs/insertions/skinsInsert.py "inserts")
 - [ChestsWardsMaps](docs/insertions/chests&wardsInsert.sql "inserts")
 
-Then you can acctualy run the project
+Then you can actually run the project
 ```bash
 python run.py
 ```
