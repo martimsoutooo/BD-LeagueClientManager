@@ -167,16 +167,17 @@ EXEC sp_InsertUserSelection @UserID=?, @SkinID=?, @ChampionID=?, @WardID=?, (use
 
 ![Exemplo Screenshot!](screenshots/game2.png "AnImage")
 ```sql
--- Uso do SP StartGame quando se clica no butao "Start Game"
+-- Uso do SP StartGame quando se clica no butao "Start Game" - insere logo o outcome do jogo na tabela do user
 EXEC sp_StartGame @ID_Map=?, @ID_User_Select=?, (map_id, user_select_id)
 ```
 
-#### Game - Claim
+#### Game - Result
 
 ![Exemplo Screenshot!](screenshots/game3.png "AnImage")
 ```sql
 -- Uso da Query para mostrar o resulta do jogo
-SELECT Result, Duration, Outcome_RP, Outcome_BE FROM LCM.Game WHERE ID_User_Select=? (user_select_id)```
+SELECT Result, Duration, Outcome_RP, Outcome_BE FROM LCM.Game WHERE ID_User_Select=? (user_select_id)
+```
 
 
 
