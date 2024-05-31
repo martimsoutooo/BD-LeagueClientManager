@@ -150,6 +150,41 @@ JOIN LCM.Item i ON ui.ID_Item = i.ID
 WHERE ui.ID_User = user_id
 ```
 
+### Store
+
+Nesta página, é onde o utilizador consegue comprar items do jogo. Neste caso diferente das outras páginas, aparecem os items que o utilizador não tem, sendo também aplicada uma lógica diferente na compra de chests já que a compra é ilimitada e podemos ter mais do que um no inventário. O utilizador pode também comprar RP e filtrar as páginas. Nesta página os filtros estão exatamente iguais á página de perfil com a diferença na adicção de uma search bar sendo que é esperado que tenha muito mais items nesta página e dá mais jeito.
+
+#### Store - Show Available Champions
+
+![alt text](image.png)
+```sql
+-- Uso da UDF GetAvailableChampionsForUser para mostrar os champions que o user não tem
+SELECT ID, Name, Category, BE_Price, Kingdom FROM GetAvailableChampionsForUse(?)(user_id)
+
+```
+
+#### Store - Show Available Skins
+![alt text](image-1.png)
+```sql
+-- Uso da UDF GetAvailableSkinsForUser para mostrar skins que o user não tem
+SELECT ID, skin, champion, rp_price FROM GetAvailableSkinsForUser(?),(user_id)
+```
+#### Store - Show Available Wards
+![alt text](image-2.png)
+```sql
+-- Uso da UDF GetAvailableWardsForUser para mostrar wards que o user não tem 
+ SELECT Name, ID, rp_price FROM GetAvailableWardsForUser(?), (user_id)
+```
+
+#### Store - Show Available Chests
+```sql
+-- Uso da UDF GetChestsAndPrices para mostrar os chests, neste caso a sua compra é ilimitada enquanto houver saldo
+SELECT ID, Name, rp_price FROM GetChestsAndPrices()
+```
+
+#### Store - Buy
+
+
 ### Game
 
 Nesta página, acontece a simulaçao de um jogo. O user fazer a seleçao de items que pertencem ao seu inventário para jogar.
