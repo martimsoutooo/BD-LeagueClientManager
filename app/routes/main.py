@@ -118,6 +118,7 @@ def profile():
         JOIN LCM.Item i ON ui.ID_Item = i.ID
         WHERE ui.ID_User = (?)
     """, (user_id,))
+
     purchase_history = cursor.fetchall()
 
     cursor.execute("SELECT ID, Name, Category, Kingdom FROM GetChampionsByUser(?)", (user_id,))
@@ -521,4 +522,20 @@ def search_skins():
     return jsonify(skins=skin_list)
 
 
+@main_bp.route('/undo_purchase/<int:item_id>', methods=['POST'])
+def undo_purchase(item_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({"status": "error", "message": "User not logged in"}), 401
 
+    db = get_db()
+    cursor = db.cursor()
+
+    try:
+        # Optionally check if the item belongs to the user here
+        cursor.execute("DELETE FROM LCM.User_Item WHERE ID_Item = ? AND ID_User = ?", (item_id, user_id))
+        db.commit()
+        return jsonify({"status": "success", "message": "Purchase undone successfully"})
+    except Exception as e:
+        db.rollback()
+        return jsonify({"status": "error", "message": str(e)}), 500

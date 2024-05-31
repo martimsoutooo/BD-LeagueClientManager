@@ -148,6 +148,8 @@ SELECT *
 FROM LCM.View_UserBuyHistory ui
 JOIN LCM.Item i ON ui.ID_Item = i.ID
 WHERE ui.ID_User = user_id
+-- Uso da Query para remover um compra efetuada e esta mesma voltar a passar disponível para ser comprada novamente
+DELETE FROM LCM.User_Item WHERE ID_Item = ? AND ID_User = ?, (item_id, user_id)
 ```
 
 ### Game
@@ -205,5 +207,6 @@ CREATE INDEX idx_champion_name ON LCM.Champion(Name);
 
 ## Mais informações
 
-
+### Features implementadas após a apresentação
+- Opção de dar remove de uma compra efetuada (página do profile) 
  
