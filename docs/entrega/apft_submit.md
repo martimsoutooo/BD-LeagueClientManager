@@ -85,8 +85,7 @@ SELECT * FROM GetUserInfo(user_id)
 Filtros usados nas abas Champion/Skins/Wards
 ```sql
 -- Uso da SP  GetFilteredData para fazer a filtragem nas respetivas abas 
-
- EXEC GetFilteredData @UserID=?, @Type=?, @Alphabetical=?, @Filter1=?, @Filter2=?
+EXEC GetFilteredData @UserID=?, @Type=?, @Alphabetical=?, @Filter1=?, @Filter2=?
     """, (user_id, data_type, alphabetical, kingdom, category))
 ```
 
@@ -160,7 +159,7 @@ Ao revermos o nosso sistema, verificámos que este já se encontrava conforme a 
 
 ## UDF
 
-## Indexs
+## Indexes
 
 Para melhorar a velocidade das pesquisas de champions e skins, optámos por utilizar índices. Apesar da nossa base de dados ser de tamanho relativamente pequeno, decidimos implementar esta estrutura nessas tabelas devido à sua utillizaçao frequente.
 
