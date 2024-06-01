@@ -2,7 +2,7 @@
 
 **Grupo**: P11G1
 - Rui Machado, MEC: 113765
-- Martim Santos, MEC: 2000
+- Martim Santos, MEC: 114614
 
 
 ## Introdução
@@ -179,6 +179,8 @@ SELECT ID, skin, champion, rp_price FROM GetAvailableSkinsForUser(?),(user_id)
 ```
 
 #### Store - Show Available Chests
+
+![alt text](screenshots/store7.png)
 ```sql
 -- Uso da UDF GetChestsAndPrices para mostrar os chests, neste caso a sua compra é ilimitada enquanto houver saldo
 SELECT ID, Name, rp_price FROM GetChestsAndPrices()
