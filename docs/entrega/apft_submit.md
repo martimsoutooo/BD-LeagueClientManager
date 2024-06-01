@@ -9,7 +9,7 @@
  
 Este projeto tem o objetivo de explorar o universo do jogo “League Of Legends” e ajudar novos jogadores a perceber o funcionamento geral do jogo, que é bastante complexo. Funciona como uma simulação do jogo e dá a conhecer a vasta gama de Champions (personagens), Skins (personalização de champions) e itens do jogo. 
 
-Nesta entrega, incluímos a análise de requisitos, o Diagrama Entidade-Relacionamento, o Esquema Relacional, os ficheiros para a criação e inicialização da base de dados, além dos ficheiros contendo as funções necessárias para realizar consultas, inserções, atualizações e remoções de dados na base. Também fornecemos o código que implementa uma interface para executar todas essas operações.
+Nesta entrega, incluímos a análise de requisitos, o Diagrama Entidade-Relacionamento, o Esquema Relacional, os ficheiros para a criação e inicialização da base de dados, além dos ficheiros contendo o código necessário para realizar consultas, inserções, atualizações e remoções de dados na base. Também fornecemos o código que implementa uma interface para executar todas essas operações.
 
 
 ## ​Análise de Requisitos 
@@ -284,6 +284,9 @@ CREATE INDEX idx_champion_name ON LCM.Champion(Name);
 
 ## Mais informações
 
+### Script de inserção de dados
+- De modo a 
 ### Features implementadas após a apresentação
+
 - Opção de dar remove de uma compra efetuada (página do profile) 
  
