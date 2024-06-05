@@ -70,7 +70,7 @@ createUser(username, email, password)
 -- Uso da UDF HashPassword para encriptar a password
 HashPassword(password)
 ```
-### Profile 
+#### Profile 
 Nesta página o user tem acesso aos seus dados pessoais, como inventário e histórico. 
 
 #### Profile - Top Info Bar
@@ -152,7 +152,7 @@ WHERE ui.ID_User = user_id
 DELETE FROM LCM.User_Item WHERE ID_Item = ? AND ID_User = ?, (item_id, user_id)
 ```
 
-### Store
+#### Store
 
 Nesta página, é onde o utilizador consegue comprar items do jogo. Diferente das outras páginas, nesta aparecem os items que o utilizador não tem, sendo também aplicada uma lógica diferente na compra de chests já que a compra é ilimitada e podemos ter mais do que um no inventário. O utilizador pode também comprar RP (Riot Points) e filtrar as páginas. Nesta página os filtros estão exatamente iguais à página de perfil com a diferença na adicção de uma search bar sendo que é esperado que tenha muito mais items nesta página.
 
@@ -290,10 +290,10 @@ CREATE INDEX idx_champion_name ON LCM.Champion(Name);
 De modo a tornar mais fácil o processo de inserção de dados, tendo em conta a dimensão dos dados inseridos, nas tabelas LCM.Champion e LCM.Skin foi usada ... 
 Já nas tabelas LCM.Ward e LCM.Chest, os inserts foram feitos à mão.
 
-[mudar isto]
-- [SQL VIEWs File](../VIEWs.sql "SQLFileQuestion")
-- [SQL VIEWs File](../VIEWs.sql "SQLFileQuestion")
-- [SQL VIEWs File](../VIEWs.sql "SQLFileQuestion")
+- [Python Champion Inserts File](../insertions/championsInsert.py. "PythonChampionInsertsFile")
+- [Python Skins Inserts File](../insertions/skinsInsert.py "PythonSkinsInsertsFile")
+- [SQL Chest&Ward Inserts File](../insertions/chests&wardsInserts.sql "SQLChestWardInsertsFile")
+
 
 ### Features implementadas após a apresentação
 
