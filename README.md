@@ -5,7 +5,8 @@
 1. [Criação da Interface](#criação-da-interface)
 2. [Camada de Interação com a Base de Dados](#camada-de-interação-com-a-base-de-dados)
 3. [Envio de Dados para o Backend](#envio-de-dados-para-o-backend)
-4. [Como Executar o Projeto](#como-executar-o-projeto)
+4. [Mudar as Informações para Conectar](#mudar-as-informações-para-conectar)
+5. [Como Executar o Projeto](#como-executar-o-projeto)
 
 ## 1. Criação da Interface
 
@@ -21,7 +22,24 @@ Além do Flask, utilizamos PyODBC, que é uma biblioteca em Python que permite f
 
 Para enviar os dados submetidos nos formulários para os endpoints do Flask, utilizamos HTMX e JavaScript. Cada endpoint do Flask recebe os dados, atualiza as tabelas conforme necessário e retorna o documento HTML atualizado com as informações.
 
-## 4. Como Executar o Projeto
+## 4. Mudar as Informações para Conectar
+
+É necessário mudar nos ficheiros skinsInserts.py e championsInsert.py, na declaração da variável conn:
+```python 
+conn = pyodbc.connect('DRIVER={SQL Server};SERVER=tcp:mednat.ieeta.pt\SQLSERVER,8101;DATABASE=p11g1;UID=p11g1;PWD=RMachado@10')
+```
+Os campos a serem mudados serão DATABASE, UID, PWD, sendo DATABASE o nome da Base de Dados, UID o nome de utilizador no SQL Management Studio e PWD a *password*.
+
+Se quiser colocar *localhost* o código terá de ser este:
+```python 
+conn = pyodbc.connect('DRIVER={SQL Server};SERVER=localhost\\SQLEXPRESS;DATABASE=p11g1;Trusted_Connection=yes;')
+
+```
+Para além desses ficheiros, na pasta data no ficheiro database.py terá que fazer as mesmas mudanças nesta linha:
+```python
+g.db = pyodbc.connect('DRIVER={SQL Server};SERVER=tcp:mednat.ieeta.pt\SQLSERVER,8101;DATABASE=p11g1;UID=p11g1;PWD=RMachado@10')
+```
+## 5. Como Executar o Projeto
 
 Para executar o projeto, siga os passos abaixo:
 
@@ -61,4 +79,4 @@ Depois de realizar as inserções, você pode executar o projeto:
 
 ```bash
 python run.py
-
+```
