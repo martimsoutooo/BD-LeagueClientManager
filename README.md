@@ -80,3 +80,5 @@ Depois de realizar as inserções, você pode executar o projeto:
 ```bash
 python run.py
 ```
+
+##Grade: 16
